@@ -32,8 +32,8 @@
       >
         <div class="sticky top-4 bg-white p-4 rounded-lg shadow-sm">
           <h3 class="text-lg font-semibold mb-4"><i class="fa fa-filter text-gray-400"></i> Filtros</h3>
-
-          <CategoriaFilter></CategoriaFilter>
+          <!--          <Loading></Loading>-->
+          <CategoriaFilter @on-selected="(value)=> {console.log(value)}"></CategoriaFilter>
 
 
           <!-- Category Filters -->
@@ -116,7 +116,9 @@
 
         <!-- Product Grid - Responsive columns -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <ProductCard v-for="product in paginatedProducts" :key="product.codigo" :product="product"/>
+
+          <ProductCartLoading v-for="row in 9" v-if="loading"></ProductCartLoading>
+          <ProductCard v-for="product in paginatedProducts" v-else :key="product.codigo" :product="product"/>
         </div>
 
         <!-- Pagination -->
@@ -199,7 +201,8 @@ export default {
       priceFilter: 0,
       inStockOnly: false,
       showFilters: false, // For mobile filter toggle
-      categorias: []
+      categorias: [],
+      loading: false
     };
   },
 
@@ -342,18 +345,13 @@ export default {
       window.scrollTo({top: 0, behavior: 'smooth'});
     },
 
-    list_categorias() {
-      this.categorias
-
-
-    }
 
   },
 
   created() {
     // Initialize price filter to max price
     this.$nextTick(() => {
-      this.priceFilter = this.maxPrice;
+
     });
   }
 }

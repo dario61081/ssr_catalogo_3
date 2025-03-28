@@ -38,15 +38,7 @@ export default {
   mounted() {
     this.get_data()
   },
-  computed: {
-    precio_minimo() {
-      return 0
-    },
-    precio_maximo() {
-      return this.productos.reduce((a, b) => a.precio < b.precio ? a : b, {precio: 0}).precio
-    },
-
-  }
+  
 }
 
 
