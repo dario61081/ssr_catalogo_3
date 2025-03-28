@@ -1,8 +1,72 @@
 <template>
   <div class="flex-1">
+    <!-- Dynamic Filters -->
+    <!--    <div class="mb-6 bg-white p-4 rounded-lg shadow">-->
+    <!--      <h3 class="text-lg font-semibold mb-4">Filtros</h3>-->
+    <!--      -->
+    <!--      &lt;!&ndash; Category Filters &ndash;&gt;-->
+    <!--      <div class="mb-4">-->
+    <!--        <h4 class="font-medium mb-2">Categorías</h4>-->
+    <!--        <div class="space-y-2 max-h-40 overflow-y-auto">-->
+    <!--          <label v-for="category in uniqueCategories" :key="category" class="flex items-center">-->
+    <!--            <input -->
+    <!--              type="checkbox" -->
+    <!--              :value="category" -->
+    <!--              v-model="selectedCategories"-->
+    <!--              class="rounded border-gray-300 text-orange-500"-->
+    <!--            >-->
+    <!--            <span class="ml-2 text-gray-700">{{ category }}</span>-->
+    <!--          </label>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--      -->
+    <!--      &lt;!&ndash; Price Range Filter &ndash;&gt;-->
+    <!--      <div class="mb-4">-->
+    <!--        <h4 class="font-medium mb-2">Precio (Gs. {{ formatPrice(minPrice) }} - Gs. {{ formatPrice(maxPrice) }})</h4>-->
+    <!--        <div class="px-2">-->
+    <!--          <input -->
+    <!--            type="range" -->
+    <!--            v-model.number="priceFilter" -->
+    <!--            :min="minPrice" -->
+    <!--            :max="maxPrice" -->
+    <!--            step="1000" -->
+    <!--            class="w-full"-->
+    <!--          >-->
+    <!--          <div class="flex justify-between text-sm text-gray-600 mt-1">-->
+    <!--            <span>Gs. {{ formatPrice(minPrice) }}</span>-->
+    <!--            <span>Gs. {{ formatPrice(priceFilter) }}</span>-->
+    <!--            <span>Gs. {{ formatPrice(maxPrice) }}</span>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--      -->
+    <!--      &lt;!&ndash; Stock Filter &ndash;&gt;-->
+    <!--      <div>-->
+    <!--        <h4 class="font-medium mb-2">Disponibilidad</h4>-->
+    <!--        <div class="space-y-2">-->
+    <!--          <label class="flex items-center">-->
+    <!--            <input -->
+    <!--              type="checkbox" -->
+    <!--              v-model="inStockOnly" -->
+    <!--              class="rounded border-gray-300 text-orange-500"-->
+    <!--            >-->
+    <!--            <span class="ml-2 text-gray-700">Solo en stock</span>-->
+    <!--          </label>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--      -->
+    <!--      &lt;!&ndash; Clear Filters Button &ndash;&gt;-->
+    <!--      <button -->
+    <!--        @click="clearFilters" -->
+    <!--        class="mt-4 w-full py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"-->
+    <!--      >-->
+    <!--        Limpiar filtros-->
+    <!--      </button>-->
+    <!--    </div>-->
 
     <div class="flex justify-between items-center mb-6">
-      <p class="text-sm text-gray-600">Mostrando {{ paginatedProducts.length }} de {{ products.length }} Productos</p>
+      <p class="text-sm text-gray-600">Mostrando {{ paginatedProducts.length }} de {{ filteredProducts.length }}
+        Productos</p>
       <select
           class="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
         <option>Mas Popular</option>
@@ -13,7 +77,7 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <ProductCard v-for="product in paginatedProducts" :key="product.id" :product="product"/>
+      <ProductCard v-for="product in paginatedProducts" :key="product.codigo" :product="product"/>
     </div>
 
     <!-- Pagination -->
@@ -89,25 +153,65 @@ export default {
   data() {
     return {
       currentPage: 1,
-      itemsPerPage: 9
+      itemsPerPage: 9,
+      selectedCategories: [],
+      priceFilter: 0,
+      inStockOnly: false
     };
   },
 
   computed: {
-    images() {
-      return this.products.filter(item => item.imagen).map(item => item.imagen).slice(0, 10);
+    // Dynamic filter values
+    uniqueCategories() {
+      return [...new Set(this.products.map(product => product.categoria))].filter(Boolean).sort();
     },
 
-    // Calculate total number of pages
-    totalPages() {
-      return Math.ceil(this.products.length / this.itemsPerPage);
+    minPrice() {
+      if (this.products.length === 0) return 0;
+      return Math.floor(Math.min(...this.products.map(product => Number(product.precio) || 0)));
     },
 
-    // Get products for the current page
+    maxPrice() {
+      if (this.products.length === 0) return 0;
+      return Math.ceil(Math.max(...this.products.map(product => Number(product.precio) || 0)));
+    },
+
+    // Apply filters to products
+    filteredProducts() {
+      return this.products.filter(product => {
+        // Category filter
+        if (this.selectedCategories.length > 0 && !this.selectedCategories.includes(product.categoria)) {
+          return false;
+        }
+
+        // Price filter
+        if (Number(product.precio) > this.priceFilter) {
+          return false;
+        }
+
+        // Stock filter
+        if (this.inStockOnly && (!product.stock || product.stock <= 0)) {
+          return false;
+        }
+
+        return true;
+      });
+    },
+
+    // Get products for the current page from filtered products
     paginatedProducts() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
-      return this.products.slice(startIndex, endIndex);
+      return this.filteredProducts.slice(startIndex, endIndex);
+    },
+
+    // Calculate total number of pages based on filtered products
+    totalPages() {
+      return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+    },
+
+    images() {
+      return this.products.filter(item => item.imagen).map(item => item.imagen).slice(0, 10);
     },
 
     // Calculate which page numbers to display
@@ -152,7 +256,26 @@ export default {
     }
   },
 
+  watch: {
+    // Reset to page 1 when filters change
+    filteredProducts() {
+      this.currentPage = 1;
+    }
+  },
+
   methods: {
+    // Format price with thousands separator
+    formatPrice(price) {
+      return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
+
+    // Clear all filters
+    clearFilters() {
+      this.selectedCategories = [];
+      this.priceFilter = this.maxPrice;
+      this.inStockOnly = false;
+    },
+
     // Go to specific page
     goToPage(page) {
       this.currentPage = page;
@@ -177,9 +300,15 @@ export default {
 
     // Scroll to top of grid after page change
     scrollToTop() {
-      // You can customize this to target a specific element if needed
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
+  },
+
+  created() {
+    // Initialize price filter to max price
+    this.$nextTick(() => {
+      this.priceFilter = this.maxPrice;
+    });
   }
 }
 </script>

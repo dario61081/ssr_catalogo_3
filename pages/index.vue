@@ -7,6 +7,7 @@
         <ProductGrid :products="productos"/>
       </div>
     </main>
+    <Footer></Footer>
   </div>
 </template>
 
