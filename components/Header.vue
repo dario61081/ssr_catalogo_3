@@ -1,19 +1,51 @@
 <template>
   <header class="bg-white shadow-sm">
-    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center">
-        <!--        <NuxtLink to="/" class="font-semibold text-gray-900">-->
-        <!--          <img src="/img/logo.svg" alt="Parana Hogar"> -->
-        <!--        </NuxtLink>-->
-        <img alt="Parana Hogar" src="/img/logo.svg" style="width: 160px; height: auto;">
-        <div class="hidden md:flex space-x-8 ml-10">
-          <!--          <NuxtLink to="/" class="text-gray-500 hover:text-gray-900">Home</NuxtLink>-->
-          <!--          <NuxtLink to="/pages" class="text-gray-500 hover:text-gray-900">Pages</NuxtLink>-->
-          <!--          <NuxtLink to="/shop" class="text-gray-500 hover:text-gray-900">Shop</NuxtLink>-->
-          <!--          <NuxtLink to="/blog" class="text-gray-500 hover:text-gray-900">Blog</NuxtLink>-->
-        </div>
+    <nav
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-16 flex flex-col sm:flex-row sm:items-center justify-between">
+      <div class="flex items-center justify-between py-2 sm:py-0">
+        <!-- Logo -->
+        <img alt="Parana Hogar" src="/img/logo.svg" style="width: 140px; height: auto;">
+
+        <!-- Mobile Menu Button -->
+        <button
+            class="sm:hidden p-2 rounded-md text-gray-500 hover:text-gray-900 focus:outline-none"
+            @click="mobileMenuOpen = !mobileMenuOpen"
+        >
+          <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+                v-if="!mobileMenuOpen"
+                d="M4 6h16M4 12h16M4 18h16"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+            />
+            <path
+                v-else
+                d="M6 18L18 6M6 6l12 12"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+            />
+          </svg>
+        </button>
       </div>
-      <div class="flex items-center space-x-4">
+
+      <!-- Desktop Navigation Links -->
+      <!--      <div class="hidden sm:flex space-x-8 ml-10">-->
+      <!--        <NuxtLink to="/" class="text-gray-500 hover:text-gray-900">Inicio</NuxtLink>-->
+      <!--        <NuxtLink to="/productos" class="text-gray-500 hover:text-gray-900">Productos</NuxtLink>-->
+      <!--        <NuxtLink to="/categorias" class="text-gray-500 hover:text-gray-900">Categorías</NuxtLink>-->
+      <!--        <NuxtLink to="/ofertas" class="text-gray-500 hover:text-gray-900">Ofertas</NuxtLink>-->
+      <!--      </div>-->
+
+      <!-- Desktop Action Icons -->
+      <div class="hidden sm:flex items-center space-x-4">
         <button class="text-gray-500 hover:text-gray-900">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"
@@ -22,21 +54,69 @@
         </button>
         <button class="text-gray-500 hover:text-gray-900">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width="2"/>
+            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width="2"/>
           </svg>
         </button>
-        <button class="text-gray-500 hover:text-gray-900">
+        <button class="text-gray-500 hover:text-gray-900 relative">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"
                   stroke-width="2"/>
           </svg>
+          <span
+              class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
         </button>
+      </div>
+
+      <!-- Mobile Menu (Collapsible) -->
+      <div
+          v-show="mobileMenuOpen"
+          class="sm:hidden py-3 border-t border-gray-200"
+      >
+        <div class="flex flex-col space-y-3">
+          <NuxtLink class="text-gray-500 hover:text-gray-900 py-1" to="/">Inicio</NuxtLink>
+          <NuxtLink class="text-gray-500 hover:text-gray-900 py-1" to="/productos">Productos</NuxtLink>
+          <NuxtLink class="text-gray-500 hover:text-gray-900 py-1" to="/categorias">Categorías</NuxtLink>
+          <NuxtLink class="text-gray-500 hover:text-gray-900 py-1" to="/ofertas">Ofertas</NuxtLink>
+        </div>
+
+        <!-- Mobile Action Icons -->
+        <div class="flex justify-between mt-4 pt-3 border-t border-gray-100">
+          <button class="text-gray-500 hover:text-gray-900 p-1">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2"/>
+            </svg>
+          </button>
+          <button class="text-gray-500 hover:text-gray-900 p-1">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2"/>
+            </svg>
+          </button>
+          <button class="text-gray-500 hover:text-gray-900 p-1 relative">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2"/>
+            </svg>
+            <span
+                class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+          </button>
+        </div>
       </div>
     </nav>
   </header>
 </template>
 
 <script>
-import "font-awesome/css/font-awesome.min.css"
+export default {
+  data() {
+    return {
+      mobileMenuOpen: false
+    }
+  }
+}
 </script>

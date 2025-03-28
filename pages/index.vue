@@ -3,7 +3,7 @@
     <Header @on-search="(filter)=>{}"/>
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="flex gap-8">
-        <Sidebar :precio_maximo="precio_maximo" :precio_minimo="precio_minimo" @on-filters="(filters)=>{}"/>
+        <!--        <Sidebar :precio_maximo="precio_maximo" :precio_minimo="precio_minimo" @on-filters="(filters)=>{}"/>-->
         <ProductGrid :products="productos"/>
       </div>
     </main>
