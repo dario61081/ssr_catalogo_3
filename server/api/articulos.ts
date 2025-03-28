@@ -5,7 +5,7 @@ export default defineEventHandler(() => {
         "ART_DESCRIPCION": "AGENDA ROSA 2024",
         "LINEA": "ACCESORIOS",
         "PRECIO": "189.000",
-        "STOCK": 2,
+        "STOCK": 0,
         "ART_DIR_IMAG1": "https://panel.colchonesparana.com.py/imagenes/2024/10/10641AM_1.jpg",
         "ART_DIR_IMAG2": null,
         "ART_DIR_IMAG3": null,
