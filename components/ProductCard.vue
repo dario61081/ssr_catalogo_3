@@ -1,5 +1,21 @@
 <template>
   <div class="bg-white rounded-lg shadow overflow-hidden relative">
+    <!-- Stock Badge -->
+    <div class="absolute left-2 top-2 z-10">
+      <span 
+        v-if="product.stock > 0" 
+        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+      >
+        En Stock
+      </span>
+      <span 
+        v-else 
+        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+      >
+        Sin Stock
+      </span>
+    </div>
+    
     <NuxtLink :to="`/product/${product.id}`" class="block">
       <img :alt="product.nombre" :src="product.imagen" class="w-full h-48 object-cover">
       <div class="p-4">
