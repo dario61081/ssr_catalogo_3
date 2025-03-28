@@ -1,4 +1,7 @@
 export default defineEventHandler(async (event) => {
+    const query = getQuery(event)
+
+
     return [{
         "DIV_CODIGO": 5,
         "DIV_DESC": "ACCESORIOS PARA EL HOGAR",
