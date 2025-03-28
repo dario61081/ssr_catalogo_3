@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-gray-900 text-white pt-8 pb-6">
+  <footer class="bg-black text-white pt-8 pb-6">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Mobile Footer with Collapsible Sections -->
@@ -301,7 +301,7 @@
           </form>
         </div>
       </div>
-      
+
 
       <!-- Copyright Section -->
       <div class="mt-8 pt-8 border-t border-gray-800">

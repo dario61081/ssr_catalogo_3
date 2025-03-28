@@ -33,9 +33,7 @@ export default {
             })
           })
     },
-    actualizar_filtros(filtros) {
 
-    }
   },
   mounted() {
     this.get_data()
