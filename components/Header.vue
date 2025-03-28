@@ -4,7 +4,9 @@
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-16 flex flex-col sm:flex-row sm:items-center justify-between">
       <div class="flex items-center justify-between py-2 sm:py-0">
         <!-- Logo -->
-        <img alt="Parana Hogar" src="/img/logo_white.svg" style="width: 140px; height: auto;">
+        <NuxtLink to="/">
+          <img alt="Parana Hogar" src="/img/logo_white.svg" style="width: 140px; height: auto;">
+        </NuxtLink>
 
         <!-- Mobile Menu Button -->
         <button
@@ -46,19 +48,19 @@
 
       <!-- Desktop Action Icons -->
       <div class="hidden sm:flex items-center space-x-4">
-        <button class="text-gray-500 hover:text-gray-900">
+        <button class="text-gray-500 hover:text-gray-900" @click="$emit('on-search')">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"
                   stroke-width="2"/>
           </svg>
         </button>
-        <button class="text-gray-500 hover:text-gray-900">
+        <NuxtLink :to="userDestination" class="text-gray-500 hover:text-gray-900">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round"
                   stroke-linejoin="round" stroke-width="2"/>
           </svg>
-        </button>
-        <button class="text-gray-500 hover:text-gray-900 relative">
+        </NuxtLink>
+        <button class="text-gray-500 hover:text-gray-900 relative" @click="$emit('open-cart')">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"
                   stroke-width="2"/>
@@ -82,21 +84,21 @@
 
         <!-- Mobile Action Icons -->
         <div class="flex justify-between mt-4 pt-3 border-t border-gray-100">
-          <button class="text-gray-500 hover:text-gray-900 p-1">
+          <button class="text-gray-500 hover:text-gray-900 p-1" @click="$emit('on-search')">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
               <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"
                     stroke-width="2"/>
             </svg>
           </button>
-          <button class="text-gray-500 hover:text-gray-900 p-1">
+          <NuxtLink :to="userDestination" class="text-gray-500 hover:text-gray-900 p-1">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
               <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round"
                     stroke-linejoin="round" stroke-width="2"/>
             </svg>
-          </button>
-          <button class="text-gray-500 hover:text-gray-900 p-1 relative">
+          </NuxtLink>
+          <button class="text-gray-500 hover:text-gray-900 p-1 relative" @click="$emit('open-cart')">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
               <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round"
@@ -112,7 +114,28 @@
 </template>
 
 <script>
+import { useAuthStore } from '~/stores/auth'
+import { computed, onMounted } from 'vue'
+
 export default {
+  emits: ['on-search', 'open-cart'],
+  setup() {
+    const authStore = useAuthStore()
+    
+    // Inicializar el estado de autenticación al cargar el componente
+    onMounted(() => {
+      authStore.initAuth()
+    })
+    
+    // Determinar la página de destino según el estado de autenticación
+    const userDestination = computed(() => {
+      return authStore.isAuthenticated ? '/cuenta/mi-cuenta' : '/cuenta/registro'
+    })
+    
+    return {
+      userDestination
+    }
+  },
   data() {
     return {
       mobileMenuOpen: false

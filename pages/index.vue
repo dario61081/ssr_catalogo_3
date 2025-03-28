@@ -1,12 +1,14 @@
 <template>
   <div class="min-h-screen bg-gray-50">
-    <Header @on-search="(filter)=>{}"/>
+    <Header @on-search="(filter)=>abrirBuscador()" @open-cart="abrirCarrito"/>
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="flex gap-8">
         <!--        <Sidebar :precio_maximo="precio_maximo" :precio_minimo="precio_minimo" @on-filters="(filters)=>{}"/>-->
         <ProductGrid :products="productos"/>
       </div>
     </main>
+    <CartAsideViewer :isOpen="isCartOpen" @close="cerrarCarrito"/>
+    <SearchAsideViewer :isOpen="isSearchOpen" @close="cerrarBuscador"/>
     <Footer></Footer>
   </div>
 </template>
@@ -20,7 +22,9 @@ export default {
   data() {
     return {
       productos: [],
-      filtros: []
+      filtros: [],
+      isCartOpen: false,
+      isSearchOpen: false
     }
   },
   methods: {
@@ -33,12 +37,22 @@ export default {
             })
           })
     },
-
+    cerrarCarrito() {
+      this.isCartOpen = false
+    },
+    abrirCarrito() {
+      this.isCartOpen = true
+    },
+    cerrarBuscador() {
+      this.isSearchOpen = false
+    },
+    abrirBuscador() {
+      this.isSearchOpen = true
+    }
   },
   mounted() {
     this.get_data()
   },
-  
 }
 
 
