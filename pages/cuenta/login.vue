@@ -3,7 +3,7 @@ import { useAuthStore } from '~/stores/auth'
 import { ref } from 'vue'
 
 definePageMeta({
-  layout: 'default'
+  layout: 'simple-layout'
 })
 
 const authStore = useAuthStore()

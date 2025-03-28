@@ -67,8 +67,6 @@
           </div>
           <div v-show="openSections.links" class="mt-4 space-y-3 text-gray-400">
             <div><a class="hover:text-white" href="/">Inicio</a></div>
-            <div><a class="hover:text-white" href="/productos">Productos</a></div>
-            <div><a class="hover:text-white" href="/categorias">Categorías</a></div>
             <div><a class="hover:text-white" href="/ofertas">Ofertas</a></div>
           </div>
         </div>
@@ -91,8 +89,8 @@
           <div v-show="openSections.service" class="mt-4 space-y-3 text-gray-400">
             <div><a class="hover:text-white" href="/contacto">Contacto</a></div>
             <div><a class="hover:text-white" href="/faq">Preguntas Frecuentes</a></div>
-            <div><a class="hover:text-white" href="/envios">Envíos</a></div>
-            <div><a class="hover:text-white" href="/devoluciones">Devoluciones</a></div>
+            <!-- <div><a class="hover:text-white" href="/envios">Envíos</a></div>
+            <div><a class="hover:text-white" href="/devoluciones">Devoluciones</a></div> -->
             <div><a class="hover:text-white" href="/terminos">Términos y Condiciones</a></div>
           </div>
         </div>
@@ -204,8 +202,6 @@
           <h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
           <ul class="space-y-3 text-gray-400">
             <li><a class="hover:text-white" href="/">Inicio</a></li>
-            <li><a class="hover:text-white" href="/productos">Productos</a></li>
-            <li><a class="hover:text-white" href="/categorias">Categorías</a></li>
             <li><a class="hover:text-white" href="/ofertas">Ofertas</a></li>
           </ul>
         </div>
@@ -216,8 +212,8 @@
           <ul class="space-y-3 text-gray-400">
             <li><a class="hover:text-white" href="/contacto">Contacto</a></li>
             <li><a class="hover:text-white" href="/faq">Preguntas Frecuentes</a></li>
-            <li><a class="hover:text-white" href="/envios">Envíos</a></li>
-            <li><a class="hover:text-white" href="/devoluciones">Devoluciones</a></li>
+            <!-- <li><a class="hover:text-white" href="/envios">Envíos</a></li>
+            <li><a class="hover:text-white" href="/devoluciones">Devoluciones</a></li> -->
             <li><a class="hover:text-white" href="/terminos">Términos y Condiciones</a></li>
           </ul>
         </div>

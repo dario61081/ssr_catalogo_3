@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // Términos de uso component
 definePageMeta({
-  layout: 'default'
+  layout: 'simple-layout'
 })
 </script>
 

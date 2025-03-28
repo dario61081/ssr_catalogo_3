@@ -39,7 +39,11 @@
                 stroke-width="2"/>
           </svg>
         </button>
-        <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200">
+        <button 
+          class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+          @click="openPreview"
+          title="Vista previa"
+        >
           <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                xmlns="http://www.w3.org/2000/svg">
             <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
@@ -83,6 +87,13 @@
         </button>
       </div>
     </div>
+    
+    <!-- Preview Dialog -->
+    <ProductCardPreviewDialog 
+      :is-open="isPreviewOpen" 
+      :product="product" 
+      @close="closePreview"
+    />
   </div>
 </template>
 
@@ -101,6 +112,7 @@ const props = defineProps({
 
 const isFavorite = ref(false);
 const heartAnimation = ref(false);
+const isPreviewOpen = ref(false);
 
 function formatPrice(price) {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -133,6 +145,14 @@ function toggleFavorite() {
   setTimeout(() => {
     heartAnimation.value = false;
   }, 1000);
+}
+
+function openPreview() {
+  isPreviewOpen.value = true;
+}
+
+function closePreview() {
+  isPreviewOpen.value = false;
 }
 </script>
 
