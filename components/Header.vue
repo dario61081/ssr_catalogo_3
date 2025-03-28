@@ -1,10 +1,10 @@
 <template>
-  <header class="bg-white shadow-sm">
+  <header class="bg-black text-white shadow-sm">
     <nav
         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-16 flex flex-col sm:flex-row sm:items-center justify-between">
       <div class="flex items-center justify-between py-2 sm:py-0">
         <!-- Logo -->
-        <img alt="Parana Hogar" src="/img/logo.svg" style="width: 140px; height: auto;">
+        <img alt="Parana Hogar" src="/img/logo_white.svg" style="width: 140px; height: auto;">
 
         <!-- Mobile Menu Button -->
         <button

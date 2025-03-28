@@ -293,7 +293,7 @@
                 type="email"
             >
             <button
-                class="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded transition-colors duration-200"
+                class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded transition-colors duration-200"
                 type="submit"
             >
               Suscribirse

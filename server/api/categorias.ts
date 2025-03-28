@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
         "DIV_DIR_IMAGEN": null
     }, {
         "DIV_CODIGO": 13,
-        "DIV_DESC": "BEBÃ‰",
+        "DIV_DESC": "BEBÉ",
         "DIV_ESTADO": "A",
         "DIV_ORDEN": 10,
         "DIV_DIR_IMAGEN": null

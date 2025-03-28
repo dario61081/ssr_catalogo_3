@@ -1,27 +1,29 @@
 <template>
   <div class="flex-1">
     <!-- Mobile Filter Toggle Button (visible only on mobile) -->
-    <div class="lg:hidden mb-4">
-      <button
-          class="w-full flex items-center justify-between bg-white p-4 rounded-lg shadow-sm"
-          @click="showFilters = !showFilters"
-      >
-        <span class="font-medium">Filtros</span>
-        <svg
-            :class="showFilters ? 'transform rotate-180' : ''"
-            class="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-        </svg>
-      </button>
-    </div>
+    <!--    <div class="lg:hidden mb-4">-->
+    <!--      <button-->
+    <!--          class="w-full flex items-center justify-between bg-white p-4 rounded-lg shadow-sm"-->
+    <!--          @click="showFilters = !showFilters"-->
+    <!--      >-->
+    <!--        <span class="font-medium">Filtros</span>-->
+    <!--        <svg-->
+    <!--            :class="showFilters ? 'transform rotate-180' : ''"-->
+    <!--            class="h-5 w-5"-->
+    <!--            fill="none"-->
+    <!--            stroke="currentColor"-->
+    <!--            viewBox="0 0 24 24"-->
+    <!--            xmlns="http://www.w3.org/2000/svg"-->
+    <!--        >-->
+    <!--          <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>-->
+    <!--        </svg>-->
+    <!--      </button>-->
+    <!--    </div>-->
 
     <div class="flex flex-col lg:flex-row gap-6">
+
       <!-- Dynamic Filters - Collapsible on mobile -->
+
       <div
           :class="[
           showFilters ? 'block' : 'hidden', 
@@ -31,9 +33,12 @@
         <div class="sticky top-4 bg-white p-4 rounded-lg shadow-sm">
           <h3 class="text-lg font-semibold mb-4"><i class="fa fa-filter text-gray-400"></i> Filtros</h3>
 
+          <CategoriaFilter></CategoriaFilter>
+
+
           <!-- Category Filters -->
           <div class="mb-4">
-            <h4 class="font-medium mb-2">Categorías</h4>
+            <h4 class="font-medium mb-2">Lineas</h4>
             <div class="space-y-2 max-h-40 overflow-y-auto">
               <label v-for="category in uniqueCategories" :key="category" class="flex items-center">
                 <input
@@ -144,7 +149,7 @@
               <button
                   v-else
                   :class="page === currentPage
-                ? 'bg-orange-500 text-white border border-orange-500'
+                ? 'bg-black text-white border border-gray-500'
                 : 'border border-gray-300 text-gray-700 hover:bg-gray-50'"
                   class="px-3 py-2 rounded-md text-sm font-medium"
                   @click="goToPage(page)"
@@ -193,7 +198,8 @@ export default {
       selectedCategories: [],
       priceFilter: 0,
       inStockOnly: false,
-      showFilters: false // For mobile filter toggle
+      showFilters: false, // For mobile filter toggle
+      categorias: []
     };
   },
 
@@ -334,7 +340,14 @@ export default {
     // Scroll to top of grid after page change
     scrollToTop() {
       window.scrollTo({top: 0, behavior: 'smooth'});
+    },
+
+    list_categorias() {
+      this.categorias
+
+
     }
+
   },
 
   created() {
