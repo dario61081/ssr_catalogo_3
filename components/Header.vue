@@ -64,7 +64,7 @@
                   stroke-width="2"/>
           </svg>
           <span
-              class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
+              class="absolute -top-1 -right-1 bg-gray-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
         </button>
       </div>
 
