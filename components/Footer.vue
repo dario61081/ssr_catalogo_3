@@ -155,12 +155,12 @@
           <p class="text-gray-400 mb-4">Recibe nuestras ofertas y novedades</p>
           <form class="flex flex-col space-y-2">
             <input
-                class="px-4 py-2 bg-gray-800 text-white rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+                class="px-4 py-2 bg-gray-800 text-white rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
                 placeholder="Tu correo electrónico"
                 type="email"
             >
             <button
-                class="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded transition-colors duration-200"
+                class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded transition-colors duration-200"
                 type="submit"
             >
               Suscribirse

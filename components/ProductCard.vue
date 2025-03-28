@@ -12,7 +12,10 @@
     </div>
 
     <!-- Product Image -->
-    <div class="relative pt-[100%] overflow-hidden rounded-t-lg">
+    <div 
+      class="relative pt-[100%] overflow-hidden rounded-t-lg cursor-pointer"
+      @click="openImageTheater"
+    >
       <img
           :alt="product.nombre"
           :src="product.imagen"
@@ -23,7 +26,7 @@
       <div class="absolute top-2 right-2 flex flex-col space-y-2">
         <button 
           class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
-          @click="toggleFavorite"
+          @click.stop="toggleFavorite"
         >
           <svg 
             :class="[isFavorite ? 'text-red-500 fill-current' : 'text-gray-600', heartAnimation ? 'animate-heartbeat' : '']" 
@@ -41,7 +44,7 @@
         </button>
         <button 
           class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
-          @click="openPreview"
+          @click.stop="openPreview"
           title="Vista previa"
         >
           <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -94,12 +97,20 @@
       :product="product" 
       @close="closePreview"
     />
+    
+    <!-- Image Theater -->
+    <ProductCardImageTheater
+      :is-open="isImageTheaterOpen"
+      :product="product"
+      @close="closeImageTheater"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useNuxtApp } from '#imports';
+import ProductCardImageTheater from './ProductCardImageTheater.vue';
 
 const { $bus } = useNuxtApp();
 
@@ -113,6 +124,7 @@ const props = defineProps({
 const isFavorite = ref(false);
 const heartAnimation = ref(false);
 const isPreviewOpen = ref(false);
+const isImageTheaterOpen = ref(false);
 
 function formatPrice(price) {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -153,6 +165,14 @@ function openPreview() {
 
 function closePreview() {
   isPreviewOpen.value = false;
+}
+
+function openImageTheater() {
+  isImageTheaterOpen.value = true;
+}
+
+function closeImageTheater() {
+  isImageTheaterOpen.value = false;
 }
 </script>
 
