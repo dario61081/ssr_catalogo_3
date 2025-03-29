@@ -13,9 +13,8 @@
 						 @close="cerrarCarrito"/>
 		<SearchAsideViewer :isOpen="isSearchOpen"
 						   @close="cerrarBuscador"/>
-               <!-- <FabButton></FabButton> -->
-               <FabChatButton > </FabChatButton>
-                		<Footer></Footer>
+		<FabChatButton></FabChatButton>
+		<Footer></Footer>
 	</div>
 </template>
 
@@ -28,6 +27,7 @@ export default {
 
 	data() {
 		return {
+			/** @type {Producto[]} */
 			productos: [],
 			filtros: [],
 			isCartOpen: false,
@@ -42,7 +42,13 @@ export default {
 				.then(res => res.json())
 				.then(res => {
 					this.productos = res.map(item => {
-						return new Producto(item.ART_COD, item.ART_DESCRIPCION, item.LINEA, item.PRECIO, item.ART_DIR_IMAG1, item.STOCK)
+						return new Producto(
+							item.ART_COD,
+							item.ART_DESCRIPCION,
+							item.DIVISION,
+							item.PRECIO,
+							item.ART_DIR_IMAG1,
+							item.STOCK)
 					})
 				}).finally(() => {
 				this.loading = false

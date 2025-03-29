@@ -36,63 +36,64 @@
 						Filtros
 					</h3>
 					<!--          <Loading></Loading>-->
-					<CategoriaFilter @on-selected="(value)=> {codigoCategorias=value}"></CategoriaFilter>
-					{{ codigoCategorias }}
+					<CategoriaFilter @on-selected="(value)=>{codigoCategorias=value}"></CategoriaFilter>
+					
 
 					<!-- Category Filters -->
-					<div class="mb-4">
-						<h4 class="font-medium mb-2">Lineas</h4>
-						<div class="space-y-2 max-h-40 overflow-y-auto">
-							<label v-for="category in uniqueCategories"
-								   :key="category"
-								   class="flex items-center">
-								<input
-									v-model="selectedCategories"
-									:value="category"
-									class="rounded border-gray-300 text-orange-500"
-									type="checkbox"
-								>
-								<span class="ml-2 text-gray-700 text-sm">{{ category }}</span>
-							</label>
-						</div>
-					</div>
+
+					<!--					<div class="mb-4">-->
+					<!--						<h4 class="font-medium mb-2">Lineas</h4>-->
+					<!--						<div class="space-y-2 max-h-40 overflow-y-auto">-->
+					<!--							<label v-for="category in uniqueCategories"-->
+					<!--								   :key="category"-->
+					<!--								   class="flex items-center">-->
+					<!--								<input-->
+					<!--									v-model="selectedCategories"-->
+					<!--									:value="category"-->
+					<!--									class="rounded border-gray-300 text-orange-500"-->
+					<!--									type="checkbox"-->
+					<!--								>-->
+					<!--								<span class="ml-2 text-gray-700 text-sm">{{ category }}</span>-->
+					<!--							</label>-->
+					<!--						</div>-->
+					<!--					</div>-->
 
 					<!-- Price Range Filter -->
-					<div class="mb-4">
-						<h4 class="font-medium mb-2">Precio</h4>
-						<div class="px-2">
-							<div class="flex justify-between text-sm text-gray-600 mb-1">
-								<span>Gs. {{ formatPrice(minPrice) }}</span>
-								<span>Gs. {{ formatPrice(maxPrice) }}</span>
-							</div>
-							<input
-								v-model.number="priceFilter"
-								:max="maxPrice"
-								:min="minPrice"
-								class="w-full"
-								step="1000"
-								type="range"
-							>
-							<div class="text-center text-sm text-gray-800 mt-1">
-								<span>Hasta Gs. {{ formatPrice(priceFilter) }}</span>
-							</div>
-						</div>
-					</div>
+					<!--					<div class="mb-4">-->
+					<!--						<h4 class="font-medium mb-2">Precio</h4>-->
+					<!--						<div class="px-2">-->
+					<!--							<div class="flex justify-between text-sm text-gray-600 mb-1">-->
+					<!--								<span>Gs. {{ formatPrice(minPrice) }}</span>-->
+					<!--								<span>Gs. {{ formatPrice(maxPrice) }}</span>-->
+					<!--							</div>-->
+					<!--							<input-->
+					<!--								v-model.number="priceFilter"-->
+					<!--								:max="maxPrice"-->
+					<!--								:min="minPrice"-->
+					<!--								class="w-full"-->
+					<!--								step="1000"-->
+					<!--								type="range"-->
+					<!--							>-->
+					<!--							<div class="text-center text-sm text-gray-800 mt-1">-->
+					<!--								<span>Hasta Gs. {{ formatPrice(priceFilter) }}</span>-->
+					<!--							</div>-->
+					<!--						</div>-->
+					<!--					</div>-->
 
 					<!-- Stock Filter -->
-					<div>
-						<h4 class="font-medium mb-2">Disponibilidad</h4>
-						<div class="space-y-2">
-							<label class="flex items-center">
-								<input
-									v-model="inStockOnly"
-									class="rounded border-gray-300 text-orange-500"
-									type="checkbox"
-								>
-								<span class="ml-2 text-gray-700 text-sm">Solo en stock</span>
-							</label>
-						</div>
-					</div>
+					<!--					<div>-->
+					<!--						<h4 class="font-medium mb-2">Disponibilidad</h4>-->
+					<!--						<div class="space-y-2">-->
+					<!--							<label class="flex items-center">-->
+					<!--								<input-->
+					<!--									v-model="inStockOnly"-->
+					<!--									class="rounded border-gray-300 text-orange-500"-->
+					<!--									type="checkbox"-->
+					<!--								>-->
+					<!--								<span class="ml-2 text-gray-700 text-sm">Solo en stock</span>-->
+					<!--							</label>-->
+					<!--						</div>-->
+					<!--					</div>-->
 
 					<!-- Clear Filters Button -->
 					<button
@@ -108,7 +109,7 @@
 			<div class="flex-1">
 				<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
 					<ProductCounterBadge :filtered-products="filteredProducts"
-										 :paginated-products="paginatedProducts"></ProductCounterBadge>
+										 :paginated-products="paginatedProducts"/>
 					<select
 						class="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full sm:w-auto"
 					>
@@ -252,7 +253,22 @@ export default {
 		// Apply filters to products
 		filteredProducts() {
 
-			return this.products
+
+			/**
+			 *
+			 * @param item {Producto}
+			 * @param filter {Array[Number]}
+			 * @returns {boolean}
+			 */
+			function filter_by_categoria(item, filter) {
+				return filter.includes(item.categoria);
+			}
+
+			if (this.codigoCategorias.length === 0) {
+				return this.products
+			}
+
+			return this.products.filter(item => filter_by_categoria(item, this.codigoCategorias))
 
 
 		},
