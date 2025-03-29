@@ -14,6 +14,7 @@
 					v-model="categoria._checked"
 					class="rounded border-gray-300 text-gray-500 text-sm"
 					type="checkbox"
+					@change="$emit('on-selected', seleccionados)"
 				>
 				<span class="ml-2 text-gray-700 text-sm"
 					  style="text-overflow: ellipsis; white-space: nowrap;">
