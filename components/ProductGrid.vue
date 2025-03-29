@@ -186,6 +186,7 @@
 import 'font-awesome/css/font-awesome.min.css';
 
 export default {
+  inject: ['bus'],
   props: {
     products: {
       type: Array,
@@ -316,6 +317,7 @@ export default {
       this.selectedCategories = [];
       this.priceFilter = this.maxPrice;
       this.inStockOnly = false;
+      this.$bus.emit('clear-filters')
     },
 
     // Go to specific page
