@@ -107,8 +107,8 @@
 			<!-- Products Section -->
 			<div class="flex-1">
 				<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
-					<p class="text-sm text-gray-600 mb-2 sm:mb-0">Mostrando {{ paginatedProducts.length }} de
-						{{ filteredProducts.length }} Productos</p>
+					<ProductCounterBadge :filtered-products="filteredProducts"
+										 :paginated-products="paginatedProducts"></ProductCounterBadge>
 					<select
 						class="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full sm:w-auto"
 					>
@@ -117,6 +117,8 @@
 						<option>Precio: Bajo</option>
 						<option>Precio: Alto</option>
 					</select>
+
+
 				</div>
 
 				<!-- Product Grid - Responsive columns -->
@@ -201,8 +203,10 @@
 
 <script>
 import 'font-awesome/css/font-awesome.min.css';
+import ProductCounterBadge from "~/components/ProductCounterBadge.vue";
 
 export default {
+	components: {ProductCounterBadge},
 	inject: ['bus'],
 	props: {
 		products: {
@@ -225,7 +229,7 @@ export default {
 			inStockOnly: false,
 			showFilters: false, // For mobile filter toggle
 			categorias: [],
-			
+
 		};
 	},
 
