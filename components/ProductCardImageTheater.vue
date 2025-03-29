@@ -1,7 +1,6 @@
-
 <template>
   <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 transition-opacity">
-    <div class="relative bg-white rounded-lg shadow-xl w-[90vw] max-w-[90vw] max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="relative bg-white rounded-lg shadow-xl w-[90vw] max-w-[90vw] h-[90dvh] max-h-[90dvh] overflow-hidden flex flex-col">
       <!-- Close button -->
       <button 
         @click="close" 
@@ -12,15 +11,43 @@
         </svg>
       </button>
       
-      <!-- Main image container -->
-      <div class="flex-1 flex items-center justify-center bg-gray-100 p-4 min-h-[70vh]">
-        <img 
-          v-if="product && images.length > 0" 
-          :src="images[currentImageIndex]" 
-          :alt="product.nombre" 
-          class="max-w-full max-h-full object-contain"
-        />
-        <div v-else class="text-gray-400 text-center">
+      <!-- Main image container with zoom functionality -->
+      <div 
+        ref="imageContainer" 
+        class="flex-1 flex items-center justify-center bg-gray-100 p-4 relative overflow-hidden min-h-[65dvh]"
+        @mousemove="handleMouseMove"
+        @mouseleave="isZooming = false"
+        @mouseenter="isZooming = true"
+      >
+        <!-- Normal image (shown when not zooming) -->
+        <div class="relative flex items-center justify-center w-full h-full">
+          <img 
+            v-if="product && images.length > 0" 
+            ref="productImage"
+            :src="images[currentImageIndex]" 
+            :alt="product.nombre" 
+            class="max-w-full max-h-full object-contain cursor-magnifying-glass transition-opacity duration-300"
+            :class="{ 'opacity-0': isZooming && !isMobile }"
+          />
+          
+          <!-- Zoomed image container -->
+          <div 
+            v-show="isZooming && !isMobile" 
+            ref="zoomContainer"
+            class="absolute inset-0 overflow-hidden flex items-center justify-center"
+          >
+            <img 
+              v-if="product && images.length > 0" 
+              ref="zoomedImage"
+              :src="images[currentImageIndex]" 
+              :alt="product.nombre" 
+              class="w-full h-full object-contain transition-transform duration-100"
+              :style="zoomedImageStyle"
+            />
+          </div>
+        </div>
+        
+        <div v-if="!product || images.length === 0" class="text-gray-400 text-center">
           <svg class="mx-auto h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
           </svg>
@@ -62,11 +89,19 @@
             @click="setCurrentImage(index)"
             class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            <img 
-              :src="image" 
-              :alt="`Miniatura ${index + 1}`" 
-              class="h-16 w-16 object-contain"
-            />
+            <div class="relative h-16 w-16">
+              <img 
+                :src="image" 
+                :alt="`Miniatura ${index + 1}`" 
+                class="h-16 w-16 object-contain"
+              />
+              <!-- Indicador de posición del cursor -->
+              <div 
+                v-if="isZooming && !isMobile && currentImageIndex === index" 
+                class="absolute border-2 border-red-500 bg-red-500 bg-opacity-30 pointer-events-none rounded-full z-10"
+                :style="cursorIndicatorStyle"
+              ></div>
+            </div>
           </button>
           
           <!-- Placeholder thumbnails if less than 3 images -->
@@ -93,7 +128,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
   isOpen: {
@@ -110,6 +145,101 @@ const emit = defineEmits(['close']);
 
 // Estado para el índice de la imagen actual
 const currentImageIndex = ref(0);
+
+// Zoom functionality
+const imageContainer = ref(null);
+const productImage = ref(null);
+const zoomContainer = ref(null);
+const zoomedImage = ref(null);
+const isZooming = ref(false);
+const isMobile = ref(false);
+
+// Zoom configuration
+const zoomLevel = 1.5; // Zoom magnification level (150%)
+
+// Style for zoomed image
+const zoomedImageStyle = ref({
+  width: '100%',
+  height: '100%',
+  transform: 'translate(0px, 0px) scale(1.5)'
+});
+
+// Estilo para el indicador de posición del cursor
+const cursorIndicatorStyle = ref({
+  top: '0px',
+  left: '0px',
+  width: '10px',
+  height: '10px'
+});
+
+// Detectar si es dispositivo móvil
+onMounted(() => {
+  checkIfMobile();
+  window.addEventListener('resize', checkIfMobile);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkIfMobile);
+});
+
+function checkIfMobile() {
+  isMobile.value = window.innerWidth < 768;
+}
+
+// Handle mouse movement over the image
+function handleMouseMove(e) {
+  if (!isZooming.value || isMobile.value || !imageContainer.value || !productImage.value || !zoomedImage.value) {
+    return;
+  }
+
+  // Get positions
+  const containerRect = imageContainer.value.getBoundingClientRect();
+  const imageRect = productImage.value.getBoundingClientRect();
+  
+  // Calculate cursor position relative to the image
+  const mouseX = e.clientX - imageRect.left;
+  const mouseY = e.clientY - imageRect.top;
+  
+  // Calculate the percentage position of the cursor on the image (0 to 1)
+  const percentX = Math.max(0, Math.min(1, mouseX / imageRect.width));
+  const percentY = Math.max(0, Math.min(1, mouseY / imageRect.height));
+  
+  // Ajustamos el cálculo para corregir los márgenes
+  const maxTransformX = imageRect.width * (zoomLevel - 1);
+  const maxTransformY = imageRect.height * (zoomLevel - 1);
+  
+  // Aplicamos un ajuste asimétrico para dar más espacio a la derecha
+  // Desplazamos el rango de transformación horizontal
+  const offsetAdjustmentLeft = 0.25; // Ajuste para el lado izquierdo
+  const offsetAdjustmentRight = 0.45; // Mayor ajuste para el lado derecho
+  
+  // Mapeamos el rango [0,1] a un rango ajustado para corregir los márgenes
+  // Usamos una función asimétrica que da más espacio al lado derecho
+  const transformX = (percentX * (1 + offsetAdjustmentLeft + offsetAdjustmentRight) - offsetAdjustmentLeft) * maxTransformX;
+  const transformY = percentY * maxTransformY;
+  
+  // Update zoomed image style
+  zoomedImageStyle.value = {
+    transform: `translate(-${transformX}px, -${transformY}px) scale(${zoomLevel})`,
+    transformOrigin: '0 0',
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain'
+  };
+  
+  // Actualizar el estilo del indicador de posición del cursor en la miniatura
+  const thumbnailSize = 64;
+  const indicatorSize = 12;
+  
+  cursorIndicatorStyle.value = {
+    top: `${percentY * thumbnailSize - indicatorSize/2}px`,
+    left: `${percentX * thumbnailSize - indicatorSize/2}px`,
+    width: `${indicatorSize}px`,
+    height: `${indicatorSize}px`,
+    transform: 'translate(0, 0)',
+    position: 'absolute'
+  };
+}
 
 // Computar las imágenes disponibles del producto
 const images = computed(() => {
@@ -166,6 +296,10 @@ function close() {
   transition: opacity 0.3s ease;
 }
 
+.transition-transform {
+  transition: transform 0.1s ease-out;
+}
+
 .transition-all {
   transition: all 0.2s ease;
 }
@@ -180,5 +314,24 @@ button:active svg {
   .max-h-\[90vh\] {
     max-height: 80vh;
   }
+}
+
+/* Estilos para el zoom */
+.cursor-magnifying-glass {
+  cursor: zoom-in;
+}
+
+/* Ajustar el CSS y la estructura del contenedor para asegurar que la imagen se muestre correctamente sin recortes verticales */
+.image-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 </style>
