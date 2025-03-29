@@ -17,13 +17,12 @@
 				>
 				<span class="ml-2 text-gray-700 text-sm"
 					  style="text-overflow: ellipsis; white-space: nowrap;">
-     {{ categoria.codigo }} - {{ categoria.nombre }}
-        </span>
-				<!--				<span class="text-gray-400 text-sm">(0)</span>-->
+     				{{ categoria.nombre }}
+        		</span>
 			</label>
 		</div>
 	</div>
-	{{ seleccionados }}
+
 </template>
 <script>
 import {Linea} from "~/models.js";
