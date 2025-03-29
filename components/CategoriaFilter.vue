@@ -1,9 +1,8 @@
 <template>
 	<h4 class="font-medium mb-2">Categorias</h4>
 	<div class="mb-4">
-		<!--    <div class="space-y-2 max-h-40 overflow-y-auto">-->
 		<div class="space-y-2 ">
-			<template v-for="row in 10"
+			<template v-for="row in 15"
 					  v-if="loading">
 				<CheckboxLoading></CheckboxLoading>
 			</template>
@@ -35,7 +34,7 @@ export default {
 		return {
 			/** @type {Linea[]} */
 			categorias: [],
-			loading: false
+			loading: true
 		}
 	},
 	methods: {

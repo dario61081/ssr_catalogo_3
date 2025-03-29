@@ -13,12 +13,13 @@
 						 @close="cerrarCarrito"/>
 		<SearchAsideViewer :isOpen="isSearchOpen"
 						   @close="cerrarBuscador"/>
-		<Footer></Footer>
+		<Footer/>
 	</div>
 </template>
 
 <script>
-
+import 'font-awesome/css/font-awesome.min.css'
+import 'animate.css/animate.compat.css'
 import {Producto} from "~/models";
 
 export default {
