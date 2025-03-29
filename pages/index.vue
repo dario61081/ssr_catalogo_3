@@ -13,7 +13,9 @@
 						 @close="cerrarCarrito"/>
 		<SearchAsideViewer :isOpen="isSearchOpen"
 						   @close="cerrarBuscador"/>
-		<Footer/>
+               <!-- <FabButton></FabButton> -->
+               <FabChatButton > </FabChatButton>
+                		<Footer></Footer>
 	</div>
 </template>
 

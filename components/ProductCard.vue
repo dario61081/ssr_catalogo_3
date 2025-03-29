@@ -19,6 +19,7 @@
       <img
           :alt="product.nombre"
           :src="product.imagen"
+          loading="lazy"
           class="absolute inset-0 w-full h-full object-contain object-center p-5"
           style="aspect-ratio: 4/3;"
       />
