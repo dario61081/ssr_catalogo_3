@@ -37,7 +37,7 @@
 					</h3>
 					<!--          <Loading></Loading>-->
 					<CategoriaFilter @on-selected="(value)=>{codigoCategorias=value}"></CategoriaFilter>
-					
+
 
 					<!-- Category Filters -->
 
@@ -79,8 +79,9 @@
 					<!--							</div>-->
 					<!--						</div>-->
 					<!--					</div>-->
-
+				
 					<!-- Stock Filter -->
+					<PriceFilter :products="filteredProducts"></PriceFilter>
 					<!--					<div>-->
 					<!--						<h4 class="font-medium mb-2">Disponibilidad</h4>-->
 					<!--						<div class="space-y-2">-->

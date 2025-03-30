@@ -4,14 +4,7 @@
 		<div
 			class="relative flex flex-col h-full bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
 			<!-- Stock Badge -->
-			<div
-				:class="[
-        product.stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800', 
-        'absolute top-2 left-2 z-10 px-2 py-1 rounded-full text-xs font-medium'
-      ]"
-			>
-				{{ product.stock > 0 ? 'En Stock' : 'Sin Stock' }}
-			</div>
+			<ProductStockBadge :product="product"/>
 
 			<!-- Product Image -->
 			<div
@@ -76,7 +69,9 @@
 				<p class="text-xs text-gray-500 mb-2">{{ product.categoria }}</p>
 
 				<div class="mt-auto">
-					<p class="text-base sm:text-lg font-bold text-gray-900">Gs. {{ product.precio }}</p>
+					<p class="text-base  sm:text-lg font-bold text-gray-900">
+						Gs. {{ formatPrecio(product.precio) }}
+					</p>
 					<button
 						:class="[
               'mt-3 w-full text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-colors duration-200',
@@ -129,8 +124,9 @@ import {useNuxtApp} from '#imports';
 import ProductCardImageTheater from './ProductCardImageTheater.vue';
 
 const {$bus} = useNuxtApp();
-
+const formatPrecio = utils().formatPrecio;
 const props = defineProps({
+	/** @type {Producto} */
 	product: {
 		type: Object,
 		required: true

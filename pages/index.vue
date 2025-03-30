@@ -22,6 +22,7 @@
 import 'font-awesome/css/font-awesome.min.css'
 import 'animate.css/animate.compat.css'
 import {Producto} from "~/models";
+import numeral from "numeral"
 
 export default {
 
@@ -41,6 +42,15 @@ export default {
 			fetch('/api/articulos')
 				.then(res => res.json())
 				.then(res => {
+					// convertir precio a numero
+					res.forEach(item => {
+						console.log(item.PRECIO)
+						//use regex para retirar los puntos
+						item.PRECIO = item.PRECIO.replace('.', '')
+						item.PRECIO = numeral(item.PRECIO).value()
+					})
+					console.log('res 1', res)
+
 					this.productos = res.map(item => {
 						return new Producto(
 							item.ART_COD,
@@ -50,9 +60,10 @@ export default {
 							item.ART_DIR_IMAG1,
 							item.STOCK)
 					})
-				}).finally(() => {
-				this.loading = false
-			})
+				})
+				.finally(() => {
+					this.loading = false
+				})
 		},
 		cerrarCarrito() {
 			this.isCartOpen = false
