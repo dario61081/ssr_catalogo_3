@@ -58,7 +58,9 @@ export default {
 							item.DIVISION,
 							item.PRECIO,
 							item.ART_DIR_IMAG1,
-							item.STOCK)
+							item.STOCK,
+							item.DIV_CLASS,
+							item.DIV_CLAS_DESC)
 					})
 				})
 				.finally(() => {

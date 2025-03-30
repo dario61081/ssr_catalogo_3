@@ -20,7 +20,7 @@
 		<!--      </button>-->
 		<!--    </div>-->
 
-		<div class="flex flex-col lg:flex-row gap-6">
+		<div class="flex flex-col lg:flex-row gap-3">
 
 			<!-- Dynamic Filters - Collapsible on mobile -->
 
@@ -30,72 +30,18 @@
           'lg:block w-full lg:w-64 flex-shrink-0'
         ]"
 			>
-				<div class="sticky top-4 bg-white p-4 rounded-lg shadow-sm">
+				<div class="sticky top-4 bg-white p-3 rounded-lg shadow-sm">
 					<h3 class="text-lg font-semibold mb-4">
 						<i class="fa fa-filter text-gray-400"></i>
 						Filtros
 					</h3>
 					<!--          <Loading></Loading>-->
-					<CategoriaFilter @on-selected="(value)=>{codigoCategorias=value}"></CategoriaFilter>
-
-
-					<!-- Category Filters -->
-
-					<!--					<div class="mb-4">-->
-					<!--						<h4 class="font-medium mb-2">Lineas</h4>-->
-					<!--						<div class="space-y-2 max-h-40 overflow-y-auto">-->
-					<!--							<label v-for="category in uniqueCategories"-->
-					<!--								   :key="category"-->
-					<!--								   class="flex items-center">-->
-					<!--								<input-->
-					<!--									v-model="selectedCategories"-->
-					<!--									:value="category"-->
-					<!--									class="rounded border-gray-300 text-orange-500"-->
-					<!--									type="checkbox"-->
-					<!--								>-->
-					<!--								<span class="ml-2 text-gray-700 text-sm">{{ category }}</span>-->
-					<!--							</label>-->
-					<!--						</div>-->
-					<!--					</div>-->
-
-					<!-- Price Range Filter -->
-					<!--					<div class="mb-4">-->
-					<!--						<h4 class="font-medium mb-2">Precio</h4>-->
-					<!--						<div class="px-2">-->
-					<!--							<div class="flex justify-between text-sm text-gray-600 mb-1">-->
-					<!--								<span>Gs. {{ formatPrice(minPrice) }}</span>-->
-					<!--								<span>Gs. {{ formatPrice(maxPrice) }}</span>-->
-					<!--							</div>-->
-					<!--							<input-->
-					<!--								v-model.number="priceFilter"-->
-					<!--								:max="maxPrice"-->
-					<!--								:min="minPrice"-->
-					<!--								class="w-full"-->
-					<!--								step="1000"-->
-					<!--								type="range"-->
-					<!--							>-->
-					<!--							<div class="text-center text-sm text-gray-800 mt-1">-->
-					<!--								<span>Hasta Gs. {{ formatPrice(priceFilter) }}</span>-->
-					<!--							</div>-->
-					<!--						</div>-->
-					<!--					</div>-->
-				
-					<!-- Stock Filter -->
-					<PriceFilter :products="filteredProducts"></PriceFilter>
-					<!--					<div>-->
-					<!--						<h4 class="font-medium mb-2">Disponibilidad</h4>-->
-					<!--						<div class="space-y-2">-->
-					<!--							<label class="flex items-center">-->
-					<!--								<input-->
-					<!--									v-model="inStockOnly"-->
-					<!--									class="rounded border-gray-300 text-orange-500"-->
-					<!--									type="checkbox"-->
-					<!--								>-->
-					<!--								<span class="ml-2 text-gray-700 text-sm">Solo en stock</span>-->
-					<!--							</label>-->
-					<!--						</div>-->
-					<!--					</div>-->
-
+					<CategoriaFilter :productos="products"
+									 @on-selected="(value)=>{codigoCategorias=value}"/>
+					<LineaFilter :productos="filteredProducts"
+								 @on-selected="(value)=>{codigoLineas=value}"/>
+					<PriceFilter :products="filteredProducts"
+								 @on-selected="(value)=>{precioSeleccionado=value}"/>
 					<!-- Clear Filters Button -->
 					<button
 						class="mt-4 w-full py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm"
@@ -226,11 +172,14 @@ export default {
 			currentPage: 1,
 			itemsPerPage: 9,
 			selectedCategories: [],
-			codigoCategorias: [], // codigo de las categorias
+
 			priceFilter: 0,
 			inStockOnly: false,
 			showFilters: false, // For mobile filter toggle
 			categorias: [],
+			codigoCategorias: [], // codigo de las categorias
+			codigoLineas: [], //codigo de lineas
+			precioSeleccionado: 0
 
 		};
 	},
@@ -263,6 +212,20 @@ export default {
 			 */
 			function filter_by_categoria(item, filter) {
 				return filter.includes(item.categoria);
+			}
+
+			/**
+			 *
+			 * @param item {Producto}
+			 * @param filter {Array[Number]}
+			 * @returns {boolean}
+			 */
+			function filter_by_linea(item, filter) {
+				return filter.includes(item.codigo_division);
+			}
+
+			function filter_by_price(item, filter) {
+				return item.precio <= filter
 			}
 
 			if (this.codigoCategorias.length === 0) {

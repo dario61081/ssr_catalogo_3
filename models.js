@@ -24,6 +24,20 @@ class Model {
 }
 
 
+export class Seleccion extends Model {
+	/**
+	 *
+	 * @param objeto {Object}
+	 * @param keyName {String}
+	 */
+	constructor(objeto, keyName) {
+		super();
+		this.objeto = objeto
+		this.keyName = keyName
+	}
+}
+
+
 export class Producto extends Model {
 	/**
 	 *
@@ -33,8 +47,11 @@ export class Producto extends Model {
 	 * @param precio {Number}
 	 * @param imagen {String}
 	 * @param stock {Number}
+	 * @param codigo_division {Number}
+	 * @param desc_division {String}
 	 */
-	constructor(codigo, nombre, categoria, precio, imagen, stock) {
+	constructor(codigo, nombre, categoria, precio, imagen, stock,
+				codigo_division, desc_division) {
 		super();
 		/** @type {Number} */
 		this.codigo = codigo
@@ -52,6 +69,10 @@ export class Producto extends Model {
 		this.imagen_3 = ''
 		/** @type {number} */
 		this.stock = stock
+		/** @type {Number} */
+		this.codigo_division = codigo_division
+		/** @type {String} */
+		this.desc_division = desc_division || ''
 	}
 }
 

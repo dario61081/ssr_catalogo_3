@@ -1,7 +1,15 @@
 <template>
 	<h4 class="font-medium mb-2">Categorias</h4>
+	<!--	<label class="flex items-center mb-2">-->
+	<!--		<input-->
+	<!--			v-model="filtroPrecio"-->
+	<!--			class="rounded border-gray-300 text-indigo-600"-->
+	<!--			type="checkbox"-->
+	<!--		>-->
+	<!--		<span class="ml-2 text-gray-700 text-sm">Filtrar por precio</span>-->
+	<!--	</label>-->
 	<div class="mb-4">
-		<div class="space-y-2 ">
+		<div class="space-y-2  ">
 			<template v-for="row in 15"
 					  v-if="loading">
 				<CheckboxLoading></CheckboxLoading>
@@ -15,10 +23,13 @@
 					type="checkbox"
 					@change="$emit('on-selected', seleccionados)"
 				>
-				<span class="ml-2 text-gray-700 text-sm"
-					  style="text-overflow: ellipsis; white-space: nowrap;">
-     				{{ categoria.nombre }}
+				<span class="ml-2 text-gray-700 text-sm">
+     				{{ categoria.nombre }} ( {{ countItems(categoria.codigo) }} )
         		</span>
+				<!--				<span class="ml-2 text-gray-700 text-sm"-->
+				<!--					  style="text-overflow: ellipsis; white-space: nowrap;">-->
+				<!--     				{{ categoria.nombre }} ( {{ countItems(categoria.codigo) }} )-->
+				<!--        		</span>-->
 			</label>
 		</div>
 	</div>
@@ -30,6 +41,13 @@ import {Linea} from "~/models.js";
 export default {
 	inject: ['bus'],
 	emits: ['vnode-unmounted', "on-selected"],
+	props: {
+		/** @type {Producto[]} */
+		productos: {
+			type: Array,
+			required: true,
+		}
+	},
 	data() {
 		return {
 			/** @type {Linea[]} */
@@ -38,6 +56,9 @@ export default {
 		}
 	},
 	methods: {
+		countItems(codigo) {
+			return this.productos.filter(producto => producto.categoria === codigo).length
+		},
 
 // {
 // 	"DIV_CODIGO": 8,
@@ -79,6 +100,9 @@ export default {
 			this.categorias.forEach(item => item._checked = false)
 			this.$emit('on-selected', this.get_seleccionados())
 		})
+	},
+	unmounted() {
+		this.$bus.off('clear-filters')
 	}
 }
 </script>
