@@ -54,6 +54,12 @@
                   stroke-width="2"/>
           </svg>
         </button>
+        <NuxtLink to="/favoritos" class="text-gray-500 hover:text-gray-900">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
+                  stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+          </svg>
+        </NuxtLink>
         <NuxtLink :to="userDestination" class="text-gray-500 hover:text-gray-900">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round"
@@ -91,8 +97,15 @@
                     stroke-width="2"/>
             </svg>
           </button>
+          <NuxtLink to="/favoritos" class="text-gray-500 hover:text-gray-900 p-1">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" 
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
+                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            </svg>
+          </NuxtLink>
           <NuxtLink :to="userDestination" class="text-gray-500 hover:text-gray-900 p-1">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" 
                  xmlns="http://www.w3.org/2000/svg">
               <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round"
                     stroke-linejoin="round" stroke-width="2"/>

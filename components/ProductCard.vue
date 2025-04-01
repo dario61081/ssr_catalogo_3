@@ -66,7 +66,7 @@
 			<!-- Product Info -->
 			<div class="flex-1 p-4 flex flex-col">
 				<h3 class="text-sm sm:text-base font-medium text-gray-900 mb-1 line-clamp-2">{{ product.nombre }}</h3>
-				<p class="text-xs text-gray-500 mb-2">{{ product.categoria }}</p>
+				<!--				<p class="text-xs text-gray-500 mb-2">{{ product. }}</p>-->
 
 				<div class="mt-auto">
 					<p class="text-base  sm:text-lg font-bold text-gray-900">
@@ -119,11 +119,14 @@
 
 <script setup>
 import 'animate.css/animate.compat.css';
-import {ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import {useNuxtApp} from '#imports';
 import ProductCardImageTheater from './ProductCardImageTheater.vue';
+import {useFavoritesStore} from '~/stores/favorites';
+import {utils} from '~/composables/utils';
 
 const {$bus} = useNuxtApp();
+const favoritesStore = useFavoritesStore();
 const formatPrecio = utils().formatPrecio;
 const props = defineProps({
 	/** @type {Producto} */
@@ -133,10 +136,14 @@ const props = defineProps({
 	}
 });
 
-const isFavorite = ref(false);
 const heartAnimation = ref(false);
 const isPreviewOpen = ref(false);
 const isImageTheaterOpen = ref(false);
+
+// Usar el estado de favoritos desde el store
+const isFavorite = computed(() => {
+	return favoritesStore.isFavorite(props.product.codigo);
+});
 
 function formatPrice(price) {
 	return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -156,13 +163,14 @@ function handleCartClick() {
 }
 
 function toggleFavorite() {
-	isFavorite.value = !isFavorite.value;
+	// Usar el store para gestionar el estado de favoritos
+	const wasAdded = favoritesStore.toggleFavorite(props.product);
 	heartAnimation.value = true;
 
 	// Emitir evento al bus con el producto seleccionado
 	$bus.emit('on-favourite-selected', {
 		product: props.product,
-		isFavorite: isFavorite.value
+		isFavorite: wasAdded
 	});
 
 	// Detener la animación después de completarse
@@ -186,6 +194,11 @@ function openImageTheater() {
 function closeImageTheater() {
 	isImageTheaterOpen.value = false;
 }
+
+// Cargar el estado inicial de favoritos
+onMounted(() => {
+	favoritesStore.loadFavorites();
+});
 </script>
 
 <style scoped>
