@@ -47,10 +47,12 @@ export default {
 		// Setup event listeners
 		onMounted(() => {
 			$bus.on('clear-filters', clearSelection);
+			$bus.on('reset-subcategories', clearSelection);
 		});
 		
 		onUnmounted(() => {
 			$bus.off('clear-filters', clearSelection);
+			$bus.off('reset-subcategories', clearSelection);
 		});
 		
 		return {

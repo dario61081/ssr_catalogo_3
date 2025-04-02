@@ -41,7 +41,7 @@
 
 					<CategoriaFilter
 						:categorias="categorias"
-						@on-selected="filterByCategoria"
+						@on-selected="filterByCategoriaAndResetSub"
 					/>
 
 					<!-- Only show subcategory filter when categories are selected -->
@@ -305,6 +305,16 @@ export default {
 	},
 
 	methods: {
+		// Filter by category and reset subcategory filter
+		filterByCategoriaAndResetSub(categorias) {
+			// First reset subcategory filter
+			this.filterBySubcategoria([]);
+			// Then apply category filter
+			this.filterByCategoria(categorias);
+			// Emit event to reset subcategory UI
+			this.bus.emit('reset-subcategories');
+		},
+
 		// Toggle favorites filter
 		toggleFavoritesFilter() {
 			this.showFavoritesOnly = !this.showFavoritesOnly;
