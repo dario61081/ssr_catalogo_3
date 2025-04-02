@@ -1,29 +1,31 @@
 <template>
 	<div class="flex-1">
 		<!-- Mobile Filter Toggle Button (visible only on mobile) -->
-		<!--    <div class="lg:hidden mb-4">-->
-		<!--      <button-->
-		<!--          class="w-full flex items-center justify-between bg-white p-4 rounded-lg shadow-sm"-->
-		<!--          @click="showFilters = !showFilters"-->
-		<!--      >-->
-		<!--        <span class="font-medium">Filtros</span>-->
-		<!--        <svg-->
-		<!--            :class="showFilters ? 'transform rotate-180' : ''"-->
-		<!--            class="h-5 w-5"-->
-		<!--            fill="none"-->
-		<!--            stroke="currentColor"-->
-		<!--            viewBox="0 0 24 24"-->
-		<!--            xmlns="http://www.w3.org/2000/svg"-->
-		<!--        >-->
-		<!--          <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>-->
-		<!--        </svg>-->
-		<!--      </button>-->
-		<!--    </div>-->
+		<div class="lg:hidden mb-4">
+			<button
+				class="w-full flex items-center justify-between bg-white p-4 rounded-lg shadow-sm"
+				@click="showFilters = !showFilters"
+			>
+				<span class="font-medium">Filtros</span>
+				<svg
+					:class="showFilters ? 'transform rotate-180' : ''"
+					class="h-5 w-5"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path d="M19 9l-7 7-7-7"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"/>
+				</svg>
+			</button>
+		</div>
 
 		<div class="flex flex-col lg:flex-row gap-3">
 
 			<!-- Dynamic Filters - Collapsible on mobile -->
-
 			<div
 				:class="[
           showFilters ? 'block' : 'hidden', 
@@ -35,13 +37,50 @@
 						<i class="fa fa-filter text-gray-400"></i>
 						Filtros
 					</h3>
-					<!--          <Loading></Loading>-->
-					<CategoriaFilter :productos="products"
-									 @on-selected="(value)=>{codigoCategorias=value}"/>
-					<LineaFilter :productos="filteredProducts"
-								 @on-selected="(value)=>{codigoLineas=value}"/>
-					<PriceFilter :products="filteredProducts"
-								 @on-selected="(value)=>{precioSeleccionado=value}"/>
+					<Loading v-if="loading"></Loading>
+
+					<CategoriaFilter
+						:categorias="categorias"
+						@on-selected="filterByCategoria"
+					/>
+
+					<!-- Only show subcategory filter when categories are selected -->
+					<SubDivisionFilter
+						v-if="activeFilters.categorias && activeFilters.categorias.length > 0"
+						:productos="productos"
+						@on-selected="filterBySubcategoria"
+					></SubDivisionFilter>
+					<PriceFilter
+						:products="productos"
+						@on-selected="filterByPrecio"
+					/>
+
+					<!-- Favorites Filter -->
+					<div v-if="favoritesStore.hasFavorites"
+						class="mb-4">
+						<div class="flex items-center justify-between">
+							<label class="text-sm font-medium text-gray-700"
+								for="favorites-filter">
+								Solo favoritos
+							</label>
+							<button
+								:class="showFavoritesOnly ? 'bg-red-500' : 'bg-gray-200'"
+								class="flex items-center justify-center w-10 h-6 rounded-full"
+								@click="toggleFavoritesFilter"
+							>
+								<span
+									:class="showFavoritesOnly ? 'translate-x-2' : '-translate-x-2'"
+									class="w-4 h-4 rounded-full transform transition-transform duration-200 bg-white"
+								></span>
+							</button>
+						</div>
+						<p class="text-xs text-gray-500 mt-1">
+							{{
+								showFavoritesOnly ? 'Mostrando solo productos favoritos' : 'Mostrando todos los productos'
+							}}
+						</p>
+					</div>
+
 					<!-- Clear Filters Button -->
 					<button
 						class="mt-4 w-full py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm"
@@ -55,35 +94,40 @@
 			<!-- Products Section -->
 			<div class="flex-1">
 				<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
-					<ProductCounterBadge :filtered-products="filteredProducts"
-										 :paginated-products="paginatedProducts"/>
+					<ProductCounterBadge
+						:filtered-products="productos"
+						:paginated-products="paginatedProducts"
+					/>
+
 					<select
 						class="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full sm:w-auto"
+						@change="(event) => ordenarPor(event.target.value)"
 					>
-						<option>Mas Popular</option>
-						<option>Nuevos</option>
-						<option>Precio: Bajo</option>
-						<option>Precio: Alto</option>
+						<option class="text-gray-300"
+							selected>-- Sin Ordenar --
+						</option>
+						<option value="precio_asc">Precio: Bajo al alto</option>
+						<option value="precio_desc">Precio: Alto al bajo</option>
 					</select>
-
-
 				</div>
 
 				<!-- Product Grid - Responsive columns -->
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-					<!--					<ProductCartLoading></ProductCartLoading>-->
 					<ProductCartLoading v-for="row in 9"
-										v-if="loading"/>
-					<ProductCard v-for="product in paginatedProducts"
-								 v-else
-								 :key="product.codigo"
-								 :product="product"/>
+						v-if="loading"
+						:key="'loading-'+row"/>
+					<ProductCard
+						v-for="product in paginatedProducts"
+						v-else
+						:key="product.codigo"
+						:product="product"
+					/>
 				</div>
 
 				<!-- Pagination -->
 				<div class="mt-8 flex justify-center">
 					<nav aria-label="Pagination"
-						 class="flex flex-wrap items-center justify-center gap-2">
+						class="flex flex-wrap items-center justify-center gap-2">
 						<!-- Previous page button -->
 						<button
 							:class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
@@ -93,30 +137,30 @@
 						>
 							<span class="sr-only">Previous</span>
 							<svg aria-hidden="true"
-								 class="h-5 w-5"
-								 fill="currentColor"
-								 viewBox="0 0 20 20"
-								 xmlns="http://www.w3.org/2000/svg">
+								class="h-5 w-5"
+								fill="currentColor"
+								viewBox="0 0 20 20"
+								xmlns="http://www.w3.org/2000/svg">
 								<path clip-rule="evenodd"
-									  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-									  fill-rule="evenodd"/>
+									d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+									fill-rule="evenodd"/>
 							</svg>
 						</button>
 
 						<!-- Page numbers - Hide some on small screens -->
 						<template v-for="page in displayedPages"
-								  :key="page">
-              <span
-				  v-if="page === '...'"
-				  class="hidden sm:inline-block px-3 py-2 text-gray-500"
-			  >
-                ...
-              </span>
+							:key="page">
+							<span
+								v-if="page === '...'"
+								class="hidden sm:inline-block px-3 py-2 text-gray-500"
+							>
+								...
+							</span>
 							<button
 								v-else
 								:class="page === currentPage
-                ? 'bg-black text-white border border-gray-500'
-                : 'border border-gray-300 text-gray-700 hover:bg-gray-50'"
+									? 'bg-black text-white border border-gray-500'
+									: 'border border-gray-300 text-gray-700 hover:bg-gray-50'"
 								class="px-3 py-2 rounded-md text-sm font-medium"
 								@click="goToPage(page)"
 							>
@@ -133,13 +177,13 @@
 						>
 							<span class="sr-only">Next</span>
 							<svg aria-hidden="true"
-								 class="h-5 w-5"
-								 fill="currentColor"
-								 viewBox="0 0 20 20"
-								 xmlns="http://www.w3.org/2000/svg">
+								class="h-5 w-5"
+								fill="currentColor"
+								viewBox="0 0 20 20"
+								xmlns="http://www.w3.org/2000/svg">
 								<path clip-rule="evenodd"
-									  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-									  fill-rule="evenodd"/>
+									d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+									fill-rule="evenodd"/>
 							</svg>
 						</button>
 					</nav>
@@ -152,101 +196,63 @@
 <script>
 import 'font-awesome/css/font-awesome.min.css';
 import ProductCounterBadge from "~/components/ProductCounterBadge.vue";
+import {useProductos} from "~/composables/useProductos.js";
+import {useFavoritesStore} from "~/stores/favorites.js";
 
 export default {
 	components: {ProductCounterBadge},
-	inject: ['bus'],
-	props: {
-		products: {
-			type: Array,
-			required: true
-		},
-		loading: {
-			type: Boolean,
-			default: false
-		}
+
+	setup() {
+		const {
+			productos,
+			categorias,
+			loading,
+			filterByCategoria,
+			filterByPrecio,
+			filterByFavoritos,
+			filterBySubcategoria,
+			ordenarPor,
+			activeFilters
+		} = useProductos();
+
+		const favoritesStore = useFavoritesStore();
+		const {$bus} = useNuxtApp();
+
+		return {
+			productos,
+			categorias,
+			loading,
+			filterByCategoria,
+			filterByPrecio,
+			filterByFavoritos,
+			filterBySubcategoria,
+			ordenarPor,
+			favoritesStore,
+			bus: $bus,
+			activeFilters
+		};
 	},
 
 	data() {
 		return {
 			currentPage: 1,
 			itemsPerPage: 9,
-			selectedCategories: [],
-
-			priceFilter: 0,
-			inStockOnly: false,
+			showFavoritesOnly: false,
 			showFilters: false, // For mobile filter toggle
-			categorias: [],
-			codigoCategorias: [], // codigo de las categorias
-			codigoLineas: [], //codigo de lineas
-			precioSeleccionado: 0
-
 		};
 	},
 
 	computed: {
-		// Dynamic filter values
-		uniqueCategories() {
-			return [...new Set(this.products.map(product => product.categoria))].filter(Boolean).sort();
-		},
-
-		minPrice() {
-			if (this.products.length === 0) return 0;
-			return Math.floor(Math.min(...this.products.map(product => Number(product.precio) || 0)));
-		},
-
-		maxPrice() {
-			if (this.products.length === 0) return 0;
-			return Math.ceil(Math.max(...this.products.map(product => Number(product.precio) || 0)));
-		},
-
-		// Apply filters to products
-		filteredProducts() {
-
-
-			/**
-			 *
-			 * @param item {Producto}
-			 * @param filter {Array[Number]}
-			 * @returns {boolean}
-			 */
-			function filter_by_categoria(item, filter) {
-				return filter.includes(item.categoria);
-			}
-
-			/**
-			 *
-			 * @param item {Producto}
-			 * @param filter {Array[Number]}
-			 * @returns {boolean}
-			 */
-			function filter_by_linea(item, filter) {
-				return filter.includes(item.codigo_division);
-			}
-
-			function filter_by_price(item, filter) {
-				return item.precio <= filter
-			}
-
-			if (this.codigoCategorias.length === 0) {
-				return this.products
-			}
-
-			return this.products.filter(item => filter_by_categoria(item, this.codigoCategorias))
-
-
-		},
-
 		// Get products for the current page from filtered products
 		paginatedProducts() {
 			const startIndex = (this.currentPage - 1) * this.itemsPerPage;
 			const endIndex = startIndex + this.itemsPerPage;
-			return this.filteredProducts.slice(startIndex, endIndex);
+			return this.productos.slice(startIndex, endIndex);
 		},
 
 		// Calculate total number of pages based on filtered products
 		totalPages() {
-			return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+			return Math.ceil(this.productos.length / this.itemsPerPage);
 		},
 
 		// Calculate which page numbers to display
@@ -292,24 +298,34 @@ export default {
 	},
 
 	watch: {
-		// Reset to page 1 when filters change
-		filteredProducts() {
+		// Reset to page 1 when products change
+		'productos.length'() {
 			this.currentPage = 1;
 		}
 	},
 
 	methods: {
-		// Format price with thousands separator
-		formatPrice(price) {
-			return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+		// Toggle favorites filter
+		toggleFavoritesFilter() {
+			this.showFavoritesOnly = !this.showFavoritesOnly;
+
+			if (this.showFavoritesOnly) {
+				// Get array of favorited product IDs
+				const favoriteIds = this.favoritesStore.favorites.map(item => item.codigo.toString());
+				this.filterByFavoritos(favoriteIds);
+			} else {
+				this.filterByFavoritos([]);
+			}
 		},
 
 		// Clear all filters
 		clearFilters() {
-			this.selectedCategories = [];
-			this.priceFilter = this.maxPrice;
-			this.inStockOnly = false;
-			this.$bus.emit('clear-filters')
+			this.showFavoritesOnly = false;
+			this.bus.emit('clear-filters');
+			this.filterByCategoria([]);
+			this.filterBySubcategoria([]);
+			this.filterByPrecio(0);
+			this.filterByFavoritos([]);
 		},
 
 		// Go to specific page
@@ -338,15 +354,11 @@ export default {
 		scrollToTop() {
 			window.scrollTo({top: 0, behavior: 'smooth'});
 		},
-
-
 	},
 
-	created() {
-		// Initialize price filter to max price
-		this.$nextTick(() => {
-
-		});
+	mounted() {
+		// Load favorites on component mount
+		this.favoritesStore.loadFavorites();
 	}
 }
 </script>

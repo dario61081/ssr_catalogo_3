@@ -41,24 +41,26 @@ export class Seleccion extends Model {
 export class Producto extends Model {
 	/**
 	 *
-	 * @param codigo {Number}
-	 * @param nombre {String }
-	 * @param categoria {Number}
-	 * @param precio {Number}
-	 * @param imagen {String}
-	 * @param stock {Number}
-	 * @param codigo_division {Number}
-	 * @param desc_division {String}
+	 * @param codigo
+	 * @param nombre
+	 * @param codigo_categoria
+	 * @param desc_categoria
+	 * @param precio
+	 * @param imagen
+	 * @param stock
+	 * @param codigo_division
+	 * @param desc_division
 	 */
-	constructor(codigo, nombre, categoria, precio, imagen, stock,
-				codigo_division, desc_division) {
+	constructor(codigo, nombre, codigo_categoria, desc_categoria, precio, imagen, stock, codigo_division, desc_division) {
 		super();
 		/** @type {Number} */
 		this.codigo = codigo
 		/** @type {String} */
 		this.nombre = nombre
 		/** @type {Number} SE OBTIENE DESDE DIVISION */
-		this.categoria = categoria
+		this.codigo_categoria = codigo_categoria
+		/** @type {String} */
+		this.desc_categoria = desc_categoria
 		/** @type {Number} */
 		this.precio = precio
 		/** @type {String} */
@@ -76,12 +78,20 @@ export class Producto extends Model {
 	}
 }
 
-export class Linea extends Model {
+export class Categoria extends Model {
 	constructor(codigo, nombre) {
 		super();
 		/** @type {string} */
 		this.codigo = codigo
 		/** @type {string} */
+		this.nombre = nombre
+	}
+}
+
+export class SubCategoria extends Model {
+	constructor(codigo, nombre) {
+		super();
+		this.codigo = codigo
 		this.nombre = nombre
 	}
 }

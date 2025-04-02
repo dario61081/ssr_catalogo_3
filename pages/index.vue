@@ -1,18 +1,16 @@
 <template>
 	<div class="min-h-screen bg-gray-50">
 		<Header @on-search="(filter)=>abrirBuscador()"
-				@open-cart="abrirCarrito"/>
+			@open-cart="abrirCarrito"/>
 		<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 			<div class="flex gap-8">
-				<!--        <Sidebar :precio_maximo="precio_maximo" :precio_minimo="precio_minimo" @on-filters="(filters)=>{}"/>-->
-				<ProductGrid :loading="loading"
-							 :products="productos"/>
+				<ProductGrid/>
 			</div>
 		</main>
 		<CartAsideViewer :isOpen="isCartOpen"
-						 @close="cerrarCarrito"/>
+			@close="cerrarCarrito"/>
 		<SearchAsideViewer :isOpen="isSearchOpen"
-						   @close="cerrarBuscador"/>
+			@close="cerrarBuscador"/>
 		<FabChatButton></FabChatButton>
 		<Footer></Footer>
 	</div>
@@ -21,52 +19,18 @@
 <script>
 import 'font-awesome/css/font-awesome.min.css'
 import 'animate.css/animate.compat.css'
-import {Producto} from "~/models";
-import numeral from "numeral"
 
 export default {
 
 	data() {
 		return {
-			/** @type {Producto[]} */
-			productos: [],
 			filtros: [],
 			isCartOpen: false,
 			isSearchOpen: false,
-			loading: true
 		}
 	},
 	methods: {
-		get_data() {
-			this.loading = true
-			fetch('/api/articulos')
-				.then(res => res.json())
-				.then(res => {
-					// convertir precio a numero
-					res.forEach(item => {
-						console.log(item.PRECIO)
-						//use regex para retirar los puntos
-						item.PRECIO = item.PRECIO.replace('.', '')
-						item.PRECIO = numeral(item.PRECIO).value()
-					})
-					console.log('res 1', res)
 
-					this.productos = res.map(item => {
-						return new Producto(
-							item.ART_COD,
-							item.ART_DESCRIPCION,
-							item.DIVISION,
-							item.PRECIO,
-							item.ART_DIR_IMAG1,
-							item.STOCK,
-							item.DIV_CLASS,
-							item.DIV_CLAS_DESC)
-					})
-				})
-				.finally(() => {
-					this.loading = false
-				})
-		},
 		cerrarCarrito() {
 			this.isCartOpen = false
 		},
@@ -80,9 +44,7 @@ export default {
 			this.isSearchOpen = true
 		}
 	},
-	mounted() {
-		this.get_data()
-	},
+
 }
 
 

@@ -1,5 +1,5 @@
 <script lang="ts"
-		setup>
+	setup>
 import {onMounted, ref} from 'vue';
 import {Producto} from '~/models';
 import {useRoute} from 'vue-router';
@@ -35,10 +35,13 @@ onMounted(async () => {
 			producto.value = new Producto(
 				data.ART_COD,
 				data.ART_DESCRIPCION,
-				data.LINEA,
-				data.PRECIO,
+				data.DIVISION,
+				data.DIV_DESC,
+				parseInt(data.PRECIO.toString().replace('.', ''), 0),
 				data.ART_DIR_IMAG1,
-				data.STOCK
+				data.STOCK,
+				data.DIV_CLAS,
+				data.DIV_CLAS_DESC
 			);
 
 			// Initialize product images array
@@ -86,48 +89,48 @@ const buyNow = () => {
 		<!-- Breadcrumbs -->
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 			<nav aria-label="Breadcrumb"
-				 class="flex">
+				class="flex">
 				<ol class="flex items-center space-x-2">
 					<li>
 						<NuxtLink class="text-gray-500 hover:text-gray-700"
-								  to="/">Products
+							to="/">Products
 						</NuxtLink>
 					</li>
 					<li class="flex items-center">
 						<svg class="h-5 w-5 text-gray-400"
-							 fill="currentColor"
-							 viewBox="0 0 20 20">
+							fill="currentColor"
+							viewBox="0 0 20 20">
 							<path clip-rule="evenodd"
-								  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-								  fill-rule="evenodd"/>
+								d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+								fill-rule="evenodd"/>
 						</svg>
 						<NuxtLink v-if="producto"
-								  :to="`/categoria/${producto.categoria}`"
-								  class="ml-2 text-gray-500 hover:text-gray-700">{{ producto.categoria }}
+							:to="`/categoria/${producto.categoria}`"
+							class="ml-2 text-gray-500 hover:text-gray-700">{{ producto.categoria }}
 						</NuxtLink>
 					</li>
 					<li class="flex items-center">
 						<svg class="h-5 w-5 text-gray-400"
-							 fill="currentColor"
-							 viewBox="0 0 20 20">
+							fill="currentColor"
+							viewBox="0 0 20 20">
 							<path clip-rule="evenodd"
-								  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-								  fill-rule="evenodd"/>
+								d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+								fill-rule="evenodd"/>
 						</svg>
 						<span v-if="producto"
-							  class="ml-2 text-gray-700 font-medium">{{ producto.nombre }}</span>
+							class="ml-2 text-gray-700 font-medium">{{ producto.nombre }}</span>
 					</li>
 				</ol>
 			</nav>
 		</div>
 
 		<div v-if="loading"
-			 class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex justify-center">
+			class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex justify-center">
 			<div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
 		</div>
 
 		<div v-else-if="producto"
-			 class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 				<!-- Product Images Carousel -->
 				<div class="bg-gray-100 rounded-lg overflow-hidden">
@@ -138,7 +141,7 @@ const buyNow = () => {
 				<div>
 					<!-- Category -->
 					<NuxtLink :to="`/categoria/${producto.categoria}`"
-							  class="text-blue-600 hover:underline">
+						class="text-blue-600 hover:underline">
 						{{ producto.categoria }}
 					</NuxtLink>
 
@@ -149,11 +152,11 @@ const buyNow = () => {
 					<div class="flex items-center mt-4">
 						<div class="flex">
 							<template v-for="i in 5"
-									  :key="i">
+								:key="i">
 								<svg :class="i <= 4 ? 'text-yellow-400' : 'text-gray-300'"
-									 class="h-5 w-5 flex-shrink-0"
-									 fill="currentColor"
-									 viewBox="0 0 20 20">
+									class="h-5 w-5 flex-shrink-0"
+									fill="currentColor"
+									viewBox="0 0 20 20">
 									<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
 								</svg>
 							</template>
@@ -220,11 +223,11 @@ const buyNow = () => {
 		</div>
 
 		<div v-else
-			 class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+			class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
 			<h2 class="text-2xl font-bold text-gray-900">Product not found</h2>
 			<p class="mt-2 text-gray-600">The product you're looking for doesn't exist or has been removed.</p>
 			<NuxtLink class="mt-4 inline-block text-blue-600 hover:underline"
-					  to="/">Return to home page
+				to="/">Return to home page
 			</NuxtLink>
 		</div>
 	</div>

@@ -8,7 +8,8 @@
 		{{ product.stock > 0 ? 'En Stock' : 'Sin Stock' }}
 	</div>
 </template>
-<script setup>
+<script lang="ts"
+	setup>
 
 import {Producto} from "~/models.js";
 
