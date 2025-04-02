@@ -1,6 +1,6 @@
 <template>
 	<transition mode="out-in"
-				name="fade">
+		name="fade">
 		<div
 			class="relative flex flex-col h-full bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
 			<!-- Stock Badge -->
@@ -45,14 +45,14 @@
 						@click.stop="openPreview"
 					>
 						<svg class="h-5 w-5 text-gray-600"
-							 fill="none"
-							 stroke="currentColor"
-							 viewBox="0 0 24 24"
-							 xmlns="http://www.w3.org/2000/svg">
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg">
 							<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-								  stroke-linecap="round"
-								  stroke-linejoin="round"
-								  stroke-width="2"/>
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"/>
 							<path
 								d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
 								stroke-linecap="round"
@@ -84,10 +84,10 @@
 						@click="handleCartClick"
 					>
 						<svg class="h-4 w-4 mr-1"
-							 fill="none"
-							 stroke="currentColor"
-							 viewBox="0 0 24 24"
-							 xmlns="http://www.w3.org/2000/svg">
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg">
 							<path
 								d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
 								stroke-linecap="round"
@@ -123,11 +123,11 @@ import {computed, onMounted, ref} from 'vue';
 import {useNuxtApp} from '#imports';
 import ProductCardImageTheater from './ProductCardImageTheater.vue';
 import {useFavoritesStore} from '~/stores/favorites';
-import {utils} from '~/composables/utils';
+import {utilidades} from '~/composables/utilidades.js';
 
 const {$bus} = useNuxtApp();
 const favoritesStore = useFavoritesStore();
-const formatPrecio = utils().formatPrecio;
+const formatPrecio = utilidades().formatPrecio;
 const props = defineProps({
 	/** @type {Producto} */
 	product: {
