@@ -78,12 +78,20 @@ export class Producto extends Model {
 	}
 }
 
-export class Linea extends Model {
+export class Categoria extends Model {
 	constructor(codigo, nombre) {
 		super();
 		/** @type {string} */
 		this.codigo = codigo
 		/** @type {string} */
+		this.nombre = nombre
+	}
+}
+
+export class SubCategoria extends Model {
+	constructor(codigo, nombre) {
+		super();
+		this.codigo = codigo
 		this.nombre = nombre
 	}
 }

@@ -1,113 +1,82 @@
 <template>
-	<h4 class="font-medium mb-2">Categorias</h4>
-	<!--	<label class="flex items-center mb-2">-->
-	<!--		<input-->
-	<!--			v-model="filtroPrecio"-->
-	<!--			class="rounded border-gray-300 text-indigo-600"-->
-	<!--			type="checkbox"-->
-	<!--		>-->
-	<!--		<span class="ml-2 text-gray-700 text-sm">Filtrar por precio</span>-->
-	<!--	</label>-->
-	<div class="mb-4">
-		<div class="space-y-2  ">
-			<template v-for="row in 15"
-					  v-if="loading">
-				<CheckboxLoading></CheckboxLoading>
-			</template>
-			<label v-for="categoria in categorias"
-				   v-else
-				   class="flex items-center">
+	<div class="mb-6">
+		<h4 class="font-medium mb-2">Categorías</h4>
+		<div class="space-y-2">
+			<label
+				v-for="categoria in categorias"
+				:key="categoria.codigo"
+				class="flex items-center"
+			>
 				<input
-					v-model="categoria._checked"
+					v-model="selectedCategories"
+					:value="categoria.codigo"
 					class="rounded border-gray-300 text-gray-500 text-sm"
 					type="checkbox"
-					@change="$emit('on-selected', seleccionados)"
 				>
 				<span class="ml-2 text-gray-700 text-sm">
-     				{{ categoria.nombre }} ( {{ countItems(categoria.codigo) }} )
-        		</span>
-				<!--				<span class="ml-2 text-gray-700 text-sm"-->
-				<!--					  style="text-overflow: ellipsis; white-space: nowrap;">-->
-				<!--     				{{ categoria.nombre }} ( {{ countItems(categoria.codigo) }} )-->
-				<!--        		</span>-->
+					{{ categoria.nombre }}
+				</span>
 			</label>
+
+			<div v-if="categorias.length === 0"
+				class="text-sm text-gray-500 italic">
+				No hay categorías disponibles
+			</div>
 		</div>
 	</div>
-
 </template>
+
 <script>
-import {Linea} from "~/models.js";
 
 export default {
-	inject: ['bus'],
-	emits: ['vnode-unmounted', "on-selected"],
+	emits: ["on-selected"],
+
 	props: {
-		/** @type {Producto[]} */
-		productos: {
+		categorias: {
 			type: Array,
 			required: true,
+			default: () => []
 		}
 	},
+
+	setup() {
+		const {$bus} = useNuxtApp();
+		return {bus: $bus};
+	},
+
 	data() {
 		return {
-			/** @type {Linea[]} */
-			categorias: [],
-			loading: true
-		}
+			selectedCategories: []
+		};
 	},
-	methods: {
-		countItems(codigo) {
-			return this.productos.filter(producto => producto.categoria === codigo).length
-		},
 
-// {
-// 	"DIV_CODIGO": 8,
-// 	"DIV_DESC": "LIVING ROOM",
-// 	"DIV_ESTADO": "A",
-// 	"DIV_ORDEN": 1,
-// 	"DIV_DIR_IMAGEN": null
-// }
-		get_data() {
-			this.loading = true
-			fetch('/api/categorias')
-				.then(res => res.json())
-				.then(res => {
-					console.log('res', res)
-					this.categorias = res.map(item => {
-						const row = new Linea()
-						row.codigo = item.DIV_CODIGO
-						row.nombre = item.DIV_DESC
-						return row
-					})
-				})
-				.finally(() => {
-					console.log(this.categorias)
-					this.loading = false
-				})
-		},
-		get_seleccionados() {
-			return this.categorias.filter(item => item._checked).map(item => item.codigo)
+	watch: {
+		selectedCategories: {
+			handler() {
+				this.$emit('on-selected', this.selectedCategories);
+			},
+			deep: true
 		}
 	},
-	computed: {
-		seleccionados() {
-			return this.get_seleccionados()
-		}
-	},
+
 	mounted() {
-		this.get_data()
-		this.$bus.on('clear-filters', () => {
-			this.categorias.forEach(item => item._checked = false)
-			this.$emit('on-selected', this.get_seleccionados())
-		})
+		// Listen for clear-filters event
+		this.bus.on('clear-filters', this.clearSelection);
 	},
+
 	unmounted() {
-		this.$bus.off('clear-filters')
+		// Clean up event listener
+		this.bus.off('clear-filters', this.clearSelection);
+	},
+
+	methods: {
+		clearSelection() {
+			this.selectedCategories = [];
+		}
 	}
-}
+};
 </script>
 
-
 <style scoped>
-
+/* Add any custom styles here */
 </style>

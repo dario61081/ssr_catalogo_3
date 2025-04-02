@@ -124,14 +124,15 @@ import {useNuxtApp} from '#imports';
 import ProductCardImageTheater from './ProductCardImageTheater.vue';
 import {useFavoritesStore} from '~/stores/favorites';
 import {utilidades} from '~/composables/utilidades.js';
+import {Producto} from "~/models.js";
 
 const {$bus} = useNuxtApp();
 const favoritesStore = useFavoritesStore();
 const formatPrecio = utilidades().formatPrecio;
+
 const props = defineProps({
-	/** @type {Producto} */
 	product: {
-		type: Object,
+		type: Producto,
 		required: true
 	}
 });
