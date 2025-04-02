@@ -27,7 +27,7 @@ interface ArticuloResponse {
 
 interface FilterOptions {
 	categorias?: number[];
-	subcategorias?: number[];
+	subcategorias?: { categoria: number; subcategoria: number }[];
 	precio?: number;
 	favoritos?: string[];
 }
@@ -131,7 +131,10 @@ export const useProductos = () => {
 		// Apply subcategory (division) filter
 		if (activeFilters.value.subcategorias && activeFilters.value.subcategorias.length > 0) {
 			filteredProducts = filteredProducts.filter((producto: Producto) => 
-				activeFilters.value.subcategorias?.includes(producto.codigo_division)
+				activeFilters.value.subcategorias?.some(subcategoria => 
+					subcategoria.categoria === producto.codigo_categoria && 
+					subcategoria.subcategoria === producto.codigo_division
+				) || false
 			);
 		}
 		
@@ -157,7 +160,7 @@ export const useProductos = () => {
 		applyFilters();
 	};
 	
-	const filterBySubcategoria = (subcategorias: number[]) => {
+	const filterBySubcategoria = (subcategorias: { categoria: number; subcategoria: number }[]) => {
 		activeFilters.value.subcategorias = subcategorias.length > 0 ? subcategorias : undefined;
 		applyFilters();
 	};

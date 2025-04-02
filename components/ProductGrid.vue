@@ -48,6 +48,8 @@
 					<SubDivisionFilter
 						v-if="activeFilters.categorias && activeFilters.categorias.length > 0"
 						:productos="productos"
+						:allProducts="cacheProductos"
+						:activeCategories="activeFilters.categorias"
 						@on-selected="filterBySubcategoria"
 					></SubDivisionFilter>
 					<PriceFilter
@@ -119,8 +121,8 @@
 					<ProductCard
 						v-for="product in paginatedProducts"
 						v-else
-						:key="product.codigo"
 						:product="product"
+						:key="product.codigo"
 					/>
 				</div>
 
@@ -212,7 +214,8 @@ export default {
 			filterByFavoritos,
 			filterBySubcategoria,
 			ordenarPor,
-			activeFilters
+			activeFilters,
+			cacheProductos
 		} = useProductos();
 
 		const favoritesStore = useFavoritesStore();
@@ -229,7 +232,8 @@ export default {
 			ordenarPor,
 			favoritesStore,
 			bus: $bus,
-			activeFilters
+			activeFilters,
+			cacheProductos
 		};
 	},
 
@@ -239,6 +243,7 @@ export default {
 			itemsPerPage: 9,
 			showFavoritesOnly: false,
 			showFilters: false, // For mobile filter toggle
+			previousCategories: [], // Track previous category selection
 		};
 	},
 
@@ -305,14 +310,40 @@ export default {
 	},
 
 	methods: {
-		// Filter by category and reset subcategory filter
+		// Filter by category and reset subcategory filter only when categories change
 		filterByCategoriaAndResetSub(categorias) {
-			// First reset subcategory filter
-			this.filterBySubcategoria([]);
-			// Then apply category filter
+			// Check if the category selection has actually changed
+			const hasChanged = this.haveCategoriesChanged(this.previousCategories, categorias);
+			
+			// Apply category filter
 			this.filterByCategoria(categorias);
-			// Emit event to reset subcategory UI
-			this.bus.emit('reset-subcategories');
+			
+			// If categories have changed, reset subcategories
+			if (hasChanged) {
+				this.filterBySubcategoria([]);
+				this.bus.emit('reset-subcategories');
+			}
+			
+			// Update previous categories for next comparison
+			this.previousCategories = [...categorias];
+		},
+		
+		// Helper to check if category selections have changed
+		haveCategoriesChanged(previous, current) {
+			// Different lengths means the selection has changed
+			if (previous.length !== current.length) return true;
+			
+			// Check if any category is in one array but not the other
+			for (const category of previous) {
+				if (!current.includes(category)) return true;
+			}
+			
+			for (const category of current) {
+				if (!previous.includes(category)) return true;
+			}
+			
+			// If we get here, the selections are the same
+			return false;
 		},
 
 		// Toggle favorites filter

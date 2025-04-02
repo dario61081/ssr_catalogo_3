@@ -8,7 +8,8 @@ export const utilidades = () => {
 	 */
 	const formatPrecio = (price) => {
 		if (!price) return '0';
-		return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+		return price.toString()
+			.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 	};
 
 	return {

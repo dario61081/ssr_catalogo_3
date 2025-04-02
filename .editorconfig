@@ -12,7 +12,18 @@ insert_final_newline = true
 ij_any_keep_indents_on_empty_lines = false
 ij_typescript_enum_constants_wrap = split_into_lines
 ij_javascript_align_multiline_parameters = true
-
+ij_any_ternary_operation_wrap = split_into_lines
+ij_javascript_method_call_chain_wrap = split_into_lines
+ij_any_method_parameters_wrap = split_into_lines
+ij_javascript_method_parameters_wrap = split_into_lines
+ij_any_method_call_chain_wrap = split_into_lines
+ij_any_wrap_long_lines = true
+ij_any_array_initializer_wrap = split_into_lines
+ij_any_extends_list_wrap = split_into_lines
+ij_any_wrap_comments = true
+ij_any_prefer_parameters_wrap = true
+# ij_javascript_method_chain_wrap = split_into_lines
+# ij_javascript_method_call_chain_wrap = split_into_lines
 # Matches multiple programming languages. See scope definitions:
 # https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Options
 # [*.{js,py}]
@@ -22,6 +33,8 @@ ij_javascript_align_multiline_parameters = true
 trim_trailing_whitespace = false
 
 [*.vue]
+
+ij_xml_attribute_wrap = split_into_lines
 ij_html_align_attributes = false
 ij_html_attribute_wrap = split_into_lines
 ij_html_inline_tags = 1
