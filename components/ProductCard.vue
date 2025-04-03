@@ -72,31 +72,57 @@
 					<p class="text-base  sm:text-lg font-bold text-gray-900">
 						Gs. {{ formatPrecio(product.precio) }}
 					</p>
-					<button
-						:class="[
-              'mt-3 w-full text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-colors duration-200',
-              product.stock > 0 
-                ? 'bg-gray-500 hover:bg-gray-600 cursor-pointer' 
-                : 'bg-gray-300 cursor-not-allowed'
-            ]"
-						:disabled="product.stock <= 0"
-						:title="product.stock <= 0 ? 'Producto sin stock' : ''"
-						@click="handleCartClick"
-					>
-						<svg class="h-4 w-4 mr-1"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							xmlns="http://www.w3.org/2000/svg">
-							<path
-								d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-							/>
-						</svg>
-						{{ product.stock > 0 ? 'Agregar al carrito' : 'Sin stock' }}
-					</button>
+					<div class="grid grid-cols-2 gap-2 mt-3">
+						<!-- Botón Ver Detalles -->
+						<button
+							class="text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-colors duration-200 bg-gray-700 hover:bg-gray-800 cursor-pointer"
+							@click="viewProductDetails"
+						>
+							<svg class="h-4 w-4 mr-1"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg">
+								<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"/>
+								<path
+									d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"/>
+							</svg>
+							Ver detalles
+						</button>
+						
+						<!-- Botón Agregar al Carrito -->
+						<button
+							:class="[
+							  'text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-colors duration-200',
+							  product.stock > 0 
+								? 'bg-gray-500 hover:bg-gray-600 cursor-pointer' 
+								: 'bg-gray-300 cursor-not-allowed'
+							]"
+							:disabled="product.stock <= 0"
+							:title="product.stock <= 0 ? 'Producto sin stock' : ''"
+							@click="handleCartClick"
+						>
+							<svg class="h-4 w-4 mr-1"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+								/>
+							</svg>
+							{{ product.stock > 0 ? 'Agregar' : 'Sin stock' }}
+						</button>
+					</div>
 				</div>
 			</div>
 
@@ -183,6 +209,8 @@ function toggleFavorite() {
 
 function openPreview() {
 	isPreviewOpen.value = true;
+	// Emitir evento de producto visto
+	$bus.emit('product-viewed', props.product);
 }
 
 function closePreview() {
@@ -191,10 +219,19 @@ function closePreview() {
 
 function openImageTheater() {
 	isImageTheaterOpen.value = true;
+	// Emitir evento de producto visto
+	$bus.emit('product-viewed', props.product);
 }
 
 function closeImageTheater() {
 	isImageTheaterOpen.value = false;
+}
+
+function viewProductDetails() {
+	// Emitir evento de producto visto
+	$bus.emit('product-viewed', props.product);
+	// Abrir vista previa
+	openPreview();
 }
 
 // Cargar el estado inicial de favoritos

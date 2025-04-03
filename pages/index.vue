@@ -1,7 +1,8 @@
 <template>
 	<div class="min-h-screen bg-gray-50">
 		<Header @on-search="(filter)=>abrirBuscador()"
-			@open-cart="abrirCarrito"/>
+			@open-cart="abrirCarrito"
+			@open-history="abrirHistorial"/>
 		<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 			<div class="flex gap-8">
 				<ProductGrid/>
@@ -11,6 +12,8 @@
 			@close="cerrarCarrito"/>
 		<SearchAsideViewer :isOpen="isSearchOpen"
 			@close="cerrarBuscador"/>
+		<ProductViewHistory :isOpen="isHistoryOpen"
+			@close="cerrarHistorial"/>
 		<FabChatButton></FabChatButton>
 		<Footer></Footer>
 	</div>
@@ -27,6 +30,7 @@ export default {
 			filtros: [],
 			isCartOpen: false,
 			isSearchOpen: false,
+			isHistoryOpen: false,
 		}
 	},
 	methods: {
@@ -42,6 +46,12 @@ export default {
 		},
 		abrirBuscador() {
 			this.isSearchOpen = true
+		},
+		cerrarHistorial() {
+			this.isHistoryOpen = false
+		},
+		abrirHistorial() {
+			this.isHistoryOpen = true
 		}
 	},
 

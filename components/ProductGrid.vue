@@ -37,7 +37,6 @@
 						<i class="fa fa-filter text-gray-400"></i>
 						Filtros
 					</h3>
-					<Loading v-if="loading"></Loading>
 
 					<CategoriaFilter
 						:categorias="categorias"
@@ -113,8 +112,11 @@
 					</select>
 				</div>
 
+				<!-- Modal Loader -->
+				<Loader v-if="isFiltering" />
+
 				<!-- Product Grid - Responsive columns -->
-				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+				<div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 					<ProductCartLoading v-for="row in 9"
 						v-if="loading"
 						:key="'loading-'+row"/>
@@ -200,9 +202,10 @@ import 'font-awesome/css/font-awesome.min.css';
 import ProductCounterBadge from "~/components/ProductCounterBadge.vue";
 import {useProductos} from "~/composables/useProductos.js";
 import {useFavoritesStore} from "~/stores/favorites.js";
+import Loader from "~/components/Loader.vue";
 
 export default {
-	components: {ProductCounterBadge},
+	components: {ProductCounterBadge, Loader},
 
 	setup() {
 		const {
@@ -244,6 +247,7 @@ export default {
 			showFavoritesOnly: false,
 			showFilters: false, // For mobile filter toggle
 			previousCategories: [], // Track previous category selection
+			isFiltering: false, // Track when filters are being applied
 		};
 	},
 
@@ -312,6 +316,9 @@ export default {
 	methods: {
 		// Filter by category and reset subcategory filter only when categories change
 		filterByCategoriaAndResetSub(categorias) {
+			// Show loader
+			this.isFiltering = true;
+			
 			// Check if the category selection has actually changed
 			const hasChanged = this.haveCategoriesChanged(this.previousCategories, categorias);
 			
@@ -326,6 +333,11 @@ export default {
 			
 			// Update previous categories for next comparison
 			this.previousCategories = [...categorias];
+			
+			// Hide loader after a short delay to ensure the UI has updated
+			setTimeout(() => {
+				this.isFiltering = false;
+			}, 500);
 		},
 		
 		// Helper to check if category selections have changed
@@ -348,6 +360,9 @@ export default {
 
 		// Toggle favorites filter
 		toggleFavoritesFilter() {
+			// Show loading state
+			this.isFiltering = true;
+			
 			this.showFavoritesOnly = !this.showFavoritesOnly;
 
 			if (this.showFavoritesOnly) {
@@ -357,16 +372,29 @@ export default {
 			} else {
 				this.filterByFavoritos([]);
 			}
+			
+			// Hide loading state after a short delay
+			setTimeout(() => {
+				this.isFiltering = false;
+			}, 500);
 		},
 
 		// Clear all filters
 		clearFilters() {
+			// Show loading state
+			this.isFiltering = true;
+			
 			this.showFavoritesOnly = false;
 			this.bus.emit('clear-filters');
 			this.filterByCategoria([]);
 			this.filterBySubcategoria([]);
 			this.filterByPrecio(0);
 			this.filterByFavoritos([]);
+			
+			// Hide loading state after a short delay
+			setTimeout(() => {
+				this.isFiltering = false;
+			}, 500);
 		},
 
 		// Go to specific page

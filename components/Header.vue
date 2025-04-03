@@ -105,6 +105,21 @@
 					<span
 						class="absolute -top-1 -right-1 bg-gray-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
 				</button>
+				<button class="text-gray-500 hover:text-gray-900 relative"
+						@click="$emit('open-history')"
+				>
+					<svg class="h-6 w-6"
+						 fill="none"
+						 stroke="currentColor"
+						 viewBox="0 0 24 24"
+						 xmlns="http://www.w3.org/2000/svg"
+					>
+						<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"/>
+					</svg>
+				</button>
 			</div>
 
 			<!-- Mobile Menu (Collapsible) -->
@@ -183,6 +198,21 @@
 						<span
 							class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
 					</button>
+					<button class="text-gray-500 hover:text-gray-900 p-1 relative"
+							@click="$emit('open-history')"
+					>
+						<svg class="h-6 w-6"
+							 fill="none"
+							 stroke="currentColor"
+							 viewBox="0 0 24 24"
+							 xmlns="http://www.w3.org/2000/svg"
+						>
+							<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"/>
+						</svg>
+					</button>
 				</div>
 			</div>
 		</nav>
@@ -192,10 +222,10 @@
 <script>
 import {useAuthStore} from '~/stores/auth'
 import {computed, onMounted} from 'vue'
-
+import {useRoute} from 'vue-router'
 
 export default {
-	emits: ['on-search', 'open-cart'],
+	emits: ['on-search', 'open-cart', 'open-history'],
 	setup() {
 		const authStore = useAuthStore()
 		const route = useRoute()
