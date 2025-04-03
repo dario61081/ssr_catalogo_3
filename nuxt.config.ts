@@ -25,24 +25,5 @@ export default defineNuxtConfig({
 		'@': '<rootDir>/'
 	},
 	debug: false,
-	build: {
-		postcss: {
-			postcssOptions: {
-				plugins: {
-					tailwindcss: {},
-					autoprefixer: {
-						// Configuración específica para Safari
-						overrideBrowserslist: [
-							'last 3 Safari versions',
-							'last 3 iOS versions',
-							'last 3 Chrome versions',
-							'last 3 Firefox versions',
-							'last 3 Edge versions'
-						],
-						grid: 'autoplace' // Para compatibilidad con grid en Safari
-					},
-				},
-			},
-		},
-	},
+	build: {},
 })

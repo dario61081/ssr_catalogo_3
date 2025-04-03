@@ -77,7 +77,8 @@ watch(selectedCategory, (newValue) => {
     emit('on-selected', []);
   } else {
     // Si se selecciona una categoría, emitir un array con solo esa categoría
-    emit('on-selected', [newValue]);
+    // Asegurar que el valor sea numérico para que coincida con lo que espera filterByCategoria
+    emit('on-selected', [parseInt(newValue, 10)]);
   }
 });
 
