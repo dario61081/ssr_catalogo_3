@@ -1,16 +1,15 @@
 <template>
-	<footer class="bg-black text-white pt-8 pb-6">
+	<footer class="bg-black text-white py-4">
 
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<!-- Mobile Footer with Collapsible Sections -->
-
-			<div class="lg:hidden">
+			<!-- Mobile Footer with Collapsible Sections - Hidden on Desktop -->
+			<div class="lg:hidden space-y-1">
 
 				<!-- Company Info Section -->
-				<div class="border-b border-gray-800 pb-4 mb-4">
+				<div class="border-b border-gray-800 pb-2 mb-2">
 					<div class="flex items-center justify-between"
 						@click="toggleSection('company')">
-						<!--            <h3 class="text-lg font-semibold">Paraná Hogar</h3>-->
+						<!--            <h3 class="text-base font-semibold">Paraná Hogar</h3>-->
 
 
 						<svg
@@ -28,12 +27,12 @@
 						</svg>
 					</div>
 					<div v-show="openSections.company"
-						class="mt-4 space-y-3 text-gray-400">
+						class="mt-2 space-y-2 text-gray-400 text-sm">
 						<p>Encuentra todo lo que necesitas para tu hogar en un solo lugar.</p>
-						<div class="flex space-x-4 mt-4">
+						<div class="flex space-x-3 mt-2">
 							<a class="text-gray-400 hover:text-white"
 								href="#">
-								<svg class="h-6 w-6"
+								<svg class="h-5 w-5"
 									fill="currentColor"
 									viewBox="0 0 24 24">
 									<path
@@ -42,7 +41,7 @@
 							</a>
 							<a class="text-gray-400 hover:text-white"
 								href="#">
-								<svg class="h-6 w-6"
+								<svg class="h-5 w-5"
 									fill="currentColor"
 									viewBox="0 0 24 24">
 									<path
@@ -51,7 +50,7 @@
 							</a>
 							<a class="text-gray-400 hover:text-white"
 								href="#">
-								<svg class="h-6 w-6"
+								<svg class="h-5 w-5"
 									fill="currentColor"
 									viewBox="0 0 24 24">
 									<path
@@ -65,10 +64,10 @@
 				</div>
 
 				<!-- Quick Links Section -->
-				<div class="border-b border-gray-800 py-4 mb-4">
+				<div class="border-b border-gray-800 py-2 mb-2">
 					<div class="flex items-center justify-between"
 						@click="toggleSection('links')">
-						<h3 class="text-lg font-semibold">Enlaces Rápidos</h3>
+						<h3 class="text-base font-semibold">Enlaces Rápidos</h3>
 						<svg
 							:class="openSections.links ? 'rotate-180' : ''"
 							class="h-5 w-5 transform transition-transform duration-200"
@@ -99,10 +98,10 @@
 				</div>
 
 				<!-- Customer Service Section -->
-				<div class="border-b border-gray-800 py-4 mb-4">
+				<div class="border-b border-gray-800 py-2 mb-2">
 					<div class="flex items-center justify-between"
 						@click="toggleSection('service')">
-						<h3 class="text-lg font-semibold">Atención al Cliente</h3>
+						<h3 class="text-base font-semibold">Atención al Cliente</h3>
 						<svg
 							:class="openSections.service ? 'rotate-180' : ''"
 							class="h-5 w-5 transform transition-transform duration-200"
@@ -139,11 +138,80 @@
 					</div>
 				</div>
 
-				<!-- Contact Section -->
-				<div class="border-b border-gray-800 py-4 mb-4">
+				<!-- Contact Sections (Split into Branches and Contact Info) -->
+				<div class="border-b border-gray-800 py-2 mb-2">
+					<!-- Branches Section -->
+					<div class="flex items-center justify-between"
+						@click="toggleSection('branches')">
+						<h3 class="text-base font-semibold">Nuestras Sucursales</h3>
+						<svg
+							:class="openSections.branches ? 'rotate-180' : ''"
+							class="h-5 w-5 transform transition-transform duration-200"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path d="M19 9l-7 7-7-7"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"/>
+						</svg>
+					</div>
+					<div v-show="openSections.branches"
+						class="mt-2 space-y-2 text-gray-400 text-sm">
+						<div class="flex items-start text-sm">
+							<svg class="h-5 w-5 mr-2 flex-shrink-0"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24">
+								<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"/>
+								<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"/>
+							</svg>
+							<div>
+								<b>Showroom Encarnación</b>
+								<br>
+								Padre Kreusser c/Gral. Artigas
+								<br>
+								+595 71 202 145
+							</div>
+						</div>
+						<div class="flex items-start text-sm">
+							<svg class="h-5 w-5 mr-2 flex-shrink-0"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24">
+								<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"/>
+								<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"/>
+							</svg>
+							<div>
+								<b>Showroom Asunción</b>
+								<br>
+								Avda. República Argentina & Dr. Hassler
+								<br>
+								+595 21 326 0656
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Contact Info Section -->
+				<div class="border-b border-gray-800 py-2 mb-2">
 					<div class="flex items-center justify-between"
 						@click="toggleSection('contact')">
-						<h3 class="text-lg font-semibold">Contacto</h3>
+						<h3 class="text-base font-semibold">Contacto</h3>
 						<svg
 							:class="openSections.contact ? 'rotate-180' : ''"
 							class="h-5 w-5 transform transition-transform duration-200"
@@ -159,38 +227,9 @@
 						</svg>
 					</div>
 					<div v-show="openSections.contact"
-						class="mt-4 space-y-3 text-gray-400">
-						<p class="flex items-start">
-							<svg class="h-6 w-6 mr-2 flex-shrink-0"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24">
-								<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"/>
-								<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"/>
-							</svg>
-							<span>Av. Mariscal López 1234, Asunción, Paraguay</span>
-						</p>
-						<p class="flex items-start">
-							<svg class="h-6 w-6 mr-2 flex-shrink-0"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24">
-								<path
-									d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"/>
-							</svg>
-							<span>+595 21 123 4567</span>
-						</p>
-						<p class="flex items-start">
-							<svg class="h-6 w-6 mr-2 flex-shrink-0"
+						class="mt-2 space-y-2 text-gray-400 text-sm">
+						<div class="flex items-start text-sm">
+							<svg class="h-5 w-5 mr-2 flex-shrink-0"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24">
@@ -201,9 +240,9 @@
 									stroke-width="2"/>
 							</svg>
 							<span>info@paranahogar.com.py</span>
-						</p>
-						<p class="flex items-start">
-							<svg class="h-6 w-6 mr-2 flex-shrink-0"
+						</div>
+						<div class="flex items-start text-sm">
+							<svg class="h-5 w-5 mr-2 flex-shrink-0"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24">
@@ -213,14 +252,14 @@
 									stroke-width="2"/>
 							</svg>
 							<span>Lun-Vie: 9:00 - 18:00<br>Sáb: 9:00 - 13:00</span>
-						</p>
+						</div>
 					</div>
 				</div>
 
 				<!-- Newsletter Section -->
-				<div class="py-4 mb-4">
-					<h3 class="text-lg font-semibold mb-4">Suscríbete</h3>
-					<p class="text-gray-400 mb-4">Recibe nuestras ofertas y novedades</p>
+				<!-- <div class="py-2 mb-2">
+					<h3 class="text-base font-semibold mb-2">Suscríbete</h3>
+					<p class="text-gray-400 mb-2 text-sm">Recibe nuestras ofertas y novedades</p>
 					<form class="flex flex-col space-y-2">
 						<input
 							class="px-4 py-2 bg-gray-800 text-white rounded focus:outline-none focus:ring-2 focus:ring-gray-500"
@@ -234,21 +273,21 @@
 							Suscribirse
 						</button>
 					</form>
-				</div>
+				</div> -->
 			</div>
 
-			<!-- Desktop Footer -->
-			<div class="hidden lg:grid lg:grid-cols-4 lg:gap-8">
-				<!-- Company Info -->
+			<!-- Desktop Footer - 4 Column Layout -->
+			<div class="hidden lg:grid lg:grid-cols-4 lg:gap-6">
+				<!-- Column 1: Company Info -->
 				<div>
 					<img alt="Parana Hogar"
 						src="/img/logo_white.svg"
-						style="width: 200px; margin-bottom: 1rem;">
-					<p class="text-gray-400 mb-4">Encuentra todo lo que necesitas para tu hogar en un solo lugar.</p>
-					<div class="flex space-x-4">
+						style="width: 180px; margin-bottom: 0.75rem;">
+					<p class="text-gray-400 mb-2 text-sm">Encuentra todo lo que necesitas para tu hogar en un solo lugar.</p>
+					<div class="flex space-x-3">
 						<a class="text-gray-400 hover:text-white"
 							href="#">
-							<svg class="h-6 w-6"
+							<svg class="h-5 w-5"
 								fill="currentColor"
 								viewBox="0 0 24 24">
 								<path
@@ -257,7 +296,7 @@
 						</a>
 						<a class="text-gray-400 hover:text-white"
 							href="#">
-							<svg class="h-6 w-6"
+							<svg class="h-5 w-5"
 								fill="currentColor"
 								viewBox="0 0 24 24">
 								<path
@@ -266,7 +305,7 @@
 						</a>
 						<a class="text-gray-400 hover:text-white"
 							href="#">
-							<svg class="h-6 w-6"
+							<svg class="h-5 w-5"
 								fill="currentColor"
 								viewBox="0 0 24 24">
 								<path
@@ -276,10 +315,10 @@
 					</div>
 				</div>
 
-				<!-- Quick Links -->
+				<!-- Column 2: Quick Links -->
 				<div>
-					<h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
-					<ul class="space-y-3 text-gray-400">
+					<h3 class="text-base font-semibold mb-2">Enlaces Rápidos</h3>
+					<ul class="space-y-2 text-gray-400 text-sm">
 						<li>
 							<a class="hover:text-white"
 								href="/">Inicio
@@ -290,13 +329,6 @@
 								href="/ofertas">Ofertas
 							</a>
 						</li>
-					</ul>
-				</div>
-
-				<!-- Customer Service -->
-				<div>
-					<h3 class="text-lg font-semibold mb-4">Atención al Cliente</h3>
-					<ul class="space-y-3 text-gray-400">
 						<li>
 							<a class="hover:text-white"
 								href="/contacto">Contacto
@@ -307,20 +339,15 @@
 								href="/faq">Preguntas Frecuentes
 							</a>
 						</li>
-						<li>
-							<a class="hover:text-white"
-								href="/terminos">Términos y Condiciones
-							</a>
-						</li>
 					</ul>
 				</div>
 
-				<!-- Contact Info and Newsletter -->
+				<!-- Column 3: Branches -->
 				<div>
-					<h3 class="text-lg font-semibold mb-4">Contacto</h3>
-					<ul class="space-y-3 text-gray-400 mb-6">
+					<h3 class="text-base font-semibold mb-2">Nuestras Sucursales</h3>
+					<ul class="space-y-2 text-gray-400 text-sm">
 						<li class="flex items-start">
-							<svg class="h-6 w-6 mr-2 flex-shrink-0"
+							<svg class="h-5 w-5 mr-2 flex-shrink-0"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24">
@@ -341,8 +368,8 @@
 								+595 71 202 145
 							</div>
 						</li>
-						<li class="flex items-start">
-							<svg class="h-6 w-6 mr-2 flex-shrink-0"
+						<li class="flex items-start mt-3">
+							<svg class="h-5 w-5 mr-2 flex-shrink-0"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24">
@@ -363,17 +390,15 @@
 								+595 21 326 0656
 							</div>
 						</li>
-						<!--            <li class="flex items-start">-->
-						<!--              <svg class="h-6 w-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-						<!--                <path-->
-						<!--                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"-->
-						<!--                    stroke-linecap="round" stroke-linejoin="round"-->
-						<!--                    stroke-width="2"/>-->
-						<!--              </svg>-->
-						<!--              <span>+595 21 123 4567</span>-->
-						<!--            </li>-->
+					</ul>
+				</div>
+
+				<!-- Column 4: Contact -->
+				<div>
+					<h3 class="text-base font-semibold mb-2">Contacto</h3>
+					<ul class="space-y-2 text-gray-400 text-sm mb-4">
 						<li class="flex items-start">
-							<svg class="h-6 w-6 mr-2 flex-shrink-0"
+							<svg class="h-5 w-5 mr-2 flex-shrink-0"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24">
@@ -386,7 +411,7 @@
 							<span>info@paranahogar.com.py</span>
 						</li>
 						<li class="flex items-start">
-							<svg class="h-6 w-6 mr-2 flex-shrink-0"
+							<svg class="h-5 w-5 mr-2 flex-shrink-0"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24">
@@ -397,33 +422,31 @@
 							</svg>
 							<span>Lun-Vie: 9:00 - 18:00<br>Sáb: 9:00 - 13:00</span>
 						</li>
+						<li class="flex items-start">
+							<svg class="h-5 w-5 mr-2 flex-shrink-0"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24">
+								<path
+									d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"/>
+							</svg>
+							<span>+595 71 202 145</span>
+						</li>
 					</ul>
-
-					<h3 class="text-lg font-semibold mb-4">Suscríbete</h3>
-					<form class="flex flex-col space-y-2">
-						<input
-							class="px-4 py-2 bg-gray-800 text-white rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-							placeholder="Tu correo electrónico"
-							type="email"
-						>
-						<button
-							class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded transition-colors duration-200"
-							type="submit"
-						>
-							Suscribirse
-						</button>
-					</form>
 				</div>
 			</div>
 
 
 			<!-- Copyright Section -->
-			<div class="mt-8 pt-8 border-t border-gray-800">
+			<div class="mt-4 pt-4 border-t border-gray-800">
 				<div class="flex flex-col md:flex-row md:justify-between md:items-center">
-					<p class="text-gray-400 text-sm mb-4 md:mb-0">
+					<p class="text-gray-400 text-xs mb-2 md:mb-0">
 						&copy; {{ new Date().getFullYear() }} Paraná Hogar. Todos los derechos reservados.
 					</p>
-					<div class="flex flex-wrap gap-4 text-sm text-gray-400">
+					<div class="flex flex-wrap gap-3 text-xs text-gray-400">
 						<a class="hover:text-white"
 							href="/privacidad">Política de Privacidad
 						</a>
@@ -448,7 +471,8 @@ export default {
 				company: false,
 				links: false,
 				service: false,
-				contact: false
+				contact: false,
+				branches: false
 			}
 		}
 	},
