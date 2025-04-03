@@ -1,5 +1,14 @@
 <template>
 	<div class="flex-1">
+		<!-- Search Bar -->
+		<div class="mb-4">
+			<ProductSearch
+				v-model="searchQuery"
+				@update:modelValue="handleSearch"
+				@clear-filters="clearFilters"
+			/>
+		</div>
+
 		<!-- Mobile Filter Toggle Button (visible only on mobile) -->
 		<div class="lg:hidden mb-4">
 			<button
@@ -203,9 +212,10 @@ import ProductCounterBadge from "~/components/ProductCounterBadge.vue";
 import {useProductos} from "~/composables/useProductos.js";
 import {useFavoritesStore} from "~/stores/favorites.js";
 import Loader from "~/components/Loader.vue";
+import ProductSearch from "~/components/ProductSearch.vue";
 
 export default {
-	components: {ProductCounterBadge, Loader},
+	components: {ProductCounterBadge, Loader, ProductSearch},
 
 	setup() {
 		const {
@@ -246,6 +256,7 @@ export default {
 			itemsPerPage: 9,
 			showFavoritesOnly: false,
 			showFilters: false, // For mobile filter toggle
+			searchQuery: '',
 			previousCategories: [], // Track previous category selection
 			isFiltering: false, // Track when filters are being applied
 		};
@@ -379,6 +390,38 @@ export default {
 			}, 500);
 		},
 
+		// Handle search input
+		handleSearch(query) {
+			// Show loading state
+			this.isFiltering = true;
+			
+			// Clear other filters when searching
+			this.showFavoritesOnly = false;
+			this.filterByCategoria([]);
+			this.filterBySubcategoria([]);
+			this.filterByPrecio(0);
+			this.filterByFavoritos([]);
+			
+			// Filter products by search query - solo por nombre del producto
+			if (query) {
+				this.productos = this.cacheProductos.filter(product => {
+					const searchTerms = query.toLowerCase();
+					return product.nombre.toLowerCase().includes(searchTerms);
+				});
+			} else {
+				// Reset to all products if search is empty
+				this.productos = [...this.cacheProductos];
+			}
+			
+			// Reset pagination
+			this.currentPage = 1;
+			
+			// Hide loading state after a short delay
+			setTimeout(() => {
+				this.isFiltering = false;
+			}, 500);
+		},
+
 		// Clear all filters
 		clearFilters() {
 			// Show loading state
@@ -390,6 +433,9 @@ export default {
 			this.filterBySubcategoria([]);
 			this.filterByPrecio(0);
 			this.filterByFavoritos([]);
+			
+			// Reset search
+			this.searchQuery = '';
 			
 			// Hide loading state after a short delay
 			setTimeout(() => {
@@ -428,6 +474,9 @@ export default {
 	mounted() {
 		// Load favorites on component mount
 		this.favoritesStore.loadFavorites();
+		
+		// Inicializar la caché de productos para la búsqueda
+		this.cacheProductos = [...this.productos];
 	}
 }
 </script>

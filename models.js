@@ -1,4 +1,4 @@
-import {nanoid} from "nanoid";
+import { nanoid } from "nanoid";
 
 class Model {
 	constructor() {
@@ -15,7 +15,7 @@ class Model {
 	toJson() {
 		return Object.keys(this)
 			.reduce((obj,
-					 key) => {
+				key) => {
 				if (!key.startsWith("_")) {
 					obj[key] = this[key]
 				}
@@ -33,7 +33,7 @@ export class Seleccion extends Model {
 	 * @param keyName {String}
 	 */
 	constructor(objeto,
-				keyName) {
+		keyName) {
 		super();
 		this.objeto = objeto
 		this.keyName = keyName
@@ -56,14 +56,14 @@ export class Producto extends Model {
 	 * @param desc_division
 	 */
 	constructor(codigo,
-				nombre,
-				codigo_categoria,
-				desc_categoria,
-				precio,
-				imagen,
-				stock,
-				codigo_division,
-				desc_division) {
+		nombre,
+		codigo_categoria,
+		desc_categoria,
+		precio,
+		imagen,
+		stock,
+		codigo_division,
+		desc_division) {
 		super();
 		/** @type {Number} */
 		this.codigo = codigo
@@ -92,18 +92,21 @@ export class Producto extends Model {
 
 export class Categoria extends Model {
 	constructor(codigo,
-				nombre) {
+		nombre, imagen, estado, orden) {
 		super();
 		/** @type {string} */
 		this.codigo = codigo
 		/** @type {string} */
 		this.nombre = nombre
+		this.imagen = imagen || ''
+		this.estado = estado || 'A'
+		this.orden = orden || 0
 	}
 }
 
 export class SubCategoria extends Model {
 	constructor(codigo,
-				nombre) {
+		nombre) {
 		super();
 		this.codigo = codigo
 		this.nombre = nombre
@@ -113,7 +116,7 @@ export class SubCategoria extends Model {
 
 export class CarritoDetalle extends Model {
 	constructor(codigo_producto,
-				cantidad) {
+		cantidad) {
 		super();
 		this.codigo_producto = codigo_producto
 		this.cantidad = cantidad
@@ -132,7 +135,7 @@ export class Carrito extends Model {
 	}
 
 	agregarProducto(codigo_producto,
-					cantidad) {
+		cantidad) {
 		const detalle = this.detalle.find(d => d.producto._id === producto._id)
 		if (detalle) {
 			detalle.cantidad += cantidad
@@ -146,7 +149,7 @@ export class Carrito extends Model {
 	}
 
 	actualizarCantidad(producto,
-					   cantidad) {
+		cantidad) {
 		const detalle = this.detalle.find(d => d.producto._id === producto._id)
 		if (detalle) {
 			detalle.cantidad = cantidad
@@ -155,7 +158,7 @@ export class Carrito extends Model {
 
 	getTotal() {
 		return this.detalle.reduce((total,
-									detalle) => total + detalle.producto.precio * detalle.cantidad, 0)
+			detalle) => total + detalle.producto.precio * detalle.cantidad, 0)
 	}
 
 	getItems() {
