@@ -53,7 +53,7 @@
 
 			<!-- Desktop Action Icons -->
 			<div class="hidden sm:flex items-center space-x-4">
-				<button class="text-gray-500 hover:text-gray-900"
+				<!-- <button class="text-gray-500 hover:text-gray-900"
 						@click="$emit('on-search')">
 					<svg class="h-6 w-6"
 						 fill="none"
@@ -65,7 +65,7 @@
 							  stroke-linejoin="round"
 							  stroke-width="2"/>
 					</svg>
-				</button>
+				</button> -->
 				<NuxtLink :to="{name: 'favoritos'}"
 						  class="text-gray-500 hover:text-gray-900"
 						  to="/favoritos">
@@ -147,7 +147,7 @@
 
 				<!-- Mobile Action Icons -->
 				<div class="flex justify-between mt-4 pt-3 border-t border-gray-100">
-					<button class="text-gray-500 hover:text-gray-900 p-1"
+					<!-- <button class="text-gray-500 hover:text-gray-900 p-1"
 							@click="$emit('on-search')">
 						<svg class="h-6 w-6"
 							 fill="none"
@@ -159,7 +159,7 @@
 								  stroke-linejoin="round"
 								  stroke-width="2"/>
 						</svg>
-					</button>
+					</button> -->
 					<NuxtLink class="text-gray-500 hover:text-gray-900 p-1"
 							  to="/favoritos">
 						<svg class="h-6 w-6"
