@@ -74,9 +74,9 @@
 					</p>
 					<div class="grid grid-cols-2 gap-2 mt-3">
 						<!-- Botón Ver Detalles -->
-						<button
+						<NuxtLink
+							:to="`/producto/${product.codigo}`"
 							class="text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-colors duration-200 bg-gray-700 hover:bg-gray-800 cursor-pointer"
-							@click="viewProductDetails"
 						>
 							<svg class="h-4 w-4 mr-1"
 								fill="none"
@@ -94,7 +94,7 @@
 									stroke-width="2"/>
 							</svg>
 							Ver detalles
-						</button>
+						</NuxtLink>
 						
 						<!-- Botón Agregar al Carrito -->
 						<button
@@ -231,7 +231,7 @@ function viewProductDetails() {
 	// Emitir evento de producto visto
 	$bus.emit('product-viewed', props.product);
 	// Abrir vista previa
-	openPreview();
+	//openPreview();
 }
 
 // Cargar el estado inicial de favoritos

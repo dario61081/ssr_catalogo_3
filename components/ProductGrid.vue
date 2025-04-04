@@ -47,9 +47,8 @@
 						Filtros
 					</h3>
 
-					<CategoriaFilter
-						:categorias="categorias"
-						@on-selected="filterByCategoriaAndResetSub"
+					<CategoriaTreeFilter
+						@filter-changed="filterByCategoriaAndResetSub"
 					/>
 
 					<!-- Only show subcategory filter when categories are selected -->
@@ -213,9 +212,10 @@ import {useProductos} from "~/composables/useProductos.js";
 import {useFavoritesStore} from "~/stores/favorites.js";
 import Loader from "~/components/Loader.vue";
 import ProductSearch from "~/components/ProductSearch.vue";
+import CategoriaTreeFilter from "~/components/CategoriaTreeFilter.vue";
 
 export default {
-	components: {ProductCounterBadge, Loader, ProductSearch},
+	components: {ProductCounterBadge, Loader, ProductSearch, CategoriaTreeFilter},
 
 	setup() {
 		const {
