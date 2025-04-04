@@ -61,6 +61,7 @@ export const useTree = () => {
   const loading = ref<boolean>(false);
   const error = ref<Error | null>(null);
   const selectedCategories = ref<number[]>([]);
+  const selectedProducts = ref<number[]>([]);
 
   const fetchCategorias = async () => {
     loading.value = true;
@@ -106,12 +107,112 @@ export const useTree = () => {
   // Initialize data on first load
   fetchCategorias();
 
+  // Toggle product selection (multiple selection allowed)
+  const toggleProduct = (productId: number) => {
+    const index = selectedProducts.value.indexOf(productId);
+    if (index === -1) {
+      selectedProducts.value.push(productId);
+    } else {
+      selectedProducts.value.splice(index, 1);
+    }
+  };
+  
+  // Toggle all products in a class
+  const toggleClassProducts = (classId: number, selected: boolean) => {
+    // Find all products with the given DIV_CLAS
+    const productsInClass: number[] = [];
+    
+    categorias.value.forEach(categoria => {
+      categoria.articulos.forEach(articulo => {
+        if (articulo.DIV_CLAS === classId) {
+          productsInClass.push(articulo.ART_COD);
+        }
+      });
+    });
+    
+    if (selected) {
+      // Add all products that aren't already selected
+      productsInClass.forEach(productId => {
+        if (!selectedProducts.value.includes(productId)) {
+          selectedProducts.value.push(productId);
+        }
+      });
+    } else {
+      // Remove all products in this class from selection
+      selectedProducts.value = selectedProducts.value.filter(
+        productId => !productsInClass.includes(productId)
+      );
+    }
+  };
+
+  // Check if a product is selected
+  const isProductSelected = (productId: number) => {
+    return selectedProducts.value.includes(productId);
+  };
+
+  // Clear all selected products
+  const clearSelectedProducts = () => {
+    selectedProducts.value = [];
+  };
+
+  // Check if all products in a class are selected
+  const areAllClassProductsSelected = (classId: number): boolean => {
+    let allSelected = true;
+    let hasProducts = false;
+    
+    // Check if all products in this class are selected
+    categorias.value.forEach(categoria => {
+      categoria.articulos.forEach(articulo => {
+        if (articulo.DIV_CLAS === classId) {
+          hasProducts = true;
+          if (!selectedProducts.value.includes(articulo.ART_COD)) {
+            allSelected = false;
+          }
+        }
+      });
+    });
+    
+    // If there are no products, consider it not selected
+    return hasProducts && allSelected;
+  };
+  
+  // Check if some (but not all) products in a class are selected
+  const areSomeClassProductsSelected = (classId: number): boolean => {
+    let someSelected = false;
+    let allSelected = true;
+    let hasProducts = false;
+    
+    // Check if some products in this class are selected
+    categorias.value.forEach(categoria => {
+      categoria.articulos.forEach(articulo => {
+        if (articulo.DIV_CLAS === classId) {
+          hasProducts = true;
+          if (selectedProducts.value.includes(articulo.ART_COD)) {
+            someSelected = true;
+          } else {
+            allSelected = false;
+          }
+        }
+      });
+    });
+    
+    // Return true only if some (but not all) products are selected
+    return hasProducts && someSelected && !allSelected;
+  };
+
   return {
     categorias: categoriasConConteo,
     loading,
     error,
     selectedCategories,
+    selectedProducts,
     toggleCategory,
+    toggleProduct,
+    toggleClassProducts,
+    isProductSelected,
+    areAllClassProductsSelected,
+    areSomeClassProductsSelected,
+    clearSelectedProducts,
     fetchCategorias
   };
 };

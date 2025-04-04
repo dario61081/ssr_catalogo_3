@@ -47,7 +47,7 @@ const props = defineProps({
 const emit = defineEmits(['filter-changed']);
 
 // Use the tree composable
-const { categorias, loading, selectedCategories, toggleCategory } = useTree();
+const { categorias, loading, selectedCategories, toggleCategory, selectedProducts, toggleProduct, isProductSelected, toggleClassProducts, areAllClassProductsSelected, areSomeClassProductsSelected } = useTree();
 
 // Track expanded categories and classes
 const expandedCategories = ref<number[]>([]);
@@ -128,11 +128,14 @@ const isSelected = (categoryId: number) => {
 
 // Apply filters when selection changes
 const applyFilters = () => {
-  emit('filter-changed', selectedCategories.value);
+  emit('filter-changed', {
+    categories: selectedCategories.value,
+    products: selectedProducts.value
+  });
 };
 
-// Watch for changes in selected categories
-watch(selectedCategories, () => {
+// Watch for changes in selected categories or products
+watch([selectedCategories, selectedProducts], () => {
   applyFilters();
 }, { deep: true });
 
@@ -141,6 +144,7 @@ onMounted(() => {
   const { $bus } = useNuxtApp();
   $bus.on('clear-filters', () => {
     selectedCategories.value = [];
+    selectedProducts.value = [];
   });
 });
 </script>
@@ -201,7 +205,7 @@ onMounted(() => {
               <div v-if="categoria.articulos && categoria.articulos.length > 0">
                 <!-- Group articles by class -->
                 <div v-for="classGroup in getGroupedArticlesByClass(categoria)" :key="classGroup.id" class="mb-2">
-                  <!-- Class header -->
+                  <!-- Class header with checkbox for selecting all products -->
                   <div class="flex items-center py-1">
                     <button 
                       @click="toggleClassExpand(categoria.DIV_CODIGO, classGroup.id)" 
@@ -217,15 +221,36 @@ onMounted(() => {
                         <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
                       </svg>
                     </button>
-                    <div class="text-sm font-medium">
-                      {{ classGroup.description }} ({{ classGroup.articles.length }})
+                    <div class="flex items-center flex-1">
+                      <!-- Checkbox for selecting all products in this class -->
+                      <input 
+                        type="checkbox" 
+                        :id="`class-${classGroup.id}`" 
+                        :checked="areAllClassProductsSelected(classGroup.id)" 
+                        :indeterminate.prop="areSomeClassProductsSelected(classGroup.id)" 
+                        @change="toggleClassProducts(classGroup.id, !areAllClassProductsSelected(classGroup.id))" 
+                        class="mr-2"
+                      />
+                      <label :for="`class-${classGroup.id}`" class="text-sm font-medium cursor-pointer flex-1">
+                        {{ classGroup.description }} ({{ classGroup.articles.length }})
+                      </label>
                     </div>
                   </div>
                   
-                  <!-- Articles in this class -->
+                  <!-- Articles in this class with checkboxes for multiple selection -->
                   <div v-if="isClassExpanded(categoria.DIV_CODIGO, classGroup.id)" class="ml-6 mt-1 space-y-1">
-                    <div v-for="articulo in classGroup.articles" :key="articulo.ART_COD" class="text-xs text-gray-600 truncate">
-                      {{ articulo.ART_DESCRIPCION }}
+                    <div v-for="articulo in classGroup.articles" :key="articulo.ART_COD" class="flex items-center py-1 ml-3">
+                      <input 
+                        type="checkbox" 
+                        :id="`prod-${articulo.ART_COD}`" 
+                        :checked="isProductSelected(articulo.ART_COD)" 
+                        @change="toggleProduct(articulo.ART_COD)" 
+                        class="mr-2 h-3 w-3"
+                      />
+                      <label :for="`prod-${articulo.ART_COD}`" class="text-xs text-gray-600 truncate cursor-pointer flex-1">
+                        {{ articulo.ART_DESCRIPCION }}
+                        <span v-if="articulo.STOCK <= 0" class="text-red-500 ml-1">(Sin stock)</span>
+                      </label>
                     </div>
                   </div>
                 </div>
