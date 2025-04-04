@@ -8,8 +8,9 @@
 				<ProductGrid/>
 			</div>
 		</main>
-		<CartAsideViewer :isOpen="isCartOpen"
-			@close="cerrarCarrito"/>
+		<!--		<CartAsideViewer :carrito="[]"-->
+		<!--			:isOpen="isCartOpen"-->
+		<!--			@close="cerrarCarrito"/>-->
 		<SearchAsideViewer :isOpen="isSearchOpen"
 			@close="cerrarBuscador"/>
 		<ProductViewHistory :isOpen="isHistoryOpen"
