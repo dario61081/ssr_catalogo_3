@@ -40,3 +40,19 @@ npm run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+
+## Update Repo and Build
+
+```bash
+git reset --hard
+npm install --legacy-peer-deps
+npm run build
+npm run preview
+```
+
+## Deploy
+
+```bash
+npm run generate
+```
