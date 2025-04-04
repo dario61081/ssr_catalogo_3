@@ -3,12 +3,15 @@
 		<nav
 			class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-16 flex flex-col sm:flex-row sm:items-center justify-between">
 			<div class="flex items-center justify-between py-2 sm:py-0">
-				<!-- Logo -->
-				<NuxtLink to="/">
-					<img alt="Parana Hogar"
-						 src="/img/logo_white.svg"
-						 style="width: 140px; height: auto;">
-				</NuxtLink>
+				<!-- Logo and Title -->
+				<div class="flex items-center">
+					<NuxtLink to="/" class="flex items-center">
+						<img alt="Parana Hogar"
+							 src="/img/logo_white.svg"
+							 style="width: 140px; height: auto;">
+						<span class="hidden md:block text-white font-medium ml-4 text-lg border-l border-gray-600 pl-4">Catálogo de productos</span>
+					</NuxtLink>
+				</div>
 
 				<!-- Mobile Menu Button -->
 				<button
