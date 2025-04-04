@@ -36,25 +36,23 @@ export const useCategorias = () => {
 
 
     const refresh = async () => {
-        loading.value = true
-        hasError.value = null
+        loading.value = true;
+        hasError.value = null;
 
         try {
-            const { data, error } = await useFetch<CategoriaResponse[]>('/api/categorias', { 
-                key: 'categorias', 
-                retry: 3,
-                timeout: 10000
+            const { data, error } = await useFetch<CategoriaResponse[]>('/api/categorias', {
+                key: 'categorias',
             });
 
             if (error.value) {
                 console.error('Error al obtener categorías:', error.value);
                 throw new Error(error.value.message || 'Error al buscar categorías');
             }
-            
+
             if (!data.value) {
                 throw new Error('No se recibieron datos de categorías');
             }
-            
+
             if (!Array.isArray(data.value)) {
                 console.error('Formato de respuesta inválido:', data.value);
                 throw new Error('Formato de respuesta inválido');
@@ -64,17 +62,23 @@ export const useCategorias = () => {
             const categoriasActivas = data.value
                 .filter(cat => cat.DIV_ESTADO === 'A')
                 .map(mapToCategoria);
-                
+
             categorias.value = categoriasActivas;
-            
+
+            // Ordenar categorías por orden
+            sortByOrden();
+
             // Si no hay categorías después del filtrado
             if (categorias.value.length === 0) {
                 console.warn('No se encontraron categorías activas');
             }
 
+            return categorias.value;
+
         } catch (error) {
             console.error('Error en refresh de categorías:', error);
             hasError.value = error instanceof Error ? error.message : 'Error desconocido al buscar categorías';
+            throw error; // Re-throw para que se pueda manejar en el componente
         } finally {
             loading.value = false;
         }
@@ -90,7 +94,11 @@ export const useCategorias = () => {
         hasError.value = null;
     };
 
-    onMounted(() => { refresh(); sortByOrden(); });
+    onMounted(() => {
+        refresh().catch(err => {
+            console.error('Error al cargar categorías en onMounted:', err);
+        });
+    });
 
     return {
         categorias,
