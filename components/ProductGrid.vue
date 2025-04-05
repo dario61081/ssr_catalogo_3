@@ -1,13 +1,13 @@
 <template>
 	<div class="flex-1">
 		<!-- Search Bar -->
-		<div class="mb-4">
-			<ProductSearch
-				v-model="searchQuery"
-				@update:modelValue="handleSearch"
-				@clear-filters="clearFilters"
-			/>
-		</div>
+		<!--		<div class="mb-4">-->
+		<!--			<ProductSearch-->
+		<!--				v-model="searchQuery"-->
+		<!--				@update:modelValue="handleSearch"-->
+		<!--				@clear-filters="clearFilters"-->
+		<!--			/>-->
+		<!--		</div>-->
 
 		<!-- Mobile Filter Toggle Button (visible only on mobile) -->
 		<div class="lg:hidden mb-4">
@@ -46,23 +46,26 @@
 						<i class="fa fa-filter text-gray-400"></i>
 						Filtros
 					</h3>
+					
+					<TreeViewFilter></TreeViewFilter>
 
-					<CategoriaTreeFilter
-						@filter-changed="filterByCategoriaAndResetSub"
-					/>
+
+					<!--					<CategoriaTreeFilter-->
+					<!--						@filter-changed="filterByCategoriaAndResetSub"-->
+					<!--					/>-->
 
 					<!-- Only show subcategory filter when categories are selected -->
-					<SubDivisionFilter
-						v-if="activeFilters.categorias && activeFilters.categorias.length > 0"
-						:productos="productos"
-						:allProducts="cacheProductos"
-						:activeCategories="activeFilters.categorias"
-						@on-selected="filterBySubcategoria"
-					></SubDivisionFilter>
-					<PriceFilter
-						:products="productos"
-						@on-selected="filterByPrecio"
-					/>
+					<!--					<SubDivisionFilter-->
+					<!--						v-if="activeFilters.categorias && activeFilters.categorias.length > 0"-->
+					<!--						:activeCategories="activeFilters.categorias"-->
+					<!--						:allProducts="cacheProductos"-->
+					<!--						:productos="productos"-->
+					<!--						@on-selected="filterBySubcategoria"-->
+					<!--					></SubDivisionFilter>-->
+					<!--					<PriceFilter-->
+					<!--						:products="productos"-->
+					<!--						@on-selected="filterByPrecio"-->
+					<!--					/>-->
 
 					<!-- Favorites Filter -->
 					<div v-if="favoritesStore.hasFavorites"
@@ -85,7 +88,9 @@
 						</div>
 						<p class="text-xs text-gray-500 mt-1">
 							{{
-								showFavoritesOnly ? 'Mostrando solo productos favoritos' : 'Mostrando todos los productos'
+								showFavoritesOnly ?
+									'Mostrando solo productos favoritos' :
+									'Mostrando todos los productos'
 							}}
 						</p>
 					</div>
@@ -121,18 +126,19 @@
 				</div>
 
 				<!-- Modal Loader -->
-				<Loader v-if="isFiltering" />
+				<Loader v-if="isFiltering"/>
 
 				<!-- Product Grid - Responsive columns -->
-				<div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+				<div v-else
+					class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 					<ProductCartLoading v-for="row in 9"
 						v-if="loading"
 						:key="'loading-'+row"/>
 					<ProductCard
 						v-for="product in paginatedProducts"
 						v-else
-						:product="product"
 						:key="product.codigo"
+						:product="product"
 					/>
 				</div>
 
@@ -213,9 +219,10 @@ import {useFavoritesStore} from "~/stores/favorites.js";
 import Loader from "~/components/Loader.vue";
 import ProductSearch from "~/components/ProductSearch.vue";
 import CategoriaTreeFilter from "~/components/CategoriaTreeFilter.vue";
+import TreeViewFilter from "~/components/treeview/TreeViewFilter.vue";
 
 export default {
-	components: {ProductCounterBadge, Loader, ProductSearch, CategoriaTreeFilter},
+	components: {TreeViewFilter, ProductCounterBadge, Loader, ProductSearch, CategoriaTreeFilter},
 
 	setup() {
 		const {
@@ -329,42 +336,43 @@ export default {
 		filterByCategoriaAndResetSub(categorias) {
 			// Show loader
 			this.isFiltering = true;
-			
+
 			// Check if the category selection has actually changed
 			const hasChanged = this.haveCategoriesChanged(this.previousCategories, categorias);
-			
+
 			// Apply category filter
 			this.filterByCategoria(categorias);
-			
+
 			// If categories have changed, reset subcategories
 			if (hasChanged) {
 				this.filterBySubcategoria([]);
 				this.bus.emit('reset-subcategories');
 			}
-			
+
 			// Update previous categories for next comparison
 			this.previousCategories = [...categorias];
-			
+
 			// Hide loader after a short delay to ensure the UI has updated
 			setTimeout(() => {
 				this.isFiltering = false;
 			}, 500);
 		},
-		
+
 		// Helper to check if category selections have changed
-		haveCategoriesChanged(previous, current) {
+		haveCategoriesChanged(previous,
+							  current) {
 			// Different lengths means the selection has changed
 			if (previous.length !== current.length) return true;
-			
+
 			// Check if any category is in one array but not the other
 			for (const category of previous) {
 				if (!current.includes(category)) return true;
 			}
-			
+
 			for (const category of current) {
 				if (!previous.includes(category)) return true;
 			}
-			
+
 			// If we get here, the selections are the same
 			return false;
 		},
@@ -373,7 +381,7 @@ export default {
 		toggleFavoritesFilter() {
 			// Show loading state
 			this.isFiltering = true;
-			
+
 			this.showFavoritesOnly = !this.showFavoritesOnly;
 
 			if (this.showFavoritesOnly) {
@@ -383,7 +391,7 @@ export default {
 			} else {
 				this.filterByFavoritos([]);
 			}
-			
+
 			// Hide loading state after a short delay
 			setTimeout(() => {
 				this.isFiltering = false;
@@ -394,28 +402,29 @@ export default {
 		handleSearch(query) {
 			// Show loading state
 			this.isFiltering = true;
-			
+
 			// Clear other filters when searching
 			this.showFavoritesOnly = false;
 			this.filterByCategoria([]);
 			this.filterBySubcategoria([]);
 			this.filterByPrecio(0);
 			this.filterByFavoritos([]);
-			
+
 			// Filter products by search query - solo por nombre del producto
 			if (query) {
 				this.productos = this.cacheProductos.filter(product => {
 					const searchTerms = query.toLowerCase();
-					return product.nombre.toLowerCase().includes(searchTerms);
+					return product.nombre.toLowerCase()
+						.includes(searchTerms);
 				});
 			} else {
 				// Reset to all products if search is empty
 				this.productos = [...this.cacheProductos];
 			}
-			
+
 			// Reset pagination
 			this.currentPage = 1;
-			
+
 			// Hide loading state after a short delay
 			setTimeout(() => {
 				this.isFiltering = false;
@@ -426,17 +435,17 @@ export default {
 		clearFilters() {
 			// Show loading state
 			this.isFiltering = true;
-			
+
 			this.showFavoritesOnly = false;
 			this.bus.emit('clear-filters');
 			this.filterByCategoria([]);
 			this.filterBySubcategoria([]);
 			this.filterByPrecio(0);
 			this.filterByFavoritos([]);
-			
+
 			// Reset search
 			this.searchQuery = '';
-			
+
 			// Hide loading state after a short delay
 			setTimeout(() => {
 				this.isFiltering = false;
@@ -474,7 +483,7 @@ export default {
 	mounted() {
 		// Load favorites on component mount
 		this.favoritesStore.loadFavorites();
-		
+
 		// Inicializar la caché de productos para la búsqueda
 		this.cacheProductos = [...this.productos];
 	}
