@@ -46,7 +46,7 @@
 						<i class="fa fa-filter text-gray-400"></i>
 						Filtros
 					</h3>
-					
+
 					<TreeViewFilter></TreeViewFilter>
 
 
@@ -118,7 +118,7 @@
 						@change="(event) => ordenarPor(event.target.value)"
 					>
 						<option class="text-gray-300"
-							selected>-- Sin Ordenar --
+							selected>Relevancia
 						</option>
 						<option value="precio_asc">Precio: Bajo al alto</option>
 						<option value="precio_desc">Precio: Alto al bajo</option>
