@@ -6,7 +6,7 @@
 		"build": "nuxt build",
 		"dev": "nuxt dev --host 0.0.0.0 --port=3010",
 		"generate": "nuxt generate",
-		"preview": "nuxt preview",
+		"preview": "nuxt preview --host 0.0.0.0 --port=3011",
 		"postinstall": "nuxt prepare",
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build"
