@@ -1,6 +1,5 @@
 <template>
-	<transition mode="out-in"
-		name="fade">
+	<transition>
 		<div
 			class="relative flex flex-col h-full bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
 			<!-- Stock Badge -->

@@ -26,8 +26,10 @@ useHead({
 	]
 });
 
-onMounted(() => {
-	product.value = productos.value.find((item: Producto) => item.codigo === codigo)
+onMounted(async () => {
+	// product.value = productos.value.find((item: Producto) => item.codigo === codigo)
+	product.value = useMaps()
+		.mapToProducto(await $fetch('/api/articulo/' + codigo))
 })
 
 const addToCart = () => {
@@ -65,9 +67,10 @@ const addToCart = () => {
 					<!-- Product image section -->
 					<div class="w-full md:w-1/2 p-6 flex flex-col">
 						<!-- Main image -->
-						<div ref="mainImage" class="flex-1 flex items-center justify-center bg-white overflow-hidden relative"
+						<div ref="mainImage"
+							class="flex-1 flex items-center justify-center bg-white overflow-hidden relative"
 							style="aspect-ratio: 4/3;">
-							<ProductImageLoadingHolder  v-if="!product" />
+							<ProductImageLoadingHolder v-if="!product"/>
 							<!-- Loading placeholder -->
 							<!-- <div v-if="imageLoading && product" class="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 z-10">
 								<div class="flex flex-col items-center">
@@ -82,17 +85,20 @@ const addToCart = () => {
 								</div>
 							</div> -->
 							<!-- Product image -->
-							<img
-								v-if="product"
-								:alt="product.nombre"
-								:src="product.imagen"
-								class="max-w-full max-h-full object-contain z-0"
-								@load="imageLoading = false"
-							/>
-						</div>	
+							<transition>
+								<img
+									v-if="product"
+									:alt="product.nombre"
+									:src="product.imagen"
+									class="max-w-full max-h-full object-contain z-0"
+									@load="imageLoading = false"
+								/>
+							</transition>
+						</div>
 
 						<!-- Thumbnail gallery -->
-						<div ref="thumbnailGallery" class="mt-4 flex space-x-2 justify-center">
+						<div ref="thumbnailGallery"
+							class="mt-4 flex space-x-2 justify-center">
 							<button class="border-2 border-gray-300 rounded-md p-1 hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
 								<img
 									v-if="product"
@@ -124,7 +130,8 @@ const addToCart = () => {
 					</div>
 
 					<!-- Product info section -->
-					<div ref="productInfo" class="w-full md:w-1/2 p-6 flex flex-col">
+					<div ref="productInfo"
+						class="w-full md:w-1/2 p-6 flex flex-col">
 						<!-- Product title and details -->
 						<h1 class="text-2xl font-bold text-gray-900 mt-2">{{ product?.nombre }}</h1>
 						<p class="text-sm text-gray-500 mt-1">Art. {{ codigo }}</p>
@@ -261,7 +268,7 @@ const addToCart = () => {
 					</div>
 				</div>
 			</div>
-			<div class="h-[29dvh]"></div>	
+			<div class="h-[29dvh]"></div>
 			<!--		-->
 			<!--		<ProductComments :is-logged-in="true"-->
 			<!--			:product-id="codigo"></ProductComments>-->
