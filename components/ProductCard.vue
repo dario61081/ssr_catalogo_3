@@ -62,12 +62,14 @@
 					</button>
 				</div>
 			</div>
-			
+
 			<!-- Product Info -->
 			<div class="flex-1 p-4 flex flex-col">
-				<ProductRate :rating="5" :is-clickable="false"></ProductRate>
+				<ProductRate :is-clickable="false"
+					:rating="5"></ProductRate>
 				<NuxtLink :to="`/producto/${product.codigo}`">
-					<h3 class="text-sm hover:text-blue-900 sm:text-base font-medium text-gray-900 mb-1 line-clamp-2">{{ product.nombre }}</h3>
+					<h3 class="text-sm hover:text-blue-900 sm:text-base font-medium text-gray-900 mb-1 line-clamp-2">
+						{{ product.nombre }}</h3>
 				</NuxtLink>
 				<!--				<p class="text-xs text-gray-500 mb-2">{{ product. }}</p>-->
 
@@ -99,32 +101,36 @@
 							Ver detalles
 						</NuxtLink>
 
-						<!-- Botón Agregar al Carrito -->
-						<!--						<button-->
-						<!--							:class="[-->
-						<!--							  'text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-colors duration-200',-->
-						<!--							  product.stock > 0 -->
-						<!--								? 'bg-gray-500 hover:bg-gray-600 cursor-pointer' -->
-						<!--								: 'bg-gray-300 cursor-not-allowed'-->
-						<!--							]"-->
-						<!--							:disabled="product.stock <= 0"-->
-						<!--							:title="product.stock <= 0 ? 'Producto sin stock' : ''"-->
-						<!--							@click="handleCartClick"-->
-						<!--						>-->
-						<!--							<svg class="h-4 w-4 mr-1"-->
-						<!--								fill="none"-->
-						<!--								stroke="currentColor"-->
-						<!--								viewBox="0 0 24 24"-->
-						<!--								xmlns="http://www.w3.org/2000/svg">-->
-						<!--								<path-->
-						<!--									d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"-->
-						<!--									stroke-linecap="round"-->
-						<!--									stroke-linejoin="round"-->
-						<!--									stroke-width="2"-->
-						<!--								/>-->
-						<!--							</svg>-->
-						<!--							{{ product.stock > 0 ? 'Agregar' : 'Sin stock' }}-->
-						<!--						</button>-->
+						<!--						Botón Agregar al Carrito-->
+						<button
+							:class="[
+													  'text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-colors duration-200',
+													  product.stock > 0
+														? 'bg-gray-500 hover:bg-gray-600 cursor-pointer'
+														: 'bg-gray-300 cursor-not-allowed'
+													]"
+							:disabled="product.stock <= 0"
+							:title="product.stock <= 0 ? 'Producto sin stock' : ''"
+							@click="handleCartClick"
+						>
+							<svg class="h-4 w-4 mr-1"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+								/>
+							</svg>
+							{{
+								product.stock > 0 ?
+									'Agregar' :
+									'Sin stock'
+							}}
+						</button>
 					</div>
 				</div>
 			</div>

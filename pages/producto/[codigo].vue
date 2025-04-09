@@ -2,110 +2,47 @@
 	setup>
 import {Producto} from '~/models';
 import {useRoute} from 'vue-router';
+import { useCartStore } from '~/stores/cart'
+import BreadCrumb from '~/components/BreadCrumb.vue';
 
 const codigo = parseInt(useRoute().params.codigo)
-// SEO metadata
-// useHead({
-// 	title: () => producto.value?.nombre || 'Producto',
-// 	meta: [
-// 		{name: 'description', content: () => producto.value?.nombre || 'Detalles del producto'},
-// 		{property: 'og:title', content: () => producto.value?.nombre || 'Producto'},
-// 		{property: 'og:description', content: () => `${producto.value?.nombre} - ${producto.value?.categoria}`},
-// 		{property: 'og:image', content: () => producto.value?.imagen || ''},
-// 		{property: 'og:type', content: 'product'},
-// 		{name: 'twitter:card', content: 'summary_large_image'},
-// 	]
-// });
-
-
 const product = ref<Producto | null>(null);
-// const cantidad = ref(1);
-// const loading = ref(true);
-// const productImages = ref<string[]>([]);
-const formatPrecio = utilidades().formatPrecio;
+const quantity = ref(1);
 const {productos} = useProductos()
+const formatPrecio = utilidades().formatPrecio;
+const cartStore = useCartStore();
 
-// buscar el producto por el codigo
+// SEO metadata
+useHead({
+	title: () => product.value?.nombre || 'Producto',
+	meta: [
+		{name: 'description', content: () => product.value?.nombre || 'Detalles del producto'},
+		{property: 'og:title', content: () => product.value?.nombre || 'Producto'},
+		{property: 'og:description', content: () => `${product.value?.nombre} - ${product.value?.categoria}`},
+		{property: 'og:image', content: () => product.value?.imagen || ''},
+		{property: 'og:type', content: 'product'},
+		{name: 'twitter:card', content: 'summary_large_image'},
+	]
+});
+
 onMounted(() => {
 	product.value = productos.value.find((item: Producto) => item.codigo === codigo)
 })
 
-
-// Fetch product data
-// onMounted(async () => {
-// 	const {codigo} = useRoute().params
-// 	loading.value = true;
-//
-// 	try {
-// 		const {data, error} = useFetch('/api/articulos')
-//
-// 		if (!data.value) {
-// 			throw new Error('Producto no encontrado');
-// 		}
-//
-// 		const item: Producto = data.find((item: ArticuloResponse) => item.ART_COD === Number(codigo))
-//
-//
-// 		if (item) {
-// 			producto.value = new Producto(
-// 				item.ART_COD,
-// 				item.ART_DESCRIPCION,
-// 				data.DIVISION,
-// 				data.DIV_DESC,
-// 				parseInt(data.PRECIO.toString()
-// 					.replace('.', ''), 10),
-// 				data.ART_DIR_IMAG1,
-// 				data.STOCK,
-// 				data.DIV_CLAS,
-// 				data.DIV_CLAS_DESC
-// 			);
-//
-// 			// Initialize product images array
-// 			// In a real scenario, you would get all images from the API
-// 			productImages.value = [
-// 				data.imagen, // Main image
-// 				// Add additional images if available
-// 				// data.ART_DIR_IMAG2 || data.ART_DIR_IMAG1,
-// 				//data.ART_DIR_IMAG3 || data.ART_DIR_IMAG1
-// 			].filter(Boolean); // Remove any undefined/null values
-// 		} else {
-// 			console.error('Product data not found');
-// 		}
-// 	} catch (error) {
-// 		console.error('Error fetching product:', error);
-// 	} finally {
-// 		loading.value = false;
-// 	}
-// });
-
-// Methods
-// const incrementQuantity = () => {
-// 	if (producto.value && cantidad.value < producto.value.stock) {
-// 		cantidad.value++;
-// 	}
-// };
-//
-// const decrementQuantity = () => {
-// 	if (cantidad.value > 1) {
-// 		cantidad.value--;
-// 	}
-// };
-
-// const addToCart = () => {
-// 	// Implement cart functionality
-// 	console.log('Adding to cart:', producto.value, 'Quantity:', cantidad.value);
-// };
-//
-// const buyNow = () => {
-// 	// Implement buy now functionality
-// 	console.log('Buying now:', producto.value, 'Quantity:', cantidad.value);
-// };
+const addToCart = () => {
+	if (product.value && quantity.value > 0) {
+		cartStore.addItem({
+			product: product.value,
+			quantity: quantity.value
+		});
+	}
+};
 </script>
 
 <template>
 	<NuxtLayout name="layout-inlogin">
-		<!--		{{ item }}-->
-		<div class="bg-white content-center w-[100dvw]  max-h-[90vh] overflow-auto">
+		<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+		<div class="bg-white content-center mx-auto  max-h-[90vh] overflow-auto rounded-lg shadow-lg p-6">
 			<!-- Close button -->
 			<!--			<button-->
 			<!--				class="absolute top-4 right-4 z-10 p-2 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 transition-colors"-->
@@ -176,7 +113,7 @@ onMounted(() => {
 
 					<!-- Price and stock -->
 					<div class="mt-6">
-						<p class="text-2xl font-bold text-gray-900">Gs. {{ product?.precio }}</p>
+						<p class="text-2xl font-bold text-gray-900">Gs. {{ formatPrecio(product?.precio) }}</p>
 						<div class="mt-1">
               <span
 				  :class="[
@@ -306,8 +243,10 @@ onMounted(() => {
 				</div>
 			</div>
 		</div>
+		
 		<ProductComments :is-logged-in="true"
 			:product-id="codigo"></ProductComments>
+			</main>
 	</NuxtLayout>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="product-comments p-5">
+	<div class="product-comments mt-8 mb-8 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
 		<h3 class="text-lg font-bold mb-4">Comentarios</h3>
 
 		<!-- Comments List -->
