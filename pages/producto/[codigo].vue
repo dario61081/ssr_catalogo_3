@@ -242,6 +242,7 @@ const addToCart = () => {
 					</div>
 				</div>
 			</div>
+			<div class="h-[29dvh]"></div>	
 			<!--		-->
 			<!--		<ProductComments :is-logged-in="true"-->
 			<!--			:product-id="codigo"></ProductComments>-->
