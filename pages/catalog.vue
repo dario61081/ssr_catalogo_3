@@ -21,7 +21,7 @@
 				<p class="text-gray-600">{{ error }}</p>
 				<button
 					class="mt-4 bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
-					@click="loadData"
+					@click="()=>loadData()"
 				>
 					Reintentar
 				</button>
@@ -81,7 +81,7 @@
 						<p class="text-gray-600 mb-4">Intenta con otros filtros o categorías</p>
 						<button
 							class="bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
-							@click="clearFilters(false)"
+							@click="()=>{clearFilters(false)}"
 						>
 							Limpiar filtros
 						</button>

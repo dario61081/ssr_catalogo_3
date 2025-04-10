@@ -77,6 +77,7 @@ export const useProductoStore = defineStore('producto', {
 				// }
 
 				// Transformar los datosw
+				// @ts-ignore
 				this.productos = data.value.map(prod => mapToProducto(prod));
 				console.log(`Productos cargados: ${this.productos.length}`);
 

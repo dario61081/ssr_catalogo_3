@@ -77,8 +77,8 @@ export type SortCriteria = 'nombre_asc' | 'nombre_desc' | 'precio_asc' | 'precio
 export interface FilterState {
 	categorias: number[];
 	subcategorias: number[];
-	precioMin: number | null;
-	precioMax: number | null;
+	precioMin: number;
+	precioMax: number;
 	searchQuery: string;
 	sortBy: SortCriteria;
 }
