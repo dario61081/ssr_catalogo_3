@@ -61,14 +61,29 @@ export const useProductoStore = defineStore('producto', {
 
 		async fetchProductoById(id: number) {
 			try {
-				const {data} = await useFetch<ProductoResponse>(
-					`https://panel.colchonesparana.com.py/api/v2/articulos/detalle/${id}/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC`
+				const {data, error} = await useFetch<ProductoResponse>(
+					`https://panel.colchonesparana.com.py/api/v2/articulos/detalle/${id}/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC`,
+					{
+						key: `producto-${id}`,
+						// onResponseError(ctx) {
+						// 	console.error(`Error en la respuesta de la API para producto ${id}:`, ctx.error);
+						// 	return ctx;
+						// }
+					}
 				);
-
-				if (data.value) {
-					return mapToProducto(data.value);
+				if (!data.value) {
+					console.error(`No se encontraron datos para el producto ${id}`);
+					return null;
 				}
-				return null;
+				if (error.value) {
+					console.error(`Error al cargar producto ${id}:`, error.value);
+					throw new Error(`Error al cargar el producto: ${error.value.message}`);
+				}
+
+				// Transformar y devolver el producto
+				const producto = mapToProducto(data.value);
+				console.log(`Producto ${id} cargado:`, producto);
+				return producto;
 			} catch (err) {
 				console.error(`Error al cargar producto con ID ${id}:`, err);
 				throw new Error('Error al cargar el producto. Por favor, intente nuevamente.');

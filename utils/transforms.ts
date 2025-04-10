@@ -14,6 +14,8 @@ export const mapToProducto = (data: ProductoResponse) => {
 		precio = 0;
 	}
 
+	console.table(data)
+
 	return {
 		codigo: data.ART_COD,
 		nombre: data.ART_DESCRIPCION,

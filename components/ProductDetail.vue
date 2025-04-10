@@ -202,7 +202,17 @@ onMounted(async () => {
     loading.value = true;
     error.value = null;
     
+    console.log(`Intentando cargar producto con ID: ${props.productId}`);
+    
+    if (!props.productId) {
+      error.value = 'ID de producto no válido';
+      console.error('ID de producto no válido:', props.productId);
+      return;
+    }
+    
     const productData = await productoStore.fetchProductoById(props.productId);
+    console.log('Datos del producto recibidos:', productData);
+    
     if (productData) {
       product.value = productData;
       
@@ -216,6 +226,7 @@ onMounted(async () => {
       emitter.emit('product:view', { productId: props.productId });
     } else {
       error.value = 'No se encontró el producto solicitado.';
+      console.error('Producto no encontrado con ID:', props.productId);
     }
   } catch (err) {
     console.error('Error al cargar producto:', err);
