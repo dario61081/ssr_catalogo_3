@@ -119,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useProductoStore } from '~/stores/productoStore';
 import { useFavoritesStore } from '~/stores/favoritesStore';
@@ -290,8 +290,20 @@ const loadData = async () => {
     // Cargar productos
     await productoStore.fetchProductos();
     
-    // Aplicar filtros desde la URL
-    applyFiltersFromUrl();
+    // Verificar si se cargaron productos
+    if (productoStore.productos.length === 0) {
+      console.warn('No se cargaron productos desde la API');
+    } else {
+      console.log(`Se cargaron ${productoStore.productos.length} productos correctamente`);
+    }
+    
+    // Aplicar filtros desde la URL o limpiar filtros si no hay parámetros
+    if (Object.keys(route.query).length > 0) {
+      applyFiltersFromUrl();
+    } else {
+      // Asegurarse de que los filtros estén limpios al iniciar
+      clearFilters(false); // Pasar false para no redirigir y evitar ciclos
+    }
     
     // Inicializar página
     currentPage.value = 1;
@@ -357,7 +369,8 @@ const applyFilters = () => {
 };
 
 // Limpiar filtros
-const clearFilters = () => {
+const clearFilters = (redirectToHome = true) => {
+  // Resetear el estado de filtros
   filterState.value = {
     categorias: [],
     subcategorias: [],
@@ -367,8 +380,22 @@ const clearFilters = () => {
     sortBy: 'nombre_asc'
   };
   
+  // Resetear la página actual
   currentPage.value = 1;
-  router.push({ query: {} });
+  
+  // Limpiar los parámetros de la URL
+  if (redirectToHome) {
+    router.push({ query: {} });
+  }
+  
+  // Forzar actualización de la UI
+  nextTick(() => {
+    // Aplicar los filtros para actualizar la lista de productos
+    applyFilters();
+    
+    // Notificar que los filtros han sido limpiados (opcional)
+    console.log('Filtros limpiados');
+  });
 };
 
 // Aplicar filtros desde la URL

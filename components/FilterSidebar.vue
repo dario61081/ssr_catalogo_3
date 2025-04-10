@@ -125,7 +125,7 @@
 
 <script lang="ts"
 	setup>
-import {computed, ref, watch} from 'vue';
+import {computed, ref, watch, nextTick} from 'vue';
 import {useRouter} from 'vue-router';
 import {FilterData} from '~/types';
 import emitter from '~/utils/eventBus';
@@ -322,19 +322,30 @@ const applyPriceFilter = () => {
 
 // Limpiar todos los filtros
 const clearAllFilters = () => {
+	// Limpiar estado local
 	localSelectedCategories.value = [];
 	localSelectedSubcategories.value = [];
 	localPriceMin.value = null;
 	localPriceMax.value = null;
 
+	// Emitir eventos para actualizar el estado en el componente padre
 	emit('update:selectedCategories', []);
 	emit('update:selectedSubcategories', []);
 	emit('update:priceMin', null);
 	emit('update:priceMax', null);
+	
+	// Emitir evento de limpieza de filtros
 	emit('clear-filters');
-
+	
 	// Limpiar parámetros de filtro en la URL
-	router.push({query: {}});
+	// Nota: Comentamos esta línea para evitar conflictos con la navegación en el componente padre
+	// router.push({query: {}});
+	
+	// Forzar actualización de la UI
+	nextTick(() => {
+		// Cerrar todas las categorías expandidas
+		expandedCategories.value = [];
+	});
 };
 
 // Actualizar parámetros de URL
