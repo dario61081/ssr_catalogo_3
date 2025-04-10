@@ -27,14 +27,29 @@ export const useProductoStore = defineStore('producto', {
 			this.error = null;
 
 			try {
-				const {data} = await useFetch<ProductoResponse[]>(
+				const {data, error} = await useFetch<ProductoResponse[]>(
 					'https://panel.colchonesparana.com.py/api/v2/articulos/division/TODOS/TODOS/TODOS/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC',
-					{key: 'productos'}
+					{
+						key: 'productos',
+						retry: 3,
+						onResponseError(ctx) {
+							console.error('Error en la respuesta de la API:', ctx.error);
+							return ctx;
+						}
+					}
 				);
 
-				if (data.value) {
+				if (error.value) {
+					throw new Error(`Error al cargar productos: ${error.value.message}`);
+				}
+
+				if (data.value && Array.isArray(data.value)) {
 					// Transformar los datos de la API al formato que necesitamos
 					this.productos = data.value.map(prod => mapToProducto(prod));
+					console.log(`Productos cargados: ${this.productos.length}`);
+				} else {
+					console.error('La respuesta de la API no contiene un array de productos:', data.value);
+					throw new Error('Formato de respuesta inválido');
 				}
 			} catch (err) {
 				console.error('Error al cargar productos:', err);

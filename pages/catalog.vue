@@ -56,12 +56,10 @@
           </div>
           
           <!-- Productos -->
-          <div v-if="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <ProductCard 
-              v-for="product in paginatedProducts" 
-              :key="product.codigo" 
-              :product="product" 
-            />
+          <div v-if="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-for="product in paginatedProducts" :key="product.codigo" class="h-full">
+              <ProductCard :product="product" />
+            </div>
           </div>
           
           <div v-else class="text-center py-16 bg-gray-50 rounded-lg">
