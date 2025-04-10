@@ -39,7 +39,7 @@
     </div>
     
     <!-- Información del producto -->
-    <div class="p-4">
+    <div class="p-4 flex flex-col h-full">
       <div class="mb-2">
         <p class="text-xs text-gray-500">{{ product.desc_division }}</p>
       </div>
@@ -50,26 +50,29 @@
         </h3>
       </NuxtLink>
       
-      <div class="mt-2 flex justify-between items-center">
+      <div class="mt-2">
         <p class="text-lg font-bold text-gray-900">
           Gs. {{ formatPrice(product.precio) }}
         </p>
-        
+      </div>
+      
+      <!-- Botón de añadir al carrito en la parte inferior -->
+      <div class="mt-auto pt-3">
         <button
           v-if="product.stock > 0"
-          class="bg-gray-700 hover:bg-gray-800 text-white text-sm py-1 px-3 rounded-md flex items-center transition-colors duration-200"
+          class="w-full bg-gray-700 hover:bg-gray-800 text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-colors duration-200"
           @click="addToCart"
         >
           <i class="pi pi-shopping-cart mr-1"></i>
-          <span class="hidden sm:inline">Añadir</span>
+          <span>Añadir</span>
         </button>
         <button
           v-else
-          class="bg-gray-300 text-gray-600 text-sm py-1 px-3 rounded-md flex items-center cursor-not-allowed"
+          class="w-full bg-gray-300 text-gray-600 text-sm py-2 px-3 rounded-md flex items-center justify-center cursor-not-allowed"
           disabled
         >
           <i class="pi pi-shopping-cart mr-1"></i>
-          <span class="hidden sm:inline">Agotado</span>
+          <span>Agotado</span>
         </button>
       </div>
     </div>
