@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
-import type {Categoria, CategoriaResponse, Subcategoria} from '~/types';
+import type {Categoria, CategoriaResponse, ProductoResponse, Subcategoria} from '~/types';
+import {mapToCategoria} from "~/utils/transforms";
 
 export const useCategoriaStore = defineStore('categoria', {
 	state: () => ({
@@ -15,7 +16,12 @@ export const useCategoriaStore = defineStore('categoria', {
 		},
 		getSubcategoriasByCategoriaId: (state) => (categoriaId: number) => {
 			return state.subcategorias.filter(subcat => subcat.codigoCategoria === categoriaId);
+		},
+		getCategoriasImages: state => {
+			return state.categorias.map(cat => cat.imagen);
 		}
+
+
 	},
 
 	actions: {
@@ -25,26 +31,19 @@ export const useCategoriaStore = defineStore('categoria', {
 
 			try {
 				const {data} = await useFetch<CategoriaResponse[]>(
-					'https://panel.colchonesparana.com.py/articulos/divisiones/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC/TODOS'
+					'https://panel.colchonesparana.com.py/api/v2/divisiones/TODOS/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC'
 				);
 
 				if (data.value) {
 					// Transformar los datos de la API al formato que necesitamos
-					this.categorias = data.value.map(cat => ({
-						codigo: cat.DIV_CODIGO,
-						nombre: cat.DIV_DESC,
-						imagen: cat.DIV_DIR_IMAGEN || '',
-						estado: cat.DIV_ESTADO,
-						orden: cat.DIV_ORDEN
-					}));
+					this.categorias = data.value.map(cat => mapToCategoria(cat));
 
 					// Ordenar categorías por orden
-					this.categorias.sort((a,
-										  b) => a.orden - b.orden);
+					this.categorias.sort((a, b) => a.orden - b.orden);
 
 					// Extraer subcategorías (en este caso, se simula ya que no tenemos endpoint específico)
 					// En una implementación real, esto podría ser otro endpoint o venir incluido en la respuesta
-					this.subcategorias = this.extractSubcategoriasFromProductos();
+					this.subcategorias = await this.extractSubcategoriasFromProductos();
 				}
 			} catch (err) {
 				console.error('Error al cargar categorías:', err);
@@ -55,18 +54,38 @@ export const useCategoriaStore = defineStore('categoria', {
 		},
 
 		// Método auxiliar para extraer subcategorías de los productos
-		// En un caso real, esto podría ser reemplazado por una llamada a la API
-		extractSubcategoriasFromProductos() {
-			// Este es un método temporal hasta que tengamos una API real de subcategorías
-			// Por ahora, usaremos datos simulados
-			return [
-				{codigo: 101, nombre: 'Colchones de Resortes', codigoCategoria: 1},
-				{codigo: 102, nombre: 'Colchones de Espuma', codigoCategoria: 1},
-				{codigo: 201, nombre: 'Sillas de Oficina', codigoCategoria: 2},
-				{codigo: 202, nombre: 'Sillas de Comedor', codigoCategoria: 2},
-				{codigo: 301, nombre: 'Mesas de Centro', codigoCategoria: 3},
-				{codigo: 302, nombre: 'Mesas de Comedor', codigoCategoria: 3}
-			];
+		async extractSubcategoriasFromProductos() {
+			try {
+				// Fetch productos
+				const { data } = await useFetch<ProductoResponse[]>(
+					'https://panel.colchonesparana.com.py/api/v2/articulos/division/TODOS/TODOS/TODOS/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC',
+					{ key: 'productos' }
+				);
+
+				if (!data.value) {
+					return [];
+				}
+
+				// Extraer subcategorías únicas de los productos
+				const subcategoriasMap = new Map<string, Subcategoria>();
+				
+				data.value.forEach(prod => {
+					const key = `${prod.DIV_CLAS}-${prod.DIVISION}`;
+					if (!subcategoriasMap.has(key)) {
+						subcategoriasMap.set(key, {
+							codigo: prod.DIV_CLAS,
+							nombre: prod.DIV_CLAS_DESC,
+							codigoCategoria: prod.DIVISION
+						});
+					}
+				});
+				
+				// Convertir el Map a un array de subcategorías
+				return Array.from(subcategoriasMap.values());
+			} catch (error) {
+				console.error('Error al extraer subcategorías:', error);
+				return [];
+			}
 		}
 	}
 });

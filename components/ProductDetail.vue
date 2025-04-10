@@ -206,6 +206,12 @@ onMounted(async () => {
     if (productData) {
       product.value = productData;
       
+      // Inicializar la cantidad a 1
+      quantity.value = 1;
+      
+      // Resetear el índice de imagen actual
+      currentImageIndex.value = 0;
+      
       // Notificar a través del event bus
       emitter.emit('product:view', { productId: props.productId });
     } else {
@@ -227,6 +233,10 @@ const isFavorite = computed(() => {
 
 // Formatear precio con separadores de miles
 const formatPrice = (price: number): string => {
+  if (typeof price === 'string') {
+    // Si por alguna razón llega como string, convertirlo a número
+    price = parseInt(price.toString().replace(/\./g, ''));
+  }
   return new Intl.NumberFormat('es-PY').format(price);
 };
 

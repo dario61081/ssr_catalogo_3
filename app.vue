@@ -5,8 +5,8 @@
       <div class="container mx-auto max-w-6xl px-4 py-4">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <!-- Logo -->
-          <NuxtLink to="/" class="text-2xl font-bold text-white mb-4 md:mb-0">
-            Paraná Hogar
+          <NuxtLink to="/" class="mb-4 md:mb-0">
+            <img src="/img/logo.svg" alt="Paraná Hogar" style="width: 180px;" />
           </NuxtLink>
           
           <!-- Navegación -->

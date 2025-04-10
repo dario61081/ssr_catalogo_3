@@ -185,7 +185,9 @@ const filteredProducts = computed(() => {
   // Filtrar por subcategorías
   if (filterState.value.subcategorias.length > 0) {
     result = result.filter(prod => 
-      filterState.value.subcategorias.includes(prod.codigo_categoria)
+      filterState.value.subcategorias.some(subcategoriaId => 
+        categoriaStore.getSubcategoriasByCategoriaId(prod.codigo_division).some(subcat => subcat.codigo === subcategoriaId)
+      )
     );
   }
   

@@ -8,6 +8,9 @@ definePageMeta({
 <template>
     
   <div class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Breadcrumb -->
+    <BreadCrumb :items="[{ text: 'Política de Privacidad' }]" class="mb-6" />
+    
     <h1 class="text-3xl font-bold mb-6">Política de Privacidad</h1>
     
     <div class="prose prose-lg">

@@ -7,6 +7,9 @@ definePageMeta({
 
 <template>
   <div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Breadcrumb -->
+    <BreadCrumb :items="[{ text: 'Términos de Uso' }]" class="mb-6" />
+    
     <h1 class="text-3xl font-bold mb-6">Términos y Condiciones de Uso</h1>
     
     <div class="prose prose-lg">

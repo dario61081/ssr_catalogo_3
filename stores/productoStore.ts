@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import type {Producto, ProductoResponse} from '~/types';
+import {mapToProducto} from "~/utils/transforms";
 
 export const useProductoStore = defineStore('producto', {
 	state: () => ({
@@ -32,19 +33,7 @@ export const useProductoStore = defineStore('producto', {
 
 				if (data.value) {
 					// Transformar los datos de la API al formato que necesitamos
-					this.productos = data.value.map(prod => ({
-						codigo: prod.ART_COD,
-						nombre: prod.ART_DESCRIPCION,
-						codigo_categoria: prod.DIV_CLAS,
-						desc_categoria: prod.DIV_CLAS_DESC,
-						precio: parseFloat(prod.PRECIO),
-						imagen: prod.ART_DIR_IMAG1 || '',
-						imagen_2: prod.ART_DIR_IMAG2 || '',
-						imagen_3: prod.ART_DIR_IMAG3 || '',
-						stock: prod.STOCK,
-						codigo_division: prod.DIVISION,
-						desc_division: prod.DIV_DESC
-					}));
+					this.productos = data.value.map(prod => mapToProducto(prod));
 				}
 			} catch (err) {
 				console.error('Error al cargar productos:', err);
@@ -61,20 +50,7 @@ export const useProductoStore = defineStore('producto', {
 				);
 
 				if (data.value) {
-					const prod = data.value;
-					return {
-						codigo: prod.ART_COD,
-						nombre: prod.ART_DESCRIPCION,
-						codigo_categoria: prod.DIV_CLAS,
-						desc_categoria: prod.DIV_CLAS_DESC,
-						precio: parseFloat(prod.PRECIO),
-						imagen: prod.ART_DIR_IMAG1 || '',
-						imagen_2: prod.ART_DIR_IMAG2 || '',
-						imagen_3: prod.ART_DIR_IMAG3 || '',
-						stock: prod.STOCK,
-						codigo_division: prod.DIVISION,
-						desc_division: prod.DIV_DESC
-					} as Producto;
+					return mapToProducto(data.value);
 				}
 				return null;
 			} catch (err) {
