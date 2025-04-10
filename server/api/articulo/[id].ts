@@ -1,20 +1,23 @@
-import {readFile} from 'fs/promises'
-import {join} from 'path'
+import {useMaps} from "~/composables/useMaps"
+import {ArticuloResponse} from "~/types/types";
 
 export default defineEventHandler(async (event) => {
+
+	const codigo = event.context.params.id
+
 	try {
-		// @ts-ignore
-		const {id} = event.context.params // Obtenemos el ID de la URL
-		const filePath = join(process.cwd(), 'public/api/articulos.json')
-		const content = await readFile(filePath, 'utf-8')
-		const data = JSON.parse(content)
+		const apiUrl = `https://panel.colchonesparana.com.py/api/v2/articulos/detalle/${codigo}/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC`
+		const data = await $fetch<ArticuloResponse[]>(apiUrl)
 
-		// Convertir el ID a número para comparar
-		const filtered = data.find((item: any) => item.ART_COD === Number(id))
+		// convertir a objeto Producto
+		return useMaps()
+			.mapToProducto(data[0])
 
-		return filtered ?? {error: 'Artículo no encontrado'}
 	} catch (error) {
 		console.error(error)
-		return {error: 'Error al leer artículos'}
+		return {error: 'Error al buscar artículos'}
 	}
 })
+
+
+

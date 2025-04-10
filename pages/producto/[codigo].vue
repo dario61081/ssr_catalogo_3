@@ -28,8 +28,7 @@ useHead({
 
 onMounted(async () => {
 	// product.value = productos.value.find((item: Producto) => item.codigo === codigo)
-	product.value = useMaps()
-		.mapToProducto(await $fetch('/api/articulo/' + codigo))
+	product.value = (await useProducto(codigo)).producto
 })
 
 const addToCart = () => {
