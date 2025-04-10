@@ -11,15 +11,15 @@
 			<div class="flex flex-col space-y-2">
 				<input
 					v-model="localSearchQuery"
-					type="text"
-					placeholder="Nombre del producto..."
 					class="w-full p-2 border rounded text-sm"
+					placeholder="Nombre del producto..."
+					type="text"
 				/>
 				<button
 					class="w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
 					@click="applySearchFilter"
 				>
-					<i class="pi pi-search mr-1"></i>
+					<i class="pi pi-search mr-2"></i>
 					Buscar
 				</button>
 			</div>
@@ -30,7 +30,7 @@
 			<h4 class="font-medium text-gray-700 mb-1 text-sm">Categorías</h4>
 			<div v-if="loading"
 				class="py-1 text-center text-gray-500">
-				<i class="pi pi-spin pi-spinner mr-1"></i>
+				<i class="pi pi-spin pi-spinner mr-2"></i>
 				Cargando...
 			</div>
 			<div v-else
@@ -128,7 +128,7 @@
 				class="mt-1 w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
 				@click="applyPriceFilter"
 			>
-				<i class="pi pi-check-circle mr-1"></i>
+				<i class="pi pi-check-circle mr-2"></i>
 				Aplicar
 			</button>
 		</div>
@@ -138,7 +138,7 @@
 			class="w-full border border-gray-300 text-gray-700 py-1 px-3 rounded text-xs hover:bg-gray-50 transition-colors flex items-center justify-center"
 			@click="clearAllFilters"
 		>
-			<i class="pi pi-filter-slash mr-1"></i>
+			<i class="pi pi-filter-slash mr-2"></i>
 			Limpiar filtros
 		</button>
 	</div>
@@ -146,7 +146,7 @@
 
 <script lang="ts"
 	setup>
-import {computed, ref, watch, nextTick} from 'vue';
+import {computed, nextTick, ref, watch} from 'vue';
 import {useRouter} from 'vue-router';
 import {FilterData} from '~/types';
 import emitter from '~/utils/eventBus';
@@ -372,13 +372,13 @@ const clearAllFilters = () => {
 	emit('update:priceMin', null);
 	emit('update:priceMax', null);
 	emit('update:searchQuery', '');
-	
+
 	// Emitir evento de limpieza de filtros
 	emit('clear-filters');
-	
+
 	// Nota: Comentamos esta línea para evitar conflictos con la navegación en el componente padre
 	// router.push({query: {}});
-	
+
 	// Forzar actualización de la UI
 	nextTick(() => {
 		// Cerrar todas las categorías expandidas

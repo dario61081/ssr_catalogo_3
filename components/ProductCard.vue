@@ -58,7 +58,7 @@
 
 			<div class="mt-2">
 				<p class="text-lg font-bold text-gray-900">
-					Gs. {{ formatPrice(product.precio) }}
+					Gs. {{ product.precio }}
 				</p>
 			</div>
 

@@ -56,28 +56,28 @@ export const useProductoStore = defineStore('producto', {
 				// Imprimir la respuesta para depuración
 				console.log('Respuesta de la API:', typeof data.value, data.value);
 
-				// Verificar si es un array o si podemos convertirlo en uno
-				let productosArray = data.value;
-				if (!Array.isArray(productosArray)) {
-					// Intentar convertir a array si es un objeto
-					if (typeof productosArray === 'object' && productosArray !== null) {
-						console.warn('La respuesta no es un array, intentando convertir');
-						// Si es un objeto con una propiedad que contiene el array
-						const possibleArrayProperties = Object.values(productosArray);
-						if (possibleArrayProperties.length > 0 && Array.isArray(possibleArrayProperties[0])) {
-							productosArray = possibleArrayProperties[0];
-						} else {
-							// Si es un objeto que debería tratarse como un array de un solo elemento
-							productosArray = [productosArray];
-						}
-					} else {
-						console.error('La respuesta no es un array ni un objeto:', productosArray);
-						throw new Error('Formato de respuesta inválido: no es un array ni un objeto');
-					}
-				}
+				// // Verificar si es un array o si podemos convertirlo en uno
+				// let productosArray = data.value;
+				// if (!Array.isArray(productosArray)) {
+				// 	// Intentar convertir a array si es un objeto
+				// 	if (typeof productosArray === 'object' && productosArray !== null) {
+				// 		console.warn('La respuesta no es un array, intentando convertir');
+				// 		// Si es un objeto con una propiedad que contiene el array
+				// 		const possibleArrayProperties = Object.values(productosArray);
+				// 		if (possibleArrayProperties.length > 0 && Array.isArray(possibleArrayProperties[0])) {
+				// 			productosArray = possibleArrayProperties[0];
+				// 		} else {
+				// 			// Si es un objeto que debería tratarse como un array de un solo elemento
+				// 			productosArray = [productosArray];
+				// 		}
+				// 	} else {
+				// 		console.error('La respuesta no es un array ni un objeto:', productosArray);
+				// 		throw new Error('Formato de respuesta inválido: no es un array ni un objeto');
+				// 	}
+				// }
 
-				// Transformar los datos
-				this.productos = productosArray.map(prod => mapToProducto(prod));
+				// Transformar los datosw
+				this.productos = data.value.map(prod => mapToProducto(prod));
 				console.log(`Productos cargados: ${this.productos.length}`);
 
 				// Si no hay productos después de procesar, podría ser un problema con la transformación

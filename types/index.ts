@@ -46,6 +46,7 @@ export interface Subcategoria {
 
 export interface Producto {
 	codigo: number;
+	codigo_alfanum: string;
 	nombre: string;
 	codigo_categoria: number;
 	desc_categoria: string;

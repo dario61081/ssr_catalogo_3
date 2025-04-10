@@ -154,7 +154,7 @@
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div class="flex">
 							<div class="w-1/3 font-medium text-gray-700">Código:</div>
-							<div class="w-2/3 text-gray-600">{{ product.codigo }}</div>
+							<div class="w-2/3 text-gray-600">{{ product.codigo_alfanum }}</div>
 						</div>
 						<div class="flex">
 							<div class="w-1/3 font-medium text-gray-700">Categoría:</div>
