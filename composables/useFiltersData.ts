@@ -36,9 +36,7 @@ export const useFiltersData = () => {
 		loading.value = false
 	}
 
-	onMounted(() => {
-		refresh()
-	})
+	refresh()
 
 
 	return {
