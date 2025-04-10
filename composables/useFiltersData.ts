@@ -3,6 +3,7 @@ import {FilterData, FiltersResponse} from "~/types";
 export const useFiltersData = () => {
 	const filtrosData = ref<FilterData[]>([])
 	const loading = ref(false)
+
 	const mapToFilterData = (item: FiltersResponse): FilterData => {
 		return {
 			codigo_orden: item.DIV_ORDEN,
@@ -30,11 +31,15 @@ export const useFiltersData = () => {
 		}
 
 
+		// @ts-ignore
 		filtrosData.value = data.value.map(item => mapToFilterData(item))
 		loading.value = false
 	}
 
-	refresh()
+	onMounted(() => {
+		refresh()
+	})
+
 
 	return {
 		filtrosData,

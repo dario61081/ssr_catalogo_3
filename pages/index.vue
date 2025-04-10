@@ -4,16 +4,17 @@
 		<div class="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16 px-4 mb-8 overflow-hidden">
 			<!-- Slider de imágenes de fondo -->
 			<div class="absolute inset-0 w-full h-full">
-				<div v-for="(image, index) in backgroundImages" :key="index" 
-					class="absolute inset-0 w-full h-full transition-opacity duration-1000 bg-cover bg-center"
-					:style="{ 
+				<div v-for="(image, index) in backgroundImages"
+					:key="index"
+					:style="{
 						backgroundImage: `url(${image || '/images/placeholder.jpg'})`,
 						opacity: currentSlide === index ? 1 : 0
-					}">
+					}"
+					class="absolute inset-0 w-full h-full transition-opacity duration-1000 bg-cover bg-center">
 					<div class="absolute inset-0 bg-blue-900/60"></div>
 				</div>
 			</div>
-			
+
 			<div class="container mx-auto max-w-6xl relative z-10">
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
 					<div>
@@ -29,16 +30,16 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<!-- Indicadores del slider -->
 			<div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-10">
-				<button 
-					v-for="(_, index) in backgroundImages" 
+				<button
+					v-for="(_, index) in backgroundImages"
 					:key="index"
-					@click="currentSlide = index"
-					class="w-2 h-2 rounded-full transition-all duration-300"
 					:class="currentSlide === index ? 'bg-white w-4' : 'bg-white/50'"
-					aria-label="Cambiar imagen de fondo">
+					aria-label="Cambiar imagen de fondo"
+					class="w-2 h-2 rounded-full transition-all duration-300"
+					@click="currentSlide = index">
 				</button>
 			</div>
 		</div>
@@ -120,6 +121,7 @@ import {useProductoStore} from '~/stores/productoStore';
 import {useFavoritesStore} from '~/stores/favoritesStore';
 import {useCartStore} from '~/stores/cartStore';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
+import {useFiltersData} from "#imports";
 
 // Definir título y meta tags para SEO
 useHead({
@@ -146,7 +148,10 @@ const slideInterval = ref<number | null>(null);
 
 // Obtener imágenes de categorías para el slider
 const backgroundImages = computed(() => {
-	return categoriaStore.getCategoriasImages;
+	return useFiltersData()
+		.filtrosData
+		.value
+		.map(item => item.imagen);
 });
 
 // Obtener productos destacados (simulados como los primeros 8 productos)
@@ -157,6 +162,7 @@ const productosDestacados = computed(() => {
 // Función para cambiar al siguiente slide
 const nextSlide = () => {
 	if (backgroundImages.value.length > 0) {
+		console.log('nextSlide', currentSlide.value);
 		currentSlide.value = (currentSlide.value + 1) % backgroundImages.value.length;
 	}
 };
@@ -171,13 +177,13 @@ onMounted(async () => {
 	try {
 		loadingProductos.value = true;
 		errorProductos.value = null;
-		
+
 		// Cargar productos
 		await productoStore.fetchProductos();
-		
+
 		// Cargar categorías para obtener las imágenes
 		await categoriaStore.fetchCategorias();
-		
+
 		// Iniciar el slider automático
 		if (backgroundImages.value.length > 0) {
 			slideInterval.value = window.setInterval(nextSlide, 5000);

@@ -28,7 +28,8 @@ export const useProductoStore = defineStore('producto', {
 
 			try {
 				const {data} = await useFetch<ProductoResponse[]>(
-					'https://panel.colchonesparana.com.py/api/v2/articulos/division/TODOS/TODOS/TODOS/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC'
+					'https://panel.colchonesparana.com.py/api/v2/articulos/division/TODOS/TODOS/TODOS/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC',
+					{key: 'productos'}
 				);
 
 				if (data.value) {
