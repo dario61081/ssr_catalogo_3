@@ -8,62 +8,67 @@
     <!-- Categorías -->
     <div class="mb-6">
       <h4 class="font-medium text-gray-700 mb-2">Categorías</h4>
-      <div class="max-h-60 overflow-y-auto pr-2 category-list">
+      <div v-if="loading" class="py-2 text-center text-gray-500">
+        <i class="pi pi-spin pi-spinner mr-1"></i> Cargando...
+      </div>
+      <div v-else class="max-h-60 overflow-y-auto pr-2 category-list">
         <div 
-          v-for="categoria in categorias" 
-          :key="categoria.codigo"
+          v-for="categoria in categoriasList" 
+          :key="categoria.codigo_categoria"
           class="mb-2"
         >
           <div 
             class="flex items-center justify-between cursor-pointer p-2 rounded hover:bg-gray-50"
-            :class="{ 'bg-gray-100': isSelectedCategory(categoria.codigo) }"
-            @click="toggleCategory(categoria.codigo)"
+            :class="{ 'bg-gray-100': isSelectedCategory(categoria.codigo_categoria) }"
+            @click="toggleCategory(categoria.codigo_categoria)"
           >
             <div class="flex items-center">
               <input 
                 type="checkbox" 
-                :id="`cat-${categoria.codigo}`"
-                :checked="isSelectedCategory(categoria.codigo)"
+                :id="`cat-${categoria.codigo_categoria}`"
+                :checked="isSelectedCategory(categoria.codigo_categoria)"
                 class="mr-2 h-4 w-4 text-gray-700 rounded"
                 @click.stop
-                @change="toggleCategory(categoria.codigo)"
+                @change="toggleCategory(categoria.codigo_categoria)"
               />
-              <label :for="`cat-${categoria.codigo}`" class="cursor-pointer">
-                {{ categoria.nombre }}
+              <label :for="`cat-${categoria.codigo_categoria}`" class="cursor-pointer">
+                {{ categoria.desc_categoria }}
+                <span class="text-xs text-gray-500 ml-1">({{ categoria.total_categoria }})</span>
               </label>
             </div>
             <button 
-              v-if="hasSubcategories(categoria.codigo)"
-              @click.stop="toggleSubcategoryVisibility(categoria.codigo)"
+              v-if="hasSubcategories(categoria.codigo_categoria)"
+              @click.stop="toggleSubcategoryVisibility(categoria.codigo_categoria)"
               class="text-gray-500 hover:text-gray-700"
             >
               <i 
                 class="pi" 
-                :class="expandedCategories.includes(categoria.codigo) ? 'pi-chevron-down' : 'pi-chevron-right'"
+                :class="expandedCategories.includes(categoria.codigo_categoria) ? 'pi-chevron-down' : 'pi-chevron-right'"
               ></i>
             </button>
           </div>
           
           <!-- Subcategorías -->
           <div 
-            v-if="expandedCategories.includes(categoria.codigo) && hasSubcategories(categoria.codigo)"
+            v-if="expandedCategories.includes(categoria.codigo_categoria) && hasSubcategories(categoria.codigo_categoria)"
             class="ml-6 mt-2 subcategory-list"
           >
             <div 
-              v-for="subcategoria in getSubcategoriesByCategory(categoria.codigo)" 
-              :key="subcategoria.codigo"
+              v-for="subcategoria in getSubcategoriesByCategory(categoria.codigo_categoria)" 
+              :key="subcategoria.codigo_subcategoria"
               class="mb-1"
             >
               <div class="flex items-center p-1 rounded hover:bg-gray-50">
                 <input 
                   type="checkbox" 
-                  :id="`subcat-${subcategoria.codigo}`"
-                  :checked="isSelectedSubcategory(subcategoria.codigo)"
+                  :id="`subcat-${subcategoria.codigo_subcategoria}`"
+                  :checked="isSelectedSubcategory(subcategoria.codigo_subcategoria)"
                   class="mr-2 h-4 w-4 text-gray-700 rounded"
-                  @change="toggleSubcategory(subcategoria.codigo)"
+                  @change="toggleSubcategory(subcategoria.codigo_subcategoria, categoria.codigo_categoria)"
                 />
-                <label :for="`subcat-${subcategoria.codigo}`" class="cursor-pointer text-sm">
-                  {{ subcategoria.nombre }}
+                <label :for="`subcat-${subcategoria.codigo_subcategoria}`" class="cursor-pointer text-sm">
+                  {{ subcategoria.desc_subcategoria }}
+                  <span class="text-xs text-gray-500 ml-1">({{ subcategoria.total_subcategoria }})</span>
                 </label>
               </div>
             </div>
@@ -114,17 +119,19 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { Categoria, Subcategoria } from '~/types';
+import { FilterData } from '~/types';
 import emitter from '~/utils/eventBus';
+import { useFiltersData } from '~/composables/useFiltersData';
 
+// Props
 const props = defineProps({
-  categorias: {
-    type: Array as () => Categoria[],
-    default: () => []
+  priceMin: {
+    type: Number,
+    default: null
   },
-  subcategorias: {
-    type: Array as () => Subcategoria[],
-    default: () => []
+  priceMax: {
+    type: Number,
+    default: null
   },
   selectedCategories: {
     type: Array as () => number[],
@@ -133,17 +140,10 @@ const props = defineProps({
   selectedSubcategories: {
     type: Array as () => number[],
     default: () => []
-  },
-  priceMin: {
-    type: Number,
-    default: null
-  },
-  priceMax: {
-    type: Number,
-    default: null
   }
 });
 
+// Emits
 const emit = defineEmits([
   'update:selectedCategories', 
   'update:selectedSubcategories', 
@@ -153,12 +153,18 @@ const emit = defineEmits([
   'clear-filters'
 ]);
 
+// Router
 const router = useRouter();
+
+// Estado local
 const expandedCategories = ref<number[]>([]);
 const localSelectedCategories = ref<number[]>([...props.selectedCategories]);
 const localSelectedSubcategories = ref<number[]>([...props.selectedSubcategories]);
 const localPriceMin = ref<number | null>(props.priceMin);
 const localPriceMax = ref<number | null>(props.priceMax);
+
+// Obtener datos de filtros
+const { filtrosData, loading } = useFiltersData();
 
 // Sincronizar props con estado local
 watch(() => props.selectedCategories, (newVal) => {
@@ -177,22 +183,49 @@ watch(() => props.priceMax, (newVal) => {
   localPriceMax.value = newVal;
 });
 
+// Obtener lista única de categorías
+const categoriasList = computed(() => {
+  const categoriasMap = new Map<number, FilterData>();
+  
+  filtrosData.value.forEach(item => {
+    if (!categoriasMap.has(item.codigo_categoria)) {
+      categoriasMap.set(item.codigo_categoria, item);
+    }
+  });
+  
+  return Array.from(categoriasMap.values());
+});
+
+// Verificar si una categoría está seleccionada
 const isSelectedCategory = (categoryId: number): boolean => {
   return localSelectedCategories.value.includes(categoryId);
 };
 
+// Verificar si una subcategoría está seleccionada
 const isSelectedSubcategory = (subcategoryId: number): boolean => {
   return localSelectedSubcategories.value.includes(subcategoryId);
 };
 
+// Verificar si una categoría tiene subcategorías
 const hasSubcategories = (categoryId: number): boolean => {
-  return props.subcategorias.some(subcat => subcat.codigoCategoria === categoryId);
+  return filtrosData.value.some(item => 
+    item.codigo_categoria === categoryId && 
+    item.codigo_subcategoria !== null
+  );
 };
 
-const getSubcategoriesByCategory = (categoryId: number): Subcategoria[] => {
-  return props.subcategorias.filter(subcat => subcat.codigoCategoria === categoryId);
+// Obtener subcategorías por categoría
+const getSubcategoriesByCategory = (categoryId: number) => {
+  return filtrosData.value
+    .filter(item => item.codigo_categoria === categoryId)
+    .map(item => ({
+      codigo_subcategoria: item.codigo_subcategoria,
+      desc_subcategoria: item.desc_subcategoria,
+      total_subcategoria: item.total_subcategoria
+    }));
 };
 
+// Mostrar/ocultar subcategorías
 const toggleSubcategoryVisibility = (categoryId: number) => {
   if (expandedCategories.value.includes(categoryId)) {
     expandedCategories.value = expandedCategories.value.filter(id => id !== categoryId);
@@ -201,15 +234,15 @@ const toggleSubcategoryVisibility = (categoryId: number) => {
   }
 };
 
+// Seleccionar/deseleccionar categoría
 const toggleCategory = (categoryId: number) => {
   if (isSelectedCategory(categoryId)) {
     // Si la categoría está seleccionada, la quitamos
     localSelectedCategories.value = localSelectedCategories.value.filter(id => id !== categoryId);
     
     // También quitamos las subcategorías asociadas
-    const subcatsToRemove = props.subcategorias
-      .filter(subcat => subcat.codigoCategoria === categoryId)
-      .map(subcat => subcat.codigo);
+    const subcatsToRemove = getSubcategoriesByCategory(categoryId)
+      .map(subcat => subcat.codigo_subcategoria);
     
     localSelectedSubcategories.value = localSelectedSubcategories.value.filter(
       id => !subcatsToRemove.includes(id)
@@ -238,7 +271,8 @@ const toggleCategory = (categoryId: number) => {
   updateUrlParams();
 };
 
-const toggleSubcategory = (subcategoryId: number) => {
+// Seleccionar/deseleccionar subcategoría
+const toggleSubcategory = (subcategoryId: number, categoryId: number) => {
   if (isSelectedSubcategory(subcategoryId)) {
     // Si la subcategoría está seleccionada, la quitamos
     localSelectedSubcategories.value = localSelectedSubcategories.value.filter(id => id !== subcategoryId);
@@ -247,9 +281,8 @@ const toggleSubcategory = (subcategoryId: number) => {
     localSelectedSubcategories.value.push(subcategoryId);
     
     // Aseguramos que la categoría padre esté seleccionada
-    const subcategoria = props.subcategorias.find(subcat => subcat.codigo === subcategoryId);
-    if (subcategoria && !localSelectedCategories.value.includes(subcategoria.codigoCategoria)) {
-      localSelectedCategories.value.push(subcategoria.codigoCategoria);
+    if (!localSelectedCategories.value.includes(categoryId)) {
+      localSelectedCategories.value.push(categoryId);
     }
   }
   
@@ -259,9 +292,8 @@ const toggleSubcategory = (subcategoryId: number) => {
   emit('filter-changed');
   
   // Notificar a través del event bus
-  const subcategoria = props.subcategorias.find(subcat => subcat.codigo === subcategoryId);
   emitter.emit('filter:change', { 
-    categoryId: subcategoria?.codigoCategoria,
+    categoryId: categoryId,
     subcategoryId: subcategoryId
   });
   
@@ -269,6 +301,7 @@ const toggleSubcategory = (subcategoryId: number) => {
   updateUrlParams();
 };
 
+// Aplicar filtro de precio
 const applyPriceFilter = () => {
   emit('update:priceMin', localPriceMin.value);
   emit('update:priceMax', localPriceMax.value);
@@ -278,6 +311,7 @@ const applyPriceFilter = () => {
   updateUrlParams();
 };
 
+// Limpiar todos los filtros
 const clearAllFilters = () => {
   localSelectedCategories.value = [];
   localSelectedSubcategories.value = [];
@@ -294,6 +328,7 @@ const clearAllFilters = () => {
   router.push({ query: {} });
 };
 
+// Actualizar parámetros de URL
 const updateUrlParams = () => {
   const query = { ...router.currentRoute.value.query };
   

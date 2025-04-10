@@ -28,8 +28,6 @@
         <!-- Sidebar de filtros -->
         <div class="lg:col-span-1">
           <FilterSidebar
-            :categorias="categorias"
-            :subcategorias="subcategorias"
             v-model:selectedCategories="filterState.categorias"
             v-model:selectedSubcategories="filterState.subcategorias"
             :priceMin="filterState.precioMin"
@@ -125,10 +123,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useCategoriaStore } from '~/stores/categoriaStore';
 import { useProductoStore } from '~/stores/productoStore';
 import { useFavoritesStore } from '~/stores/favoritesStore';
 import { useCartStore } from '~/stores/cartStore';
+import { useFiltersData } from '~/composables/useFiltersData';
 import type { FilterState, SortCriteria, Producto } from '~/types';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
 
@@ -145,10 +143,12 @@ const route = useRoute();
 const router = useRouter();
 
 // Stores
-const categoriaStore = useCategoriaStore();
 const productoStore = useProductoStore();
 const favoritesStore = useFavoritesStore();
 const cartStore = useCartStore();
+
+// Obtener datos de filtros
+const { filtrosData, loading: filtersLoading } = useFiltersData();
 
 // Estado
 const loading = ref(true);
@@ -167,8 +167,6 @@ const filterState = ref<FilterState>({
 });
 
 // Getters computados
-const categorias = computed(() => categoriaStore.categorias);
-const subcategorias = computed(() => categoriaStore.subcategorias);
 const productos = computed(() => productoStore.productos);
 
 // Productos filtrados según los criterios seleccionados
@@ -185,9 +183,7 @@ const filteredProducts = computed(() => {
   // Filtrar por subcategorías
   if (filterState.value.subcategorias.length > 0) {
     result = result.filter(prod => 
-      filterState.value.subcategorias.some(subcategoriaId => 
-        categoriaStore.getSubcategoriasByCategoriaId(prod.codigo_division).some(subcat => subcat.codigo === subcategoriaId)
-      )
+      filterState.value.subcategorias.includes(prod.codigo_categoria)
     );
   }
   
@@ -289,22 +285,18 @@ const paginationItems = computed(() => {
 
 // Cargar datos iniciales
 const loadData = async () => {
+  loading.value = true;
+  error.value = null;
+  
   try {
-    loading.value = true;
-    error.value = null;
-    
-    // Cargar favoritos y carrito desde localStorage
-    favoritesStore.loadFavorites();
-    cartStore.loadCart();
-    
-    // Cargar categorías y productos en paralelo
-    await Promise.all([
-      categoriaStore.fetchCategorias(),
-      productoStore.fetchProductos()
-    ]);
+    // Cargar productos
+    await productoStore.fetchProductos();
     
     // Aplicar filtros desde la URL
     applyFiltersFromUrl();
+    
+    // Inicializar página
+    currentPage.value = 1;
   } catch (err) {
     console.error('Error al cargar datos:', err);
     error.value = 'Error al cargar los datos. Por favor, intente nuevamente.';
