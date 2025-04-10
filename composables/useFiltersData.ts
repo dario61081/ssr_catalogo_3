@@ -30,7 +30,6 @@ export const useFiltersData = () => {
 			filtrosData.value = []
 		}
 
-
 		// @ts-ignore
 		filtrosData.value = data.value.map(item => mapToFilterData(item))
 		loading.value = false

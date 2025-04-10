@@ -5,6 +5,26 @@
 			Filtros
 		</h3>
 
+		<!-- Buscador -->
+		<div class="mb-5">
+			<h4 class="font-medium text-gray-700 mb-1 text-sm">Buscar productos</h4>
+			<div class="flex flex-col space-y-2">
+				<input
+					v-model="localSearchQuery"
+					type="text"
+					placeholder="Nombre del producto..."
+					class="w-full p-2 border rounded text-sm"
+				/>
+				<button
+					class="w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
+					@click="applySearchFilter"
+				>
+					<i class="pi pi-search mr-1"></i>
+					Buscar
+				</button>
+			</div>
+		</div>
+
 		<!-- Categorías -->
 		<div class="mb-5">
 			<h4 class="font-medium text-gray-700 mb-1 text-sm">Categorías</h4>
@@ -105,9 +125,10 @@
 				/>
 			</div>
 			<button
-				class="mt-1 w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors"
+				class="mt-1 w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
 				@click="applyPriceFilter"
 			>
+				<i class="pi pi-check-circle mr-1"></i>
 				Aplicar
 			</button>
 		</div>
@@ -148,6 +169,10 @@ const props = defineProps({
 	selectedSubcategories: {
 		type: Array as () => number[],
 		default: () => []
+	},
+	searchQuery: {
+		type: String,
+		default: ''
 	}
 });
 
@@ -157,6 +182,7 @@ const emit = defineEmits([
 	'update:selectedSubcategories',
 	'update:priceMin',
 	'update:priceMax',
+	'update:searchQuery',
 	'filter-changed',
 	'clear-filters'
 ]);
@@ -170,6 +196,7 @@ const localSelectedCategories = ref<number[]>([...props.selectedCategories]);
 const localSelectedSubcategories = ref<number[]>([...props.selectedSubcategories]);
 const localPriceMin = ref<number | null>(props.priceMin);
 const localPriceMax = ref<number | null>(props.priceMax);
+const localSearchQuery = ref<string>(props.searchQuery);
 
 // Obtener datos de filtros
 const {filtrosData, loading} = useFiltersData();
@@ -189,6 +216,10 @@ watch(() => props.priceMin, (newVal) => {
 
 watch(() => props.priceMax, (newVal) => {
 	localPriceMax.value = newVal;
+});
+
+watch(() => props.searchQuery, (newVal) => {
+	localSearchQuery.value = newVal;
 });
 
 // Obtener lista única de categorías
@@ -320,6 +351,12 @@ const applyPriceFilter = () => {
 	updateUrlParams();
 };
 
+// Aplicar filtro de búsqueda
+const applySearchFilter = () => {
+	emit('update:searchQuery', localSearchQuery.value);
+	emit('filter-changed');
+};
+
 // Limpiar todos los filtros
 const clearAllFilters = () => {
 	// Limpiar estado local
@@ -327,17 +364,18 @@ const clearAllFilters = () => {
 	localSelectedSubcategories.value = [];
 	localPriceMin.value = null;
 	localPriceMax.value = null;
+	localSearchQuery.value = '';
 
 	// Emitir eventos para actualizar el estado en el componente padre
 	emit('update:selectedCategories', []);
 	emit('update:selectedSubcategories', []);
 	emit('update:priceMin', null);
 	emit('update:priceMax', null);
+	emit('update:searchQuery', '');
 	
 	// Emitir evento de limpieza de filtros
 	emit('clear-filters');
 	
-	// Limpiar parámetros de filtro en la URL
 	// Nota: Comentamos esta línea para evitar conflictos con la navegación en el componente padre
 	// router.push({query: {}});
 	
@@ -377,6 +415,13 @@ const updateUrlParams = () => {
 		query.max = localPriceMax.value.toString();
 	} else {
 		delete query.max;
+	}
+
+	// Búsqueda
+	if (localSearchQuery.value) {
+		query.q = localSearchQuery.value;
+	} else {
+		delete query.q;
 	}
 
 	router.push({query});

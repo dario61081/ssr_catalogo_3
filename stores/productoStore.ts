@@ -2,13 +2,14 @@ import {defineStore} from 'pinia';
 import type {Producto, ProductoResponse} from '~/types';
 import {mapToProducto} from "~/utils/transforms";
 
+
 export const useProductoStore = defineStore('producto', {
 	state: () => ({
 		productos: [] as Producto[],
 		loading: false,
 		error: null as string | null,
 	}),
-
+	persist: true,
 	getters: {
 		getProductoById: (state) => (id: number) => {
 			return state.productos.find(prod => prod.codigo === id);
@@ -31,7 +32,7 @@ export const useProductoStore = defineStore('producto', {
 					'https://panel.colchonesparana.com.py/api/v2/articulos/division/TODOS/TODOS/TODOS/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC',
 					{
 						key: 'productos',
-						retry: 3,
+						server: true,
 						onResponseError(ctx) {
 							console.error('Error en la respuesta de la API:', ctx.error);
 							return ctx;
@@ -39,10 +40,12 @@ export const useProductoStore = defineStore('producto', {
 					}
 				);
 
+
 				if (error.value) {
 					console.error('Error de la API:', error.value);
 					throw new Error(`Error al cargar productos: ${error.value.message}`);
 				}
+
 
 				// Verificar si data.value existe
 				if (!data.value) {
@@ -120,4 +123,5 @@ export const useProductoStore = defineStore('producto', {
 			}
 		}
 	}
+
 });

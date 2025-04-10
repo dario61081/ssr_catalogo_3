@@ -1,20 +1,6 @@
 import {CategoriaResponse, ProductoResponse} from "~/types";
 
 export const mapToProducto = (data: ProductoResponse) => {
-	// Asegurarse de que el precio se procese correctamente
-	// let precio;
-	// try {
-	// 	// Eliminar todos los puntos y convertir a número
-	// 	precio = parseInt(data.PRECIO.replace(/\./g, ''));
-	// 	if (isNaN(precio)) {
-	// 		precio = 0;
-	// 	}
-	// } catch (error) {
-	// 	console.error('Error al procesar el precio:', error);
-	// 	precio = 0;
-	// }
-	//
-	console.table(data)
 
 	return {
 		codigo: data.ART_COD,
