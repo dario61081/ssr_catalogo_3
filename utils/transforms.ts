@@ -2,18 +2,18 @@ import {CategoriaResponse, ProductoResponse} from "~/types";
 
 export const mapToProducto = (data: ProductoResponse) => {
 	// Asegurarse de que el precio se procese correctamente
-	let precio;
-	try {
-		// Eliminar todos los puntos y convertir a número
-		precio = parseInt(data.PRECIO.replace(/\./g, ''));
-		if (isNaN(precio)) {
-			precio = 0;
-		}
-	} catch (error) {
-		console.error('Error al procesar el precio:', error);
-		precio = 0;
-	}
-
+	// let precio;
+	// try {
+	// 	// Eliminar todos los puntos y convertir a número
+	// 	precio = parseInt(data.PRECIO.replace(/\./g, ''));
+	// 	if (isNaN(precio)) {
+	// 		precio = 0;
+	// 	}
+	// } catch (error) {
+	// 	console.error('Error al procesar el precio:', error);
+	// 	precio = 0;
+	// }
+	//
 	console.table(data)
 
 	return {
@@ -21,7 +21,7 @@ export const mapToProducto = (data: ProductoResponse) => {
 		nombre: data.ART_DESCRIPCION,
 		codigo_categoria: data.DIV_CLAS,
 		desc_categoria: data.DIV_CLAS_DESC,
-		precio: precio,
+		precio: parseInt(data.PRECIO.replace('.', '')),
 		imagen: data.ART_DIR_IMAG1 || '',
 		imagen_2: data.ART_DIR_IMAG2 || '',
 		imagen_3: data.ART_DIR_IMAG3 || '',

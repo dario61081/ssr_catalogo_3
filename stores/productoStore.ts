@@ -76,7 +76,7 @@ export const useProductoStore = defineStore('producto', {
 				// Transformar los datos
 				this.productos = productosArray.map(prod => mapToProducto(prod));
 				console.log(`Productos cargados: ${this.productos.length}`);
-				
+
 				// Si no hay productos después de procesar, podría ser un problema con la transformación
 				if (this.productos.length === 0) {
 					console.warn('No se encontraron productos después de procesar la respuesta');
@@ -91,14 +91,14 @@ export const useProductoStore = defineStore('producto', {
 
 		async fetchProductoById(id: number) {
 			try {
-				const {data, error} = await useFetch<ProductoResponse>(
+				const {data, error} = await useFetch<ProductoResponse[]>(
 					`https://panel.colchonesparana.com.py/api/v2/articulos/detalle/${id}/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC`,
 					{
 						key: `producto-${id}`,
-						// onResponseError(ctx) {
-						// 	console.error(`Error en la respuesta de la API para producto ${id}:`, ctx.error);
-						// 	return ctx;
-						// }
+						onResponseError(ctx) {
+							console.error(`Error en la respuesta de la API para producto ${id}:`, ctx.error);
+							return ctx;
+						}
 					}
 				);
 				if (!data.value) {
@@ -111,7 +111,7 @@ export const useProductoStore = defineStore('producto', {
 				}
 
 				// Transformar y devolver el producto
-				const producto = mapToProducto(data.value);
+				const producto = mapToProducto(data.value[0]);
 				console.log(`Producto ${id} cargado:`, producto);
 				return producto;
 			} catch (err) {
