@@ -29,12 +29,15 @@
 				
 			</div>
 		</div>
+		<!-- Ultimos productos -->
+		<UltimosProductosVistos></UltimosProductosVistos>
 	</div>
 </template>
 
 <script lang="ts"
 	setup>
 import {computed, onMounted, ref, watch} from 'vue';
+import UltimosProductosVistos from '~/components/UltimosProductosVistos.vue';
 // import {useRoute} from 'vue-router';
 import {useProductoStore} from '~/stores/productoStore';
 import type {Producto} from '~/types';

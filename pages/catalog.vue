@@ -141,8 +141,7 @@
 			</div>
 		</div>
 
-		<!-- Ultimos productos -->
-		<UltimosProductosVistos></UltimosProductosVistos>
+		
 		<!-- Modal de vista previa de producto -->
 		<ProductModalPreview
 			:isOpen="showProductPreview"
