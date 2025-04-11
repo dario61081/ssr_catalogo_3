@@ -14,6 +14,8 @@
 					class="w-full p-2 border rounded text-sm"
 					placeholder="Nombre del producto..."
 					type="text"
+					@keydown.enter.prevent="applySearchFilter"
+					@keydown.esc.prevent="localSearchQuery = ''"
 				/>
 				<button
 					class="w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
