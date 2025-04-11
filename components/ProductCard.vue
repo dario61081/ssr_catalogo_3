@@ -28,6 +28,7 @@
 
 			<!-- Botón de favoritos -->
 			<button
+				v-if="showActions"
 				:aria-label="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
 				class="absolute top-2 right-2 bg-white p-2 rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
 				@click.prevent="toggleFavorite"
@@ -39,6 +40,7 @@
 			</button>
 			<!-- Botón de vista previa -->
 			<button
+				v-if="showActions"
 				aria-label="Vista previa rápida"
 				class="absolute top-14 right-2 bg-white p-2 rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
 				@click.prevent="openPreview"
@@ -104,7 +106,8 @@ import emitter from '~/utils/eventBus';
 import ProductRating from "~/components/ProductRating.vue";
 
 const props = defineProps<{
-	product: Producto
+	product: Producto,
+	showActions: { type: boolean, default: true }
 }>();
 
 const favoritesStore = useFavoritesStore();

@@ -68,7 +68,8 @@
 						<div v-for="product in paginatedProducts"
 							:key="product.codigo"
 							class="h-full">
-							<ProductCard :product="product"/>
+							<ProductCard :product="product"
+								:showActions="true"/>
 						</div>
 					</div>
 
@@ -131,11 +132,11 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- Modal de vista previa de producto -->
-		<ProductModalPreview 
-			:isOpen="showProductPreview" 
-			:productId="selectedProductId" 
+		<ProductModalPreview
+			:isOpen="showProductPreview"
+			:productId="selectedProductId"
 			@close="showProductPreview = false"
 		/>
 	</div>
@@ -143,7 +144,7 @@
 
 <script lang="ts"
 	setup>
-import {computed, nextTick, onMounted, ref, watch, reactive} from 'vue';
+import {computed, nextTick, onMounted, ref, watch} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {useProductoStore} from '~/stores/productoStore';
 import {useFavoritesStore} from '~/stores/favoritesStore';
