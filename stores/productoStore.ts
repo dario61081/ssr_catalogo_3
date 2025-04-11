@@ -85,10 +85,10 @@ export const useProductoStore = defineStore('producto', {
 
 		async fetchProductos(forceRefresh = false) {
 			// Verificar si ya tenemos datos y no están desactualizados
-			if (!forceRefresh && this.productos.length > 0 && !this.isDataStale) {
-				console.log('Usando productos en caché:', this.productos.length);
-				return this.productos;
-			}
+			// if (!forceRefresh && this.productos.length > 0 && !this.isDataStale) {
+			// 	console.log('Usando productos en caché:', this.productos.length);
+			// 	return this.productos;
+			// }
 
 			this.loading = true;
 			this.error = null;
@@ -96,7 +96,7 @@ export const useProductoStore = defineStore('producto', {
 			try {
 				const apiUrl = 'https://panel.colchonesparana.com.py/api/v2/articulos/division/TODOS/TODOS/TODOS/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC';
 
-				const data: ProductoResponse[] = await $fetch(apiUrl)
+				const data: ProductoResponse[] = await $fetch(apiUrl);
 
 				// @ts-ignore
 				this.productos = data.map((prod: ProductoResponse) => mapToProducto(prod));

@@ -63,8 +63,9 @@
 					</div>
 
 					<!-- Loading de productos -->
-					<div v-if="loading || filterLoading" class="mb-6">
-						<ProductGridLoading />
+					<div v-if="loading || filterLoading"
+						class="mb-6">
+						<ProductGridLoading/>
 					</div>
 
 					<!-- Productos -->
@@ -138,6 +139,8 @@
 			</div>
 		</div>
 
+		<!-- Ultimos productos		-->
+		<!--		<UltimosProductosVistos></UltimosProductosVistos>-->
 		<!-- Modal de vista previa de producto -->
 		<ProductModalPreview
 			:isOpen="showProductPreview"
@@ -149,7 +152,7 @@
 
 <script lang="ts"
 	setup>
-import {computed, nextTick, onMounted, ref, watch} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {useProductoStore} from '~/stores/productoStore';
 import {useFavoritesStore} from '~/stores/favoritesStore';

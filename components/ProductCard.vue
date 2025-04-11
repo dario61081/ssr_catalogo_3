@@ -47,16 +47,16 @@
 			>
 				<i class="pi pi-eye text-gray-400"></i>
 			</button>
-			<button
-				v-if="showActions"
-				:title="JSON.stringify(product)"
-				aria-label="Debug"
-				class="absolute top-28 right-2 bg-white p-2 rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
-				@click.prevent="openPreview"
-			>
-				<i class="pi pi-search text-gray-400"></i>
+			<!--			<button-->
+			<!--				v-if="showActions"-->
+			<!--				:title="JSON.stringify(product)"-->
+			<!--				aria-label="Debug"-->
+			<!--				class="absolute top-28 right-2 bg-white p-2 rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"-->
+			<!--				@click.prevent="openPreview"-->
+			<!--			>-->
+			<!--				<i class="pi pi-search text-gray-400"></i>-->
 
-			</button>
+			<!--			</button>-->
 
 		</div>
 
