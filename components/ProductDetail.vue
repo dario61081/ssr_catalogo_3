@@ -120,6 +120,8 @@
 									Añadir al carrito
 								</button>
 
+								<ActionButtonWhatsapp :product="product"></ActionButtonWhatsapp>
+
 								<button
 									class="flex-1 sm:flex-none border border-gray-300 text-gray-700 py-3 px-4 rounded-md flex items-center justify-center hover:bg-gray-50 transition-colors"
 									@click="toggleFavorite"
@@ -179,7 +181,8 @@
 		</div>
 
 		<!-- Productos relacionados -->
-		<div v-if="relatedProducts && relatedProducts.length > 0" class="mt-12">
+		<div v-if="relatedProducts && relatedProducts.length > 0"
+			class="mt-12">
 			<h2 class="text-xl font-semibold text-gray-900 mb-6">Productos relacionados</h2>
 			<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
 				<ProductCard
@@ -271,7 +274,9 @@ const isFavorite = computed(() => {
 
 // Formatear precio con separadores de miles
 const formatPrice = (price: number | string): string => {
-	const numericPrice = typeof price === 'string' ? parseInt(price.replace(/\./g, '')) : price;
+	const numericPrice = typeof price === 'string' ?
+		parseInt(price.replace(/\./g, '')) :
+		price;
 	return new Intl.NumberFormat('es-PY').format(numericPrice);
 };
 
