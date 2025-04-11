@@ -289,27 +289,27 @@ const toggleCategory = (categoryId: number) => {
 	} else {
 		// Deseleccionar todas las categorías previamente seleccionadas
 		const previouslySelectedCategories = [...localSelectedCategories.value];
-		
+
 		// Limpiar las categorías seleccionadas
 		localSelectedCategories.value = [];
-		
+
 		// Limpiar las subcategorías de las categorías previamente seleccionadas
 		if (previouslySelectedCategories.length > 0) {
 			const allSubcatsToRemove = [];
-			
+
 			// Recopilar todas las subcategorías a eliminar
 			previouslySelectedCategories.forEach(catId => {
 				const subcats = getSubcategoriesByCategory(catId)
 					.map(subcat => subcat.codigo_subcategoria);
 				allSubcatsToRemove.push(...subcats);
 			});
-			
+
 			// Filtrar las subcategorías seleccionadas
 			localSelectedSubcategories.value = localSelectedSubcategories.value.filter(
 				id => !allSubcatsToRemove.includes(id)
 			);
 		}
-		
+
 		// Seleccionar la nueva categoría
 		localSelectedCategories.value.push(categoryId);
 
@@ -485,8 +485,8 @@ const updateUrlParams = () => {
 
 /* checkbox debe ser un cuadrado interno pequeño color negro */
 input[type="checkbox"] {
-	width: 16px;
-	height: 16px;
+	width: 16px !important;
+	height: 16px !important;
 	margin-right: 5px;
 }
 
