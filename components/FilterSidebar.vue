@@ -55,7 +55,8 @@
 								@click.stop
 							/>
 							<label :for="`cat-${categoria.codigo_categoria}`"
-								class="cursor-pointer text-sm">
+								class="cursor-pointer text-sm"
+								@click.stop>
 								{{ categoria.desc_categoria }}
 								<span class="text-xs text-gray-500 ml-1">({{ categoria.total_categoria }})</span>
 							</label>
