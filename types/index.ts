@@ -27,6 +27,16 @@ export interface ProductoResponse {
 	MOSTRAR_ECOM: string;
 	MOSTRAR_CAT: string;
 	TIENE_DOCUMENTOS: string;
+	MARCA: string;
+	ART_GRUPO: number;
+	GRUPO: string;
+	ART_PROV_MARCA: number;
+	MARC_DESC: string;
+	ART_DESC_PRINCIPAL_APP: string | null;
+	ART_DESC_LARGA_APP: string | null;
+	ACTIVO: boolean;
+	ACTUALIZADO: string;
+	SYNC_TOKEN: string;
 }
 
 export interface Categoria {

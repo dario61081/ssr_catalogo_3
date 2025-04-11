@@ -96,18 +96,11 @@ export const useProductoStore = defineStore('producto', {
 			try {
 				const apiUrl = 'https://panel.colchonesparana.com.py/api/v2/articulos/division/TODOS/TODOS/TODOS/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC';
 
-				const {data, error} = await useFetch<ProductoResponse[]>(apiUrl, {});
+				const data: ProductoResponse[] = await $fetch(apiUrl)
 
-				if (error.value) {
-					throw new Error(`Error al cargar productos: ${error.value.message}`);
-				}
+				// @ts-ignore
+				this.productos = data.map((prod: ProductoResponse) => mapToProducto(prod));
 
-				if (!data.value || !Array.isArray(data.value)) {
-					throw new Error('Formato de respuesta inválido: no se recibió un array');
-				}
-
-				// Transformar los datos
-				this.productos = data.value.map(prod => mapToProducto(prod));
 				this.lastFetched = new Date();
 
 				console.log(`Productos cargados: ${this.productos.length}`);

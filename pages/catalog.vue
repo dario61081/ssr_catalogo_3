@@ -393,7 +393,7 @@ const filterLoading = ref(false);
 const applyFilters = async () => {
 	// Activar el estado de carga
 	filterLoading.value = true;
-	
+
 	// Resetear a la primera página cuando se aplican filtros
 	currentPage.value = 1;
 
@@ -431,10 +431,10 @@ const applyFilters = async () => {
 
 	// Esperar 1 segundo antes de actualizar
 	await new Promise(resolve => setTimeout(resolve, 1000));
-	
+
 	// Actualizar la URL con los nuevos parámetros
 	await router.push({query});
-	
+
 	// Desactivar el estado de carga
 	filterLoading.value = false;
 };
@@ -443,7 +443,7 @@ const applyFilters = async () => {
 const clearFilters = async (redirectToHome = true) => {
 	// Activar estado de carga
 	filterLoading.value = true;
-	
+
 	// Resetear el estado de filtros
 	console.log('Limpiando filtros');
 	filterState.value = {
@@ -462,7 +462,7 @@ const clearFilters = async (redirectToHome = true) => {
 	if (redirectToHome) {
 		await router.push({query: {}});
 	}
-	
+
 	// Desactivar estado de carga después de un breve retraso para asegurar que la UI se actualice
 	setTimeout(() => {
 		filterLoading.value = false;
@@ -472,7 +472,7 @@ const clearFilters = async (redirectToHome = true) => {
 // Aplicar filtros desde la URL
 const applyFiltersFromUrl = () => {
 	const query = route.query;
-	
+
 	// Resetear el estado de filtros antes de aplicar los de la URL
 	filterState.value = {
 		categorias: [],
@@ -521,7 +521,7 @@ const applyFiltersFromUrl = () => {
 	} else {
 		currentPage.value = 1; // Asegurar que la página sea 1 si no se especifica
 	}
-	
+
 	console.log('Filtros aplicados desde URL:', filterState.value);
 };
 
