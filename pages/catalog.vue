@@ -62,8 +62,13 @@
 						/>
 					</div>
 
+					<!-- Loading de productos -->
+					<div v-if="loading || filterLoading" class="mb-6">
+						<ProductGridLoading />
+					</div>
+
 					<!-- Productos -->
-					<div v-if="filteredProducts.length > 0"
+					<div v-if="!loading && !filterLoading && filteredProducts.length > 0"
 						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 						<div v-for="product in paginatedProducts"
 							:key="product.codigo"
@@ -157,6 +162,7 @@ import SortOptions from '~/components/SortOptions.vue';
 import BreadCrumb from '~/components/BreadCrumb.vue';
 import ProductModalPreview from '~/components/ProductModalPreview.vue';
 import emitter from '~/utils/eventBus';
+import ProductGridLoading from "~/components/ProductGridLoading.vue";
 
 // Definir título y meta tags para SEO
 useHead({
@@ -381,44 +387,54 @@ const goToPage = (page: number) => {
 };
 
 // Aplicar filtros
-const applyFilters = () => {
+const filterLoading = ref(false);
+const applyFilters = async () => {
+	// Activar el estado de carga
+	filterLoading.value = true;
+	
 	// Resetear a la primera página cuando se aplican filtros
 	currentPage.value = 1;
 
-	// Actualizar URL con los parámetros de filtro
-	const query: Record<string, string> = {};
+	// Construir query params para la URL
+	const query: Record<string, string | string[]> = {};
 
-	// Categorías
+	// Añadir categorías seleccionadas
 	if (filterState.value.categorias.length > 0) {
 		query.cat = filterState.value.categorias.join(',');
 	}
 
-	// Subcategorías
+	// Añadir subcategorías seleccionadas
 	if (filterState.value.subcategorias.length > 0) {
 		query.subcat = filterState.value.subcategorias.join(',');
 	}
 
-	// Precio mínimo
-	if (filterState.value.precioMin !== null) {
+	// Añadir rango de precios
+	if (filterState.value.precioMin > 0) {
 		query.min = filterState.value.precioMin.toString();
 	}
 
-	// Precio máximo
-	if (filterState.value.precioMax !== null) {
+	if (filterState.value.precioMax < Infinity && filterState.value.precioMax > 0) {
 		query.max = filterState.value.precioMax.toString();
 	}
 
-	// Búsqueda
+	// Añadir término de búsqueda
 	if (filterState.value.searchQuery) {
 		query.q = filterState.value.searchQuery;
 	}
 
-	// Ordenamiento
+	// Añadir criterio de ordenamiento
 	if (filterState.value.sortBy !== 'nombre_asc') {
 		query.sort = filterState.value.sortBy;
 	}
 
-	router.push({query});
+	// Esperar 1 segundo antes de actualizar
+	await new Promise(resolve => setTimeout(resolve, 1000));
+	
+	// Actualizar la URL con los nuevos parámetros
+	await router.push({query});
+	
+	// Desactivar el estado de carga
+	filterLoading.value = false;
 };
 
 // Limpiar filtros
