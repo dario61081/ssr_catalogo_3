@@ -70,7 +70,7 @@ export const useProductoStore = defineStore('producto', {
 		isDataStale: (state) => {
 			if (!state.lastFetched) return true;
 			// Caducidad de caché de 1 hora
-			const cacheExpiry = 60 * 60 * 1000;
+			const cacheExpiry = 60 * 60 * 500;
 			return (Date.now() - new Date(state.lastFetched).getTime()) > cacheExpiry;
 		}
 	},
