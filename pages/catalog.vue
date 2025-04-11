@@ -153,7 +153,6 @@ import {useFiltersData} from '~/composables/useFiltersData';
 import type {FilterState, SortCriteria} from '~/types';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
 import FilterSidebar from '~/components/FilterSidebar.vue';
-import ProductCard from '~/components/ProductCard.vue';
 import SortOptions from '~/components/SortOptions.vue';
 import BreadCrumb from '~/components/BreadCrumb.vue';
 import ProductModalPreview from '~/components/ProductModalPreview.vue';
