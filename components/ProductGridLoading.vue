@@ -12,10 +12,11 @@ export default defineComponent({
 			:key="i"
 			class="bg-white rounded-lg p-6 shadow-sm">
 			<div class="animate-pulse">
-				<div class="shimmer-bg h-48 w-full rounded-lg"></div>
-				<div class="h-6 w-2/5 bg-gray-300 rounded-lg mt-3 shimmer-bg"></div>
+				<div class="shimmer-bg min-h-[262px] w-full rounded-lg"></div>
 				<div class="h-6 w-3/5 bg-gray-300 rounded-lg mt-3 shimmer-bg"></div>
-				<div class="h-6 w-1/5 bg-gray-300 rounded-lg mt-3 shimmer-bg"></div>
+				<div class="h-10 w-5/5 bg-gray-300 rounded-lg mt-3 shimmer-bg"></div>
+				<div class="h-6 w-2/5 bg-gray-300 rounded-lg mt-3 shimmer-bg"></div>
+				<div class="h-8 w-5/5 bg-gray-300 rounded-lg mt-3 shimmer-bg"></div>
 			</div>
 		</div>
 	</div>
@@ -23,17 +24,17 @@ export default defineComponent({
 
 <style scoped>
 .shimmer-bg {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+	background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: shimmer 1.5s infinite;
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
 }
 </style>

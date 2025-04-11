@@ -72,7 +72,7 @@
 
 			<NuxtLink :to="`/product/${product.codigo}`"
 				class="block">
-				<h3 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2 hover:text-gray-600">
+				<h3 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2 min-h-[40px] overflow-hidden hover:text-gray-600">
 					{{ product.nombre }}
 				</h3>
 			</NuxtLink>
