@@ -1,5 +1,6 @@
 <template>
 	<div class="product-page">
+
 		<div class="container mx-auto max-w-6xl px-4 py-6">
 			<!-- Breadcrumb -->
 			<BreadCrumb :items="breadcrumbItems"
@@ -25,7 +26,7 @@
 					Volver al catálogo
 				</NuxtLink>
 
-				{{ product }}
+				
 			</div>
 		</div>
 	</div>
@@ -118,6 +119,30 @@ const loadProduct = async () => {
 					{
 						name: 'description',
 						content: `${product.value.nombre} - ${product.value.desc_division} - ${product.value.desc_categoria}`
+					},
+					{
+						property: 'og:type',
+						content: 'product'
+					},
+					{
+						property: 'og:title',
+						content: product.value.nombre
+					},
+					{
+						property: 'og:description',
+						content: `${product.value.nombre} - ${product.value.desc_division} - ${product.value.desc_categoria}`
+					},
+					{
+						property: 'og:image',
+						content: product.value.imagen
+					},
+					{
+						property: 'og:url',
+						content: `https://www.casa-parana.com/product/${product.value.codigo}`
+					},
+					{
+						property: 'og:site_name',
+						content: 'Casa Paraná'
 					}
 				]
 			});

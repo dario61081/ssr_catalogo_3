@@ -144,9 +144,9 @@
 			<div class="border-t border-gray-200 p-6">
 				<div class="mb-8">
 					<h2 class="text-xl font-semibold text-gray-900 mb-4">Descripción</h2>
-					<p class="text-gray-700">
+					<h1 class="text-gray-700">
 						{{ product.nombre }}
-					</p>
+					</h1>
 				</div>
 
 				<div>

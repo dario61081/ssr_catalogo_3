@@ -74,7 +74,7 @@
 
 
 			<!-- Botón de añadir al carrito en la parte inferior -->
-			<div class="mt-auto pt-3">
+			<div class="mt-auto pt-1 flex flex-row">
 				<button
 					v-if="product.stock > 0"
 					class="add-to-cart-btn w-full bg-gray-700 hover:bg-gray-800 text-white text-sm py-2 px-3 rounded-md flex items-center justify-center"
@@ -91,6 +91,7 @@
 					<i class="pi pi-shopping-cart mr-1"></i>
 					<span>Agotado</span>
 				</button>
+				<!--				<ActionButtonWhatsapp :product="product"></ActionButtonWhatsapp>-->
 			</div>
 		</div>
 	</div>
