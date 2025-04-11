@@ -3,7 +3,6 @@
 export default defineNuxtConfig({
 	compatibilityDate: '2024-04-03',
 	devtools: {enabled: false},
-
 	app: {
 		head: {
 			title: 'Paraná Hogar - Catálogo de Productos',
@@ -26,6 +25,9 @@ export default defineNuxtConfig({
 				}
 			]
 		}
+	},
+	routeRules: {
+		"/product/**": {prerender: true, ssr: true},
 	},
 	alias: {
 		'@': '~/'

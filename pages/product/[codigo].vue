@@ -26,7 +26,7 @@
 					Volver al catálogo
 				</NuxtLink>
 
-				
+
 			</div>
 		</div>
 		<!-- Ultimos productos -->
@@ -41,6 +41,7 @@ import UltimosProductosVistos from '~/components/UltimosProductosVistos.vue';
 // import {useRoute} from 'vue-router';
 import {useProductoStore} from '~/stores/productoStore';
 import type {Producto} from '~/types';
+
 
 const route = useRoute();
 const productoStore = useProductoStore();

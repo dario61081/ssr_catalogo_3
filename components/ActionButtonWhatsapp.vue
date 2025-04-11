@@ -6,7 +6,7 @@ export default defineComponent({
 	props: {
 		phoneNumber: {
 			type: String,
-			default: "5493764000000" // Número de WhatsApp por defecto
+			default: "+595991440100" // Número de WhatsApp por defecto
 		},
 		product: {
 			type: Object,
@@ -16,7 +16,7 @@ export default defineComponent({
 	computed: {
 		message(): string {
 			if (!this.product) return ""
-			return `Hola, estoy interesado en el producto ${this.product.nombre}`
+			return `Hola, quiero más información sobre este producto ${this.product.nombre} SKU: ${this.product.codigo_alfanum}`
 		}
 	},
 	methods: {
@@ -39,10 +39,10 @@ export default defineComponent({
 
 <style scoped>
 .whatsapp-button {
-	@apply bg-green-500 hover:bg-green-700 text-white font-bold p-2  rounded gap-1  ;
+	@apply w-[120px] bg-green-500 hover:bg-green-700 text-white font-bold p-2  rounded gap-1  ;
 }
 
 .whatsapp-icon {
-	@apply text-center;
+	@apply text-center text-2xl;
 }
 </style>
