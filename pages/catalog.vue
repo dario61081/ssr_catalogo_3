@@ -78,7 +78,7 @@
 						</div>
 					</div>
 
-					<div v-else
+					<div v-else-if="!loading && !filterLoading && filteredProducts.length === 0"
 						class="text-center py-16 bg-gray-50 rounded-lg">
 						<div class="text-gray-400 mb-4">
 							<i class="pi pi-search text-4xl"></i>
@@ -370,7 +370,9 @@ const loadData = async () => {
 		console.error('Error al cargar datos:', err);
 		error.value = 'Error al cargar los datos. Por favor, intente nuevamente.';
 	} finally {
+		// Asegurar que el estado de carga se desactive correctamente
 		loading.value = false;
+		filterLoading.value = false;
 	}
 };
 
@@ -438,9 +440,12 @@ const applyFilters = async () => {
 };
 
 // Limpiar filtros
-const clearFilters = (redirectToHome = true) => {
+const clearFilters = async (redirectToHome = true) => {
+	// Activar estado de carga
+	filterLoading.value = true;
+	
 	// Resetear el estado de filtros
-	console.log('limpiando filtros')
+	console.log('Limpiando filtros');
 	filterState.value = {
 		categorias: [],
 		subcategorias: [],
@@ -455,22 +460,28 @@ const clearFilters = (redirectToHome = true) => {
 
 	// Limpiar los parámetros de la URL
 	if (redirectToHome) {
-		router.push({query: {}});
+		await router.push({query: {}});
 	}
-
-	// Forzar actualización de la UI
-	nextTick(() => {
-		// Aplicar los filtros para actualizar la lista de productos
-		applyFilters();
-
-		// Notificar que los filtros han sido limpiados (opcional)
-		console.log('Filtros limpiados');
-	});
+	
+	// Desactivar estado de carga después de un breve retraso para asegurar que la UI se actualice
+	setTimeout(() => {
+		filterLoading.value = false;
+	}, 300);
 };
 
 // Aplicar filtros desde la URL
 const applyFiltersFromUrl = () => {
 	const query = route.query;
+	
+	// Resetear el estado de filtros antes de aplicar los de la URL
+	filterState.value = {
+		categorias: [],
+		subcategorias: [],
+		precioMin: null,
+		precioMax: null,
+		searchQuery: '',
+		sortBy: 'nombre_asc'
+	};
 
 	// Categorías
 	if (query.cat) {
@@ -507,7 +518,11 @@ const applyFiltersFromUrl = () => {
 	// Página
 	if (query.page) {
 		currentPage.value = Number(query.page);
+	} else {
+		currentPage.value = 1; // Asegurar que la página sea 1 si no se especifica
 	}
+	
+	console.log('Filtros aplicados desde URL:', filterState.value);
 };
 
 // Observar cambios en la ruta para actualizar filtros
