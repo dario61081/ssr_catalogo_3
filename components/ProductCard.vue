@@ -117,10 +117,12 @@ import {useCartStore} from '~/stores/cartStore';
 import emitter from '~/utils/eventBus';
 import ProductRating from "~/components/ProductRating.vue";
 
-const props = defineProps<{
-	product: Producto,
-	showActions: { type: boolean, default: true }
-}>();
+const props = withDefaults(defineProps<{
+	product: Producto;
+	showActions?: boolean;
+}>(), {
+	showActions: true
+});
 
 const favoritesStore = useFavoritesStore();
 const cartStore = useCartStore();

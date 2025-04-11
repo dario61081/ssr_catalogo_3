@@ -179,14 +179,14 @@
 		</div>
 
 		<!-- Productos relacionados -->
-		<div v-if="relatedProducts.length > 0"
-			class="mt-12">
+		<div v-if="relatedProducts && relatedProducts.length > 0" class="mt-12">
 			<h2 class="text-xl font-semibold text-gray-900 mb-6">Productos relacionados</h2>
 			<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
 				<ProductCard
 					v-for="relatedProduct in relatedProducts"
 					:key="relatedProduct.codigo"
 					:product="relatedProduct"
+					:showActions="true"
 				/>
 			</div>
 		</div>
@@ -204,10 +204,12 @@ import emitter from '~/utils/eventBus';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
 import ProductRating from "~/components/ProductRating.vue";
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	productId: number;
 	relatedProducts?: Producto[];
-}>();
+}>(), {
+	relatedProducts: () => []
+});
 
 const productoStore = useProductoStore();
 const favoritesStore = useFavoritesStore();
@@ -238,6 +240,8 @@ onMounted(async () => {
 
 		if (productData) {
 			product.value = productData;
+			// Registrar el producto como visto
+			productoStore.agregarProductoVisto(productData);
 
 			// Inicializar la cantidad a 1
 			quantity.value = 1;
@@ -266,13 +270,9 @@ const isFavorite = computed(() => {
 });
 
 // Formatear precio con separadores de miles
-const formatPrice = (price: number): string => {
-	if (typeof price === 'string') {
-		// Si por alguna razón llega como string, convertirlo a número
-		price = parseInt(price.toString()
-			.replace(/\./g, ''));
-	}
-	return new Intl.NumberFormat('es-PY').format(price);
+const formatPrice = (price: number | string): string => {
+	const numericPrice = typeof price === 'string' ? parseInt(price.replace(/\./g, '')) : price;
+	return new Intl.NumberFormat('es-PY').format(numericPrice);
 };
 
 // Obtener imágenes del producto
