@@ -131,12 +131,19 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- Modal de vista previa de producto -->
+		<ProductModalPreview 
+			:isOpen="showProductPreview" 
+			:productId="selectedProductId" 
+			@close="showProductPreview = false"
+		/>
 	</div>
 </template>
 
 <script lang="ts"
 	setup>
-import {computed, nextTick, onMounted, ref, watch} from 'vue';
+import {computed, nextTick, onMounted, ref, watch, reactive} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {useProductoStore} from '~/stores/productoStore';
 import {useFavoritesStore} from '~/stores/favoritesStore';
@@ -144,6 +151,12 @@ import {useCartStore} from '~/stores/cartStore';
 import {useFiltersData} from '~/composables/useFiltersData';
 import type {FilterState, SortCriteria} from '~/types';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
+import FilterSidebar from '~/components/FilterSidebar.vue';
+import ProductCard from '~/components/ProductCard.vue';
+import SortOptions from '~/components/SortOptions.vue';
+import BreadCrumb from '~/components/BreadCrumb.vue';
+import ProductModalPreview from '~/components/ProductModalPreview.vue';
+import emitter from '~/utils/eventBus';
 
 // Definir título y meta tags para SEO
 useHead({
@@ -151,9 +164,21 @@ useHead({
 	meta: [
 		{
 			name: 'description',
-			content: 'Explora nuestro catálogo completo de productos para el hogar. Filtra por categorías y encuentra lo que necesitas.'
+			content: 'Explora nuestro catálogo completo de productos para el hogar. Encuentra muebles, electrodomésticos y más con los mejores precios y calidad.'
 		}
 	]
+});
+
+// Variables para el modal de vista previa
+const showProductPreview = ref(false);
+const selectedProductId = ref('');
+
+// Escuchar evento de vista previa de producto
+onMounted(() => {
+	emitter.on('product:preview', (productId) => {
+		selectedProductId.value = productId;
+		showProductPreview.value = true;
+	});
 });
 
 // Router y route

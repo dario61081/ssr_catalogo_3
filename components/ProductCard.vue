@@ -37,6 +37,14 @@
 					class="pi"
 				></i>
 			</button>
+			<!-- Botón de vista previa -->
+			<button
+				aria-label="Vista previa rápida"
+				class="absolute top-14 right-2 bg-white p-2 rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
+				@click.prevent="openPreview"
+			>
+				<i class="pi pi-eye text-gray-400"></i>
+			</button>
 		</div>
 
 		<!-- Información del producto -->
@@ -67,10 +75,8 @@
 			<div class="mt-auto pt-3">
 				<button
 					v-if="product.stock > 0"
-					class="add-to-cart-btn w-full bg-gray-700 hover:bg-gray-800 text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-colors duration-200"
+					class="add-to-cart-btn w-full bg-gray-700 hover:bg-gray-800 text-white text-sm py-2 px-3 rounded-md flex items-center justify-center"
 					@click="addToCart"
-					@mouseenter="showCartHint = true"
-					@mouseleave="showCartHint = false"
 				>
 					<i class="pi pi-shopping-cart mr-1"></i>
 					<span>Añadir</span>
@@ -132,43 +138,15 @@ const toggleFavorite = () => {
 // Añadir al carrito
 const addToCart = () => {
 	if (props.product.stock > 0) {
-		// Crear elemento animado que "vuela" hacia el carrito
-		const productCard = document.querySelector('.product-card') as HTMLElement;
-		const cartButton = document.querySelector('.pi-shopping-cart') as HTMLElement;
-
-		if (productCard && cartButton) {
-			// Crear elemento para la animación
-			const flyingCart = document.createElement('div');
-			flyingCart.className = 'flying-cart-item';
-			flyingCart.innerHTML = '<i class="pi pi-shopping-cart"></i>';
-			document.body.appendChild(flyingCart);
-
-			// Posición inicial (desde el botón)
-			const buttonRect = productCard.getBoundingClientRect();
-			flyingCart.style.top = `${buttonRect.top + window.scrollY}px`;
-			flyingCart.style.left = `${buttonRect.left + buttonRect.width / 2}px`;
-
-			// Añadir clase para iniciar la animación
-			setTimeout(() => {
-				flyingCart.classList.add('flying-animation');
-
-				// Posición final (el carrito en el header)
-				const cartRect = cartButton.getBoundingClientRect();
-				flyingCart.style.top = `${cartRect.top + window.scrollY}px`;
-				flyingCart.style.left = `${cartRect.left + cartRect.width / 2}px`;
-
-				// Eliminar el elemento después de la animación
-				setTimeout(() => {
-					document.body.removeChild(flyingCart);
-				}, 1000);
-			}, 10);
-		}
-
 		// Añadir al carrito
 		cartStore.addToCart(props.product, 1);
 		emitter.emit('product:addToCart', {product: props.product, quantity: 1});
 		emitter.emit('cart:update', undefined);
 	}
+};
+
+const openPreview = () => {
+	emitter.emit('product:preview', props.product.codigo);
 };
 </script>
 
@@ -186,59 +164,5 @@ const addToCart = () => {
 
 .product-card:hover img {
 	transform: scale(1.05);
-}
-
-/* Animación del botón de añadir */
-.add-to-cart-btn {
-	position: relative;
-	overflow: hidden;
-	transition: transform 0.3s ease;
-}
-
-.add-to-cart-btn:hover {
-	transform: scale(1.05);
-	animation: wiggle 0.5s ease;
-}
-
-.add-to-cart-btn:active {
-	transform: scale(0.95);
-}
-
-@keyframes wiggle {
-	0%, 100% {
-		transform: scale(1.05) rotate(0deg);
-	}
-	25% {
-		transform: scale(1.05) rotate(-5deg);
-	}
-	50% {
-		transform: scale(1.05) rotate(0deg);
-	}
-	75% {
-		transform: scale(1.05) rotate(5deg);
-	}
-}
-
-/* Elemento animado que vuela hacia el carrito */
-.flying-cart-item {
-	position: fixed;
-	z-index: 9999;
-	width: 30px;
-	height: 30px;
-	background-color: #4B5563;
-	color: white;
-	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transform: translate(-50%, -50%) scale(0.5);
-	opacity: 0.9;
-	pointer-events: none;
-}
-
-.flying-animation {
-	transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-	transform: translate(-50%, -50%) scale(0.2);
-	opacity: 0;
 }
 </style>
