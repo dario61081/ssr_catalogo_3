@@ -85,7 +85,7 @@
 
 							<div class="mt-2 flex justify-between items-center">
 								<p class="text-lg font-bold text-gray-900">
-									Gs. {{ product.precio }}
+									Gs. {{ formatPrice(product.precio) }}
 								</p>
 
 								<button
