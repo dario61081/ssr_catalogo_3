@@ -290,9 +290,22 @@ const toggleCategory = (categoryId: number) => {
 		// Si la categoría no está seleccionada, la añadimos
 		localSelectedCategories.value.push(categoryId);
 
-		// Expandimos la categoría para mostrar subcategorías
-		if (hasSubcategories(categoryId) && !expandedCategories.value.includes(categoryId)) {
-			expandedCategories.value.push(categoryId);
+		// Seleccionar automáticamente todas las subcategorías
+		if (hasSubcategories(categoryId)) {
+			const subcatsToAdd = getSubcategoriesByCategory(categoryId)
+				.map(subcat => subcat.codigo_subcategoria);
+			
+			// Añadir subcategorías que no estén ya seleccionadas
+			subcatsToAdd.forEach(subcatId => {
+				if (!localSelectedSubcategories.value.includes(subcatId)) {
+					localSelectedSubcategories.value.push(subcatId);
+				}
+			});
+			
+			// Expandimos la categoría para mostrar subcategorías
+			if (!expandedCategories.value.includes(categoryId)) {
+				expandedCategories.value.push(categoryId);
+			}
 		}
 	}
 
