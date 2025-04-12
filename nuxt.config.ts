@@ -44,7 +44,8 @@ export default defineNuxtConfig({
 		transpile: ['mitt']
 	},
 	css: [
-		'~/assets/css/main.css'
+		'~/assets/css/main.css',
+		'leaflet/dist/leaflet.css'
 	],
 	pinia: {
 		autoImports: ['defineStore',
