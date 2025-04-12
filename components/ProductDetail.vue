@@ -181,7 +181,7 @@
 		</div>
 
 		<!-- Productos relacionados -->
-		<div v-if="relatedProducts && relatedProducts.length > 0"
+		<!-- <div v-if="relatedProducts && relatedProducts.length > 0"
 			class="mt-12">
 			<h2 class="text-xl font-semibold text-gray-900 mb-6">Productos relacionados</h2>
 			<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -192,7 +192,7 @@
 					:showActions="true"
 				/>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </template>
 

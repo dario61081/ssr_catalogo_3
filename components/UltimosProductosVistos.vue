@@ -1,14 +1,15 @@
 <template>
-
+<div class="container mx-auto max-w-6xl ">
 <div v-if="productos.length > 0" class="ultimos-productos-vistos">
 		<div class="container mx-auto px-4">
 			<h2 class="text-2xl font-semibold text-gray-800 mb-6">Últimos Productos Vistos</h2>
-			<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-				<div v-for="producto in productos" :key="producto.codigo" class="h-full">
+			<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+				<div v-for="producto in productos" :key="producto.codigo" class="h-full transform scale-80">
 					<ProductCard :product="producto" :showActions="true"/>
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 </template>
 

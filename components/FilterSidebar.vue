@@ -9,18 +9,12 @@
 		<div class="mb-5">
 			<h4 class="font-medium text-gray-700 mb-1 text-sm">Buscar productos</h4>
 			<div class="flex flex-col space-y-2">
-				<input
-					v-model="localSearchQuery"
-					class="w-full p-2 border rounded text-sm"
-					placeholder="Nombre del producto..."
-					type="text"
-					@keydown.enter.prevent="applySearchFilter"
-					@keydown.esc.prevent="localSearchQuery = ''"
-				/>
+				<input v-model="localSearchQuery" class="w-full p-2 border rounded text-sm"
+					placeholder="Nombre del producto..." type="text" @keydown.enter.prevent="applySearchFilter"
+					@keydown.esc.prevent="localSearchQuery = ''" />
 				<button
 					class="w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
-					@click="applySearchFilter"
-				>
+					@click="applySearchFilter">
 					<i class="pi pi-search mr-2"></i>
 					Buscar
 				</button>
@@ -30,75 +24,50 @@
 		<!-- Categorías -->
 		<div class="mb-5">
 			<h4 class="font-medium text-gray-700 mb-1 text-sm">Categorías</h4>
-			<div v-if="loading"
-				class="py-1 text-center text-gray-500">
+			<div v-if="loading" class="py-1 text-center text-gray-500">
 				<i class="pi pi-spin pi-spinner mr-2"></i>
 				Cargando...
 			</div>
-			<div v-else
-				class="max-h-120 overflow-y-auto pr-1 category-list">
-				<div
-					v-for="categoria in categoriasList"
-					:key="categoria.codigo_categoria"
-					class="mb-1"
-				>
-					<div
-						:class="{ 'bg-gray-100': isSelectedCategory(categoria.codigo_categoria) }"
+			<div v-else class="max-h-120 overflow-y-auto pr-1 category-list">
+				<div v-for="categoria in categoriasList" :key="categoria.codigo_categoria" class="mb-1">
+					<div :class="{ 'bg-gray-100': isSelectedCategory(categoria.codigo_categoria) }"
 						class="flex items-center justify-between cursor-pointer p-1 rounded hover:bg-gray-50"
-						@click="toggleCategory(categoria.codigo_categoria)"
-					>
+						@click="toggleCategory(categoria.codigo_categoria)">
 						<div class="flex items-center">
-							<input
-								:id="`cat-${categoria.codigo_categoria}`"
+							<input :id="`cat-${categoria.codigo_categoria}`"
 								:checked="isSelectedCategory(categoria.codigo_categoria)"
-								class="mr-2 h-4 w-4 text-gray-700 rounded"
-								type="checkbox"
-								@change="toggleCategory(categoria.codigo_categoria)"
-								@click.stop
-							/>
-							<label :for="`cat-${categoria.codigo_categoria}`"
-								class="cursor-pointer text-sm"
+								class="mr-2 h-4 w-4 text-gray-700 rounded" type="checkbox"
+								@change="toggleCategory(categoria.codigo_categoria)" @click.stop />
+							<label :for="`cat-${categoria.codigo_categoria}`" class="cursor-pointer text-sm"
 								@click.stop>
 								{{ categoria.desc_categoria }}
 								<span class="text-xs text-gray-500 ml-1">({{ categoria.total_categoria }})</span>
 							</label>
 						</div>
-						<button
-							v-if="hasSubcategories(categoria.codigo_categoria)"
+						<button v-if="hasSubcategories(categoria.codigo_categoria)"
 							class="text-gray-500 hover:text-gray-700"
-							@click.stop="toggleSubcategoryVisibility(categoria.codigo_categoria)"
-						>
-							<i
-								:class="expandedCategories.includes(categoria.codigo_categoria) ? 'pi-chevron-down' : 'pi-chevron-right'"
-								class="pi"
-							></i>
+							@click.stop="toggleSubcategoryVisibility(categoria.codigo_categoria)">
+							<i :class="expandedCategories.includes(categoria.codigo_categoria) ? 'pi-chevron-down' : 'pi-chevron-right'"
+								class="pi"></i>
 						</button>
 					</div>
 
 					<!-- Subcategorías -->
-					<div
-						v-if="expandedCategories.includes(categoria.codigo_categoria) && hasSubcategories(categoria.codigo_categoria)"
-						class="ml-5 mt-1 subcategory-list"
-					>
-						<div
-							v-for="subcategoria in getSubcategoriesByCategory(categoria.codigo_categoria)"
-							:key="subcategoria.codigo_subcategoria"
-							class="mb-1"
-						>
+					<div v-if="expandedCategories.includes(categoria.codigo_categoria) && hasSubcategories(categoria.codigo_categoria)"
+						class="ml-5 mt-1 subcategory-list">
+						<div v-for="subcategoria in getSubcategoriesByCategory(categoria.codigo_categoria)"
+							:key="subcategoria.codigo_subcategoria" class="mb-1">
 							<div class="flex items-center p-1 rounded hover:bg-gray-50">
-								<input
-									:id="`subcat-${subcategoria.codigo_subcategoria}`"
+								<input :id="`subcat-${subcategoria.codigo_subcategoria}`"
 									:checked="isSelectedSubcategory(subcategoria.codigo_subcategoria)"
-									class="mr-2 h-4 w-4 text-gray-700 rounded"
-									type="checkbox"
-									@change="toggleSubcategory(subcategoria.codigo_subcategoria, categoria.codigo_categoria)"
-								/>
+									class="mr-2 h-4 w-4 text-gray-700 rounded" type="checkbox"
+									@change="toggleSubcategory(subcategoria.codigo_subcategoria, categoria.codigo_categoria)" />
 								<label :for="`subcat-${subcategoria.codigo_subcategoria}`"
 									class="cursor-pointer text-xs">
 									{{ subcategoria.desc_subcategoria }}
 									<span class="text-xs text-gray-500 ml-1">({{
-											subcategoria.total_subcategoria
-										}})</span>
+										subcategoria.total_subcategoria
+									}})</span>
 								</label>
 							</div>
 						</div>
@@ -111,26 +80,15 @@
 		<div class="mb-5">
 			<h4 class="font-medium text-gray-700 mb-1 text-sm">Rango de precio</h4>
 			<div class="flex items-center space-x-2">
-				<input
-					v-model="localPriceMin"
-					class="w-full p-1 border rounded text-xs"
-					min="0"
-					placeholder="Mín"
-					type="number"
-				/>
+				<input v-model="localPriceMin" class="w-full p-1 border rounded text-xs" min="0" placeholder="Mín"
+					type="number" />
 				<span class="text-gray-500">-</span>
-				<input
-					v-model="localPriceMax"
-					class="w-full p-1 border rounded text-xs"
-					min="0"
-					placeholder="Máx"
-					type="number"
-				/>
+				<input v-model="localPriceMax" class="w-full p-1 border rounded text-xs" min="0" placeholder="Máx"
+					type="number" />
 			</div>
 			<button
 				class="mt-1 w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
-				@click="applyPriceFilter"
-			>
+				@click="applyPriceFilter">
 				<i class="pi pi-check-circle mr-2"></i>
 				Aplicar
 			</button>
@@ -139,21 +97,19 @@
 		<!-- Botón para limpiar filtros -->
 		<button
 			class="w-full border border-gray-300 text-gray-700 py-1 px-3 rounded text-xs hover:bg-gray-50 transition-colors flex items-center justify-center"
-			@click="clearAllFilters"
-		>
+			@click="clearAllFilters">
 			<i class="pi pi-filter-slash mr-2"></i>
 			Limpiar filtros
 		</button>
 	</div>
 </template>
 
-<script lang="ts"
-	setup>
-import {computed, nextTick, ref, watch} from 'vue';
-import {useRouter} from 'vue-router';
-import {FilterData} from '~/types';
+<script lang="ts" setup>
+import { computed, nextTick, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { FilterData } from '~/types';
 import emitter from '~/utils/eventBus';
-import {useFiltersData} from '~/composables/useFiltersData';
+import { useFiltersData } from '~/composables/useFiltersData';
 
 // Props
 const props = defineProps({
@@ -202,7 +158,7 @@ const localPriceMax = ref<number | null>(props.priceMax);
 const localSearchQuery = ref<string>(props.searchQuery);
 
 // Obtener datos de filtros
-const {filtrosData, loading} = useFiltersData();
+const { filtrosData, loading } = useFiltersData();
 
 // Sincronizar props con estado local
 watch(() => props.selectedCategories, (newVal) => {
@@ -329,9 +285,9 @@ const toggleCategory = (categoryId: number) => {
 			});
 
 			// Expandimos la categoría para mostrar subcategorías
-			if (!expandedCategories.value.includes(categoryId)) {
-				expandedCategories.value.push(categoryId);
-			}
+			// if (!expandedCategories.value.includes(categoryId)) {
+			// 	expandedCategories.value.push(categoryId);
+			// }
 		}
 	}
 
@@ -351,7 +307,7 @@ const toggleCategory = (categoryId: number) => {
 
 // Seleccionar/deseleccionar subcategoría
 const toggleSubcategory = (subcategoryId: number,
-						   categoryId: number) => {
+	categoryId: number) => {
 	if (isSelectedSubcategory(subcategoryId)) {
 		// Si la subcategoría está seleccionada, la quitamos
 		localSelectedSubcategories.value = localSelectedSubcategories.value.filter(id => id !== subcategoryId);
@@ -427,7 +383,7 @@ const clearAllFilters = () => {
 
 // Actualizar parámetros de URL
 const updateUrlParams = () => {
-	const query = {...router.currentRoute.value.query};
+	const query = { ...router.currentRoute.value.query };
 
 	// Categorías
 	if (localSelectedCategories.value.length > 0) {
@@ -463,25 +419,29 @@ const updateUrlParams = () => {
 		delete query.q;
 	}
 
-	router.push({query});
+	router.push({ query });
 };
 </script>
 
 <style scoped>
-.category-list, .subcategory-list {
+.category-list,
+.subcategory-list {
 	scrollbar-width: thin;
 	scrollbar-color: #cbd5e0 #f7fafc;
 }
 
-.category-list::-webkit-scrollbar, .subcategory-list::-webkit-scrollbar {
+.category-list::-webkit-scrollbar,
+.subcategory-list::-webkit-scrollbar {
 	width: 6px;
 }
 
-.category-list::-webkit-scrollbar-track, .subcategory-list::-webkit-scrollbar-track {
+.category-list::-webkit-scrollbar-track,
+.subcategory-list::-webkit-scrollbar-track {
 	background: #f7fafc;
 }
 
-.category-list::-webkit-scrollbar-thumb, .subcategory-list::-webkit-scrollbar-thumb {
+.category-list::-webkit-scrollbar-thumb,
+.subcategory-list::-webkit-scrollbar-thumb {
 	background-color: #cbd5e0;
 	border-radius: 20px;
 }
@@ -492,5 +452,4 @@ input[type="checkbox"] {
 	height: 16px !important;
 	margin-right: 5px;
 }
-
 </style>

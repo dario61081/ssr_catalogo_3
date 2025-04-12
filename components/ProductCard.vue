@@ -1,50 +1,33 @@
 <template>
-	<div class="product-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+	<div
+		class="product-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
 		<!-- Imagen del producto -->
 		<div class="relative pt-[100%] overflow-hidden">
-			<NuxtLink :to="`/product/${product.codigo}`"
-				class="block">
-				<img
-					:alt="product.nombre"
-					:src="product.imagen"
-					class="absolute inset-0 w-full h-full object-contain p-4"
-					loading="lazy"
-				/>
+			<NuxtLink :to="`/product/${product.codigo}`" class="block">
+				<img :alt="product.nombre" :src="product.imagen"
+					class="absolute inset-0 w-full h-full object-contain p-4" loading="lazy" />
 			</NuxtLink>
 
 			<!-- Etiqueta de stock -->
-			<div
-				v-if="product.stock > 0"
-				class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full"
-			>
+			<div v-if="product.stock > 0"
+				class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
 				En stock
 			</div>
-			<div
-				v-else
-				class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded-full"
-			>
+			<div v-else
+				class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded-full">
 				Sin stock
 			</div>
 
 			<!-- Botón de favoritos -->
-			<button
-				v-if="showActions"
-				:aria-label="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+			<button v-if="showActions" :aria-label="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
 				class="absolute top-2 right-2 bg-white p-2 rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
-				@click.prevent="toggleFavorite"
-			>
-				<i
-					:class="[isFavorite ? 'pi-heart-fill text-red-500' : 'pi-heart text-gray-400']"
-					class="pi"
-				></i>
+				@click.prevent="toggleFavorite">
+				<i :class="[isFavorite ? 'pi-heart-fill text-red-500' : 'pi-heart text-gray-400']" class="pi"></i>
 			</button>
 			<!-- Botón de vista previa -->
-			<button
-				v-if="showActions"
-				aria-label="Vista previa rápida"
+			<button v-if="showActions" aria-label="Vista previa rápida"
 				class="absolute top-14 right-2 bg-white p-2 rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
-				@click.prevent="openPreview"
-			>
+				@click.prevent="openPreview">
 				<i class="pi pi-eye text-gray-400"></i>
 			</button>
 			<!--			<button-->
@@ -70,9 +53,9 @@
 				<p class="text-xs text-gray-500">{{ product.desc_division }}</p>
 			</div>
 
-			<NuxtLink :to="`/product/${product.codigo}`"
-				class="block">
-				<h3 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2 min-h-[40px] overflow-hidden hover:text-gray-600">
+			<NuxtLink :to="`/product/${product.codigo}`" class="block">
+				<h3
+					class="text-sm font-medium text-gray-900 mb-1 line-clamp-2 min-h-[40px] overflow-hidden hover:text-gray-600">
 					{{ product.nombre }}
 				</h3>
 			</NuxtLink>
@@ -86,19 +69,27 @@
 
 			<!-- Botón de añadir al carrito en la parte inferior -->
 			<div class="mt-auto pt-1 flex flex-row gap-1">
-				<button
-					v-if="product.stock > 0"
-					class="add-to-cart-btn w-full bg-gray-700 hover:bg-gray-800 text-white text-sm py-2 px-3 rounded-md flex items-center justify-center"
-					@click="addToCart"
-				>
-					<i class="pi pi-shopping-cart mr-1"></i>
-					<span>Añadir</span>
+				<button v-if="product.stock > 0" :class="{
+					'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500': !isAdded,
+					'bg-green-600 hover:bg-green-700 focus:ring-green-500': isAdded
+				}" class="add-to-cart-btn w-full bg-gray-700 hover:bg-gray-800 text-white text-sm py-2 px-3 rounded-md flex items-center justify-center transition-all duration-300"
+					@click="() => { addToCart(); addToCartAnimation(); }">
+					<i v-if="!isAdded" class="pi pi-shopping-cart mr-1"></i>
+					<i v-else class="pi pi-check animate-bounce"></i>
+					<span v-if="!isAdded">Añadir</span>
+					<!-- <span class="absolute inset-0 flex items-center justify-center transition-all duration-300" :class="{
+						'opacity-0 translate-y-full': !isAdded,
+						'opacity-100 translate-y-0': isAdded
+					}">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+							stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+						</svg>
+					</span> -->
 				</button>
-				<button
-					v-else
+				<button v-else
 					class="w-full bg-gray-300 text-gray-600 text-sm py-2 px-3 rounded-md flex items-center justify-center cursor-not-allowed"
-					disabled
-				>
+					disabled>
 					<i class="pi pi-shopping-cart mr-1"></i>
 					<span>Agotado</span>
 				</button>
@@ -108,12 +99,11 @@
 	</div>
 </template>
 
-<script lang="ts"
-	setup>
-import {computed, ref} from 'vue';
-import {Producto} from '~/types';
-import {useFavoritesStore} from '~/stores/favoritesStore';
-import {useCartStore} from '~/stores/cartStore';
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { Producto } from '~/types';
+import { useFavoritesStore } from '~/stores/favoritesStore';
+import { useCartStore } from '~/stores/cartStore';
 import emitter from '~/utils/eventBus';
 import ProductRating from "~/components/ProductRating.vue";
 
@@ -127,6 +117,15 @@ const props = withDefaults(defineProps<{
 const favoritesStore = useFavoritesStore();
 const cartStore = useCartStore();
 const showCartHint = ref(false);
+const isAdded = ref(false);
+
+const addToCartAnimation = () => {
+	console.log('addToCartAnimation');
+	isAdded.value = true;
+	setTimeout(() => {
+		isAdded.value = false;
+	}, 2000);
+}
 
 // Comprobar si el producto está en favoritos
 const isFavorite = computed(() => {
@@ -142,10 +141,10 @@ const formatPrice = (price: number): string => {
 const toggleFavorite = () => {
 	if (isFavorite.value) {
 		favoritesStore.removeFavorite(props.product.codigo);
-		emitter.emit('product:removeFromFavorites', {productId: props.product.codigo});
+		emitter.emit('product:removeFromFavorites', { productId: props.product.codigo });
 	} else {
 		favoritesStore.addFavorite(props.product);
-		emitter.emit('product:addToFavorites', {productId: props.product.codigo});
+		emitter.emit('product:addToFavorites', { productId: props.product.codigo });
 	}
 
 	// Notificar actualización de favoritos
@@ -157,7 +156,7 @@ const addToCart = () => {
 	if (props.product.stock > 0) {
 		// Añadir al carrito
 		cartStore.addToCart(props.product, 1);
-		emitter.emit('product:addToCart', {product: props.product, quantity: 1});
+		emitter.emit('product:addToCart', { product: props.product, quantity: 1 });
 		emitter.emit('cart:update', undefined);
 	}
 };
