@@ -30,10 +30,10 @@
 			</div>
 
 			<div class="filter-sidebar bg-white rounded-lg shadow-sm p-3">
-				<h3 class="text-base font-semibold mb-3 flex items-center">
+				<!-- <h3 class="text-base font-semibold mb-3 flex items-center">
 					<i class="pi pi-filter text-gray-500 mr-2"></i>
 					Filtros
-				</h3>
+				</h3> -->
 
 				<!-- Buscador -->
 				<div class="mb-5">
