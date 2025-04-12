@@ -2,64 +2,50 @@
 	<div class="cart-page">
 		<div class="container mx-auto max-w-6xl px-4 py-6">
 			<!-- Breadcrumb -->
-			<BreadCrumb :items="[{ text: 'Carrito de Compras' }]"
-				class="mb-6"/>
+			<BreadCrumb :items="[{ text: 'Carrito de Compras' }]" class="mb-6" />
 
 			<h1 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
 				<i class="pi pi-shopping-cart text-gray-500 mr-2"></i>
 				Mi Carrito
 			</h1>
 
-			<div v-if="loading"
-				class="flex justify-center py-16">
-				<LoadingSpinner/>
+			<div v-if="loading" class="flex justify-center py-16">
+				<LoadingSpinner />
 			</div>
 
-			<div v-else-if="cartItems.length === 0"
-				class="text-center py-16 bg-gray-50 rounded-lg">
+			<div v-else-if="cartItems.length === 0" class="text-center py-16 bg-gray-50 rounded-lg">
 				<div class="text-gray-400 mb-4">
 					<i class="pi pi-shopping-cart text-4xl"></i>
 				</div>
 				<h2 class="text-xl font-semibold text-gray-800 mb-2">Tu carrito está vacío</h2>
 				<p class="text-gray-600 mb-4">Explora nuestro catálogo y agrega productos a tu carrito</p>
-				<NuxtLink
-					class="bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
-					to="/catalog"
-				>
+				<NuxtLink class="bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
+					to="/catalog">
 					Explorar catálogo
 				</NuxtLink>
 			</div>
 
-			<div v-else
-				class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+			<div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 				<!-- Lista de productos en el carrito -->
 				<div class="lg:col-span-2">
 					<div class="bg-white rounded-lg shadow-sm overflow-hidden">
 						<div class="p-4 border-b flex justify-between items-center">
 							<h2 class="text-lg font-semibold text-gray-900">Productos en tu carrito</h2>
-							<button
-								class="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
-								@click="clearCart"
-							>
+							<button class="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
+								@click="clearCart">
 								<i class="pi pi-trash mr-1"></i>
 								Vaciar carrito
 							</button>
 						</div>
 
 						<div class="divide-y">
-							<div
-								v-for="item in cartItems"
-								:key="item.product.codigo"
-								class="p-4 flex flex-col sm:flex-row"
-							>
+							<div v-for="item in cartItems" :key="item.product.codigo"
+								class="p-4 flex flex-col sm:flex-row">
 								<!-- Imagen del producto -->
 								<div class="sm:w-24 h-24 flex-shrink-0 mb-4 sm:mb-0">
 									<NuxtLink :to="`/product/${item.product.codigo}`">
-										<img
-											:alt="item.product.nombre"
-											:src="item.product.imagen"
-											class="w-full h-full object-contain"
-										/>
+										<img :alt="item.product.nombre" :src="item.product.imagen"
+											class="w-full h-full object-contain" />
 									</NuxtLink>
 								</div>
 
@@ -67,10 +53,8 @@
 								<div class="sm:ml-4 flex-grow">
 									<div class="flex flex-col sm:flex-row justify-between">
 										<div>
-											<NuxtLink
-												:to="`/product/${item.product.codigo}`"
-												class="text-sm font-medium text-gray-900 hover:text-gray-600"
-											>
+											<NuxtLink :to="`/product/${item.product.codigo}`"
+												class="text-sm font-medium text-gray-900 hover:text-gray-600">
 												{{ item.product.nombre }}
 											</NuxtLink>
 											<p class="text-xs text-gray-500 mt-1">{{ item.product.desc_division }}</p>
@@ -78,7 +62,7 @@
 
 										<div class="mt-2 sm:mt-0 text-right">
 											<p class="text-sm font-medium text-gray-900">
-												Gs. {{ item.product.precio }}
+												Gs. {{ formatPrice(item.product.precio) }}
 											</p>
 										</div>
 									</div>
@@ -86,26 +70,17 @@
 									<div class="mt-4 flex flex-col sm:flex-row sm:items-center justify-between">
 										<!-- Control de cantidad -->
 										<div class="flex items-center">
-											<button
-												:disabled="item.quantity <= 1"
+											<button :disabled="item.quantity <= 1"
 												class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-1 px-2 rounded-l-md border border-gray-300"
-												@click="decrementQuantity(item)"
-											>
+												@click="decrementQuantity(item)">
 												<i class="pi pi-minus"></i>
 											</button>
-											<input
-												v-model="item.quantity"
-												:max="item.product.stock"
-												class="w-12 text-center py-1 border-t border-b border-gray-300"
-												min="1"
-												type="number"
-												@change="updateQuantity(item)"
-											/>
-											<button
-												:disabled="item.product.stock <= item.quantity"
+											<input v-model="item.quantity" :max="item.product.stock"
+												class="w-12 text-center py-1 border-t border-b border-gray-300" min="1"
+												type="number" @change="updateQuantity(item)" />
+											<button :disabled="item.product.stock <= item.quantity"
 												class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-1 px-2 rounded-r-md border border-gray-300"
-												@click="incrementQuantity(item)"
-											>
+												@click="incrementQuantity(item)">
 												<i class="pi pi-plus"></i>
 											</button>
 										</div>
@@ -119,11 +94,9 @@
 												}}
 											</p>
 
-											<button
-												aria-label="Eliminar producto"
+											<button aria-label="Eliminar producto"
 												class="text-red-600 hover:text-red-800"
-												@click="removeItem(item.product.codigo)"
-											>
+												@click="removeItem(item.product.codigo)">
 												<i class="pi pi-trash"></i>
 											</button>
 										</div>
@@ -150,10 +123,10 @@
 							<div class="flex justify-between mb-2">
 								<span class="text-gray-600">Envío</span>
 								<span class="font-medium">{{
-										shipping > 0 ?
-											`Gs. ${formatPrice(shipping)}` :
-											'Gratis'
-									}}</span>
+									shipping > 0 ?
+										`Gs. ${formatPrice(shipping)}` :
+										'Gratis'
+								}}</span>
 							</div>
 
 							<div class="flex justify-between mb-4 pb-4 border-b">
@@ -169,39 +142,29 @@
 							<!-- Código de descuento -->
 							<div class="mb-4">
 								<div class="flex">
-									<input
-										v-model="discountCode"
+									<input v-model="discountCode"
 										class="flex-grow p-2 border rounded-l-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-										placeholder="Código de descuento"
-										type="text"
-									/>
+										placeholder="Código de descuento" type="text" />
 									<button
 										class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-r-md border border-gray-300 text-sm"
-										@click="applyDiscount"
-									>
+										@click="applyDiscount">
 										Aplicar
 									</button>
 								</div>
-								<p v-if="discountError"
-									class="text-red-500 text-xs mt-1">{{ discountError }}</p>
-								<p v-if="discountSuccess"
-									class="text-green-500 text-xs mt-1">{{ discountSuccess }}</p>
+								<p v-if="discountError" class="text-red-500 text-xs mt-1">{{ discountError }}</p>
+								<p v-if="discountSuccess" class="text-green-500 text-xs mt-1">{{ discountSuccess }}</p>
 							</div>
 
 							<!-- Botón de checkout -->
 							<button
 								class="w-full bg-gray-700 hover:bg-gray-800 text-white py-3 px-4 rounded-md flex items-center justify-center transition-colors"
-								@click="checkout"
-							>
+								@click="checkout">
 								<i class="pi pi-check-circle mr-2"></i>
 								Proceder al pago
 							</button>
 
 							<div class="mt-4 text-center">
-								<NuxtLink
-									class="text-gray-700 hover:text-gray-800 text-sm font-medium"
-									to="/catalog"
-								>
+								<NuxtLink class="text-gray-700 hover:text-gray-800 text-sm font-medium" to="/catalog">
 									Continuar comprando
 								</NuxtLink>
 							</div>
@@ -213,12 +176,11 @@
 	</div>
 </template>
 
-<script lang="ts"
-	setup>
-import {computed, onMounted, ref} from 'vue';
-import {useCartStore} from '~/stores/cartStore';
+<script lang="ts" setup>
+import { computed, onMounted, ref } from 'vue';
+import { useCartStore } from '~/stores/cartStore';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
-import {CartItem} from '~/types';
+import { CartItem } from '~/types';
 import emitter from '~/utils/eventBus';
 
 // Definir título y meta tags para SEO
