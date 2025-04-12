@@ -110,15 +110,12 @@
 				<!-- Rango de precio -->
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Rango de precio</h4>
-					<div class="flex items-center space-x-2">
-						<input v-model="localPriceMin" class="w-full p-1 border rounded text-xs" min="0"
-							placeholder="Mín" type="number" />
-						<span class="text-gray-500">-</span>
-						<input v-model="localPriceMax" class="w-full p-1 border rounded text-xs" min="0"
-							placeholder="Máx" type="number" />
-					</div>
+					<PriceSlider :min-price="categoryPriceRange.min" :max-price="categoryPriceRange.max"
+						:initial-min="localPriceMin || categoryPriceRange.min"
+						:initial-max="localPriceMax || categoryPriceRange.max" @update:min="handleMinPriceChange"
+						@update:max="handleMaxPriceChange" />
 					<button
-						class="mt-1 w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
+						class="mt-3 w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
 						@click="applyPriceFilter">
 						<i class="pi pi-check-circle mr-2"></i>
 						Aplicar
@@ -143,6 +140,7 @@ import { useRouter } from 'vue-router';
 import { FilterData } from '~/types';
 import emitter from '~/utils/eventBus';
 import { useFiltersData } from '~/composables/useFiltersData';
+import { useProductoStore } from '~/stores/productoStore';
 
 // Props
 const props = defineProps({
@@ -190,8 +188,60 @@ const localPriceMin = ref<number | null>(props.priceMin);
 const localPriceMax = ref<number | null>(props.priceMax);
 const localSearchQuery = ref<string>(props.searchQuery);
 
+// Constante para el precio máximo
+const maxPriceLimit = 1000000; // 1 millón como límite máximo
+
+// Stores
+const productoStore = useProductoStore();
+
+// Manejadores para el slider de precio
+const handleMinPriceChange = (value: number) => {
+	localPriceMin.value = value;
+};
+
+const handleMaxPriceChange = (value: number) => {
+	localPriceMax.value = value;
+};
+
 // Obtener datos de filtros
 const { filtrosData, loading } = useFiltersData();
+
+// Calcular rango de precios para la categoría seleccionada
+const categoryPriceRange = computed(() => {
+	const productos = productoStore.productos;
+	let filteredProducts = productos;
+
+	if (localSelectedCategories.value.length > 0) {
+		filteredProducts = productos.filter(prod =>
+			localSelectedCategories.value.includes(prod.codigo_division)
+		);
+	}
+
+	if (localSelectedSubcategories.value.length > 0) {
+		filteredProducts = filteredProducts.filter(prod =>
+			localSelectedSubcategories.value.includes(prod.codigo_categoria)
+		);
+	}
+
+	if (filteredProducts.length === 0) {
+		return { min: 0, max: maxPriceLimit };
+	}
+
+	return {
+		min: Math.min(...filteredProducts.map(p => p.precio)),
+		max: Math.max(...filteredProducts.map(p => p.precio))
+	};
+});
+
+// Watch para actualizar el rango de precios cuando cambian las categorías
+watch([localSelectedCategories, localSelectedSubcategories], () => {
+	const { min, max } = categoryPriceRange.value;
+	localPriceMin.value = min;
+	localPriceMax.value = max;
+	// Emitir los nuevos valores
+	emit('update:priceMin', min);
+	emit('update:priceMax', max);
+});
 
 // Sincronizar props con estado local
 watch(() => props.selectedCategories, (newVal) => {
@@ -395,15 +445,15 @@ const clearAllFilters = () => {
 	// Limpiar estado local
 	localSelectedCategories.value = [];
 	localSelectedSubcategories.value = [];
-	localPriceMin.value = null;
-	localPriceMax.value = null;
+	localPriceMin.value = 0;
+	localPriceMax.value = maxPriceLimit;
 	localSearchQuery.value = '';
 
 	// Emitir eventos para actualizar el estado en el componente padre
 	emit('update:selectedCategories', []);
 	emit('update:selectedSubcategories', []);
-	emit('update:priceMin', null);
-	emit('update:priceMax', null);
+	emit('update:priceMin', 0);
+	emit('update:priceMax', maxPriceLimit);
 	emit('update:searchQuery', '');
 
 	// Emitir evento de limpieza de filtros
