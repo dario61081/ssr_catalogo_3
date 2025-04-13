@@ -111,13 +111,21 @@
 
 							<div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
 								<button
-									:class="{ 'opacity-50 cursor-not-allowed': product.stock <= 0 }"
+									:class="{
+										'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500': !isAdded,
+										'bg-green-600 hover:bg-green-700 focus:ring-green-500': isAdded,
+										 'opacity-50 cursor-not-allowed': product.stock <= 0
+									}"
 									:disabled="product.stock <= 0"
 									class="flex-1 bg-gray-700 hover:bg-gray-800 text-white py-3 px-4 rounded-md flex items-center justify-center transition-colors"
-									@click="addToCart"
+									@click="()=>{addToCart(); addToCartAnimation(); }"
 								>
-									<i class="pi pi-shopping-cart mr-2"></i>
-									Añadir al carrito
+									<i v-if="!isAdded"
+										class="pi pi-shopping-cart mr-2"></i>
+									<i v-else
+										class="pi pi-check animate-bounce"></i>
+									<span v-if="!isAdded">Añadir al carrito</span>
+
 								</button>
 
 								<ActionButtonWhatsapp :product="product"></ActionButtonWhatsapp>
@@ -224,6 +232,8 @@ const error = ref<string | null>(null);
 const quantity = ref(1);
 const currentImageIndex = ref(0);
 
+const isAdded = ref(false);
+
 // Cargar el producto
 onMounted(async () => {
 	try {
@@ -321,6 +331,13 @@ const decrementQuantity = () => {
 		quantity.value--;
 	}
 };
+
+const addToCartAnimation = () => {
+	isAdded.value = true;
+	setTimeout(() => {
+		isAdded.value = false;
+	}, 2000);
+}
 
 // Añadir o quitar de favoritos
 const toggleFavorite = () => {
