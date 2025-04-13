@@ -557,7 +557,7 @@ const confirmOrder = async () => {
 	};
 
 	cartStore.saveConfirmedOrder(confirmedOrder);
-	
+
 	// Mostrar resumen de la compra
 	const lastOrder = cartStore.getLastOrder();
 	if (lastOrder) {

@@ -1,6 +1,7 @@
 <!-- A simple theme toggle button component -->
 <template>
-  <div class="theme-switch" :class="{ 'dark': isDarkMode }" @click="toggleTheme"
+  <!-- {{ ... }} -->
+  <!-- <div class="theme-switch" :class="{ 'dark': isDarkMode }" @click="toggleTheme"
     :title="isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
     <div class="switch-track">
       <div class="icons">
@@ -9,7 +10,7 @@
       </div>
       <div class="switch-thumb"></div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup lang="ts">
