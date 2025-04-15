@@ -2,40 +2,40 @@
     <section
         class="relative rounded-xl overflow-hidden min-h-[488px] md:min-h-[608px] w-full h-full flex items-center justify-center shadow-lg p-0 m-0">
         <!-- Slide actual -->
-        <Transition name="fade" mode="out-in">
-    <div v-if="banners.length" :key="activeIndex" class="w-full h-full min-h-[488px] md:min-h-[608px] relative">
-      <!-- Imagen de fondo/banner -->
-      <img :src="banners[activeIndex].imagen" :alt="banners[activeIndex].titulo"
-           class="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
-           style="z-index:0; left:0; top:0; right:0; bottom:0; margin:0; padding:0;" loading="lazy" />
-      <!-- Overlay de color de fondo del banner -->
-      <div v-if="showLabels"
-        class="absolute inset-0 pointer-events-none"
-        :style="`background: ${banners[activeIndex].fondo_color || 'linear-gradient(to top right, #111827cc, #374151cc)'}; opacity:0.85; z-index:2;`">
-      </div>
-      <!-- Contenido principal -->
-      <div
-        class="relative z-10 flex flex-col md:flex-row items-center justify-between w-full px-6 py-10 gap-8"
-        :class="banners[activeIndex].posicion_texto === 'left' ? 'justify-start' : banners[activeIndex].posicion_texto === 'right' ? 'justify-end' : 'justify-center'">
-        <div v-if="showLabels">
-          <h1 class="text-3xl md:text-5xl font-bold mb-2" :style="`color: ${banners[activeIndex].texto_color || '#fff'};`">
-            {{ banners[activeIndex].titulo }}<br>
-            <span :style="`color: ${banners[activeIndex].cta_color || '#f59e42'};`">{{ banners[activeIndex].subtitulo }}</span>
-          </h1>
-          <div class="w-20 h-1 mb-4" :style="`background: ${banners[activeIndex].cta_color || '#f59e42'};`"></div>
-        </div>
-        <div class="flex flex-col items-center md:items-end">
-          <a v-if="showVerMas" :href="banners[activeIndex].cta_url || '#'" target="_blank">
-            <button
-              class="font-semibold rounded-full px-6 py-2 mt-2 shadow transition"
-              :style="`background: ${banners[activeIndex].cta_color || '#f59e42'}; color: ${banners[activeIndex].texto_color || '#222'};`">
-              {{ banners[activeIndex].cta_texto }}
-            </button>
-          </a>
-        </div>
-      </div>
-    </div>
-  </Transition>
+        <Transition name="slide" mode="out-in">
+            <div v-if="banners.length" :key="activeIndex" class="w-full h-full min-h-[488px] md:min-h-[608px] relative">
+                <!-- Imagen de fondo/banner -->
+                <img :src="banners[activeIndex].imagen" :alt="banners[activeIndex].titulo"
+                    class="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
+                    style="z-index:0; left:0; top:0; right:0; bottom:0; margin:0; padding:0;" loading="lazy" />
+                <!-- Overlay de color de fondo del banner -->
+                <div v-if="showLabels" class="absolute inset-0 pointer-events-none"
+                    :style="`background: ${banners[activeIndex].fondo_color || 'linear-gradient(to top right, #111827cc, #374151cc)'}; opacity:0.85; z-index:2;`">
+                </div>
+                <!-- Contenido principal -->
+                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between w-full px-6 py-10 gap-8"
+                    :class="banners[activeIndex].posicion_texto === 'left' ? 'justify-start' : banners[activeIndex].posicion_texto === 'right' ? 'justify-end' : 'justify-center'">
+                    <div v-if="showLabels">
+                        <h1 class="text-3xl md:text-5xl font-bold mb-2"
+                            :style="`color: ${banners[activeIndex].texto_color || '#fff'};`">
+                            {{ banners[activeIndex].titulo }}<br>
+                            <span :style="`color: ${banners[activeIndex].cta_color || '#f59e42'};`">{{
+                                banners[activeIndex].subtitulo }}</span>
+                        </h1>
+                        <div class="w-20 h-1 mb-4"
+                            :style="`background: ${banners[activeIndex].cta_color || '#f59e42'};`"></div>
+                    </div>
+                    <div class="flex flex-col items-center md:items-end">
+                        <a v-if="showVerMas" :href="banners[activeIndex].cta_url || '#'" target="_blank">
+                            <button class="font-semibold rounded-full px-6 py-2 mt-2 shadow transition"
+                                :style="`background: ${banners[activeIndex].cta_color || '#f59e42'}; color: ${banners[activeIndex].texto_color || '#222'};`">
+                                {{ banners[activeIndex].cta_texto }}
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </Transition>
         <!-- Flechas navegación -->
         <button @click="prev"
             class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-gray-800/60 hover:bg-gray-700/80 text-white rounded-full w-8 h-8 flex items-center justify-center shadow transition">
@@ -139,13 +139,30 @@ function mapToBanner(item: BannerResponse): Banner {
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.5s;
+.slide-enter-active,
+.slide-leave-active {
+    transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: absolute;
+    width: 100%;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.slide-enter-from {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.slide-enter-to {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.slide-leave-from {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.slide-leave-to {
+    transform: translateX(-100%);
     opacity: 0;
 }
 
