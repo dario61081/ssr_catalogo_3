@@ -108,6 +108,7 @@ src/
 | categorias   | https://panel.colchonesparana.com.py/articulos/divisiones/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC/TODOS                  |
 | productos    | https://panel.colchonesparana.com.py/api/v2/articulos/division/TODOS/TODOS/TODOS/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC |
 | producto     | https://panel.colchonesparana.com.py/api/v2/articulos/detalle/${codigo_producto}/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC |
+| banners      | https://panel.colchonesparana.com.py/api/v2/banners/QrZ45aBhidW1v1uaARbOGYtTpnP74Qa7MnS74wbhm0esFSXK5adk1kP6HeGakIa2PU5vdTDd9ojNlTXQEg37zyFZKwHkRxWBC8eT3uJgfxTOjOSBpYv6eZaa9Biist5V |
 
 ### 📦 Modelo de Datos (Ejemplo)
 
