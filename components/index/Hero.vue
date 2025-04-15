@@ -1,8 +1,8 @@
 <template>
     <section
-        class="relative rounded-xl overflow-hidden min-h-[488px] md:min-h-[608px] w-full h-full flex items-center justify-center shadow-lg p-0 m-0">
+        class="relative rounded-xl overflow-hidden min-h-[488px] md:min-h-[608px] w-full h-full flex items-center justify-center shadow-lg p-0 m-0 overflow-hidden bg-gray-900">
         <!-- Slide actual -->
-        <Transition name="slide" mode="out-in">
+        <Transition name="slide">
             <div v-if="banners.length" :key="activeIndex" class="w-full h-full min-h-[488px] md:min-h-[608px] relative">
                 <!-- Imagen de fondo/banner -->
                 <img :src="banners[activeIndex].imagen" :alt="banners[activeIndex].titulo"
