@@ -1,9 +1,9 @@
 <template>
     <section
-        class="relative rounded-xl overflow-hidden min-h-[360px] md:min-h-[480px] w-full h-full flex items-center justify-center shadow-lg p-0 m-0">
+        class="relative rounded-xl overflow-hidden min-h-[488px] md:min-h-[608px] w-full h-full flex items-center justify-center shadow-lg p-0 m-0">
         <!-- Slide actual -->
         <Transition name="fade" mode="out-in">
-    <div v-if="banners.length" :key="activeIndex" class="w-full h-full min-h-[360px] md:min-h-[480px] relative">
+    <div v-if="banners.length" :key="activeIndex" class="w-full h-full min-h-[488px] md:min-h-[608px] relative">
       <!-- Imagen de fondo/banner -->
       <img :src="banners[activeIndex].imagen" :alt="banners[activeIndex].titulo"
            class="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
