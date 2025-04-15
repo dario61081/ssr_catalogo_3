@@ -18,6 +18,7 @@ export const mapToProducto = (data: ProductoResponse) => {
 	}
 }
 
+
 export const mapToCategoria = (data: CategoriaResponse) => {
 	return {
 		codigo: data.DIV_CODIGO,

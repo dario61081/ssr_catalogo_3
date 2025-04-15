@@ -1,14 +1,15 @@
 <template>
 	<div>
 		<!-- Botón para mostrar filtros en móvil -->
-		<button @click="showMobileFilters = true"
-			class="md:hidden fixed bottom-4 left-4 z-50 bg-gray-700 text-white rounded-full p-3 shadow-lg flex items-center">
+		<button class="md:hidden fixed bottom-4 left-4 z-50 bg-gray-700 text-white rounded-full p-3 shadow-lg flex items-center"
+			@click="showMobileFilters = true">
 			<i class="pi pi-filter mr-2"></i>
 			Filtros
 		</button>
 
 		<!-- Overlay para móvil -->
-		<div v-if="showMobileFilters" class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+		<div v-if="showMobileFilters"
+			class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
 			@click="showMobileFilters = false">
 		</div>
 
@@ -18,13 +19,15 @@
 			'-translate-x-full': !showMobileFilters,
 			'translate-x-0': showMobileFilters,
 			'md:translate-x-0 md:static md:w-auto': true
-		}" class="filter-sidebar bg-white rounded-lg shadow-sm p-3">
+		}"
+			class="filter-sidebar bg-white rounded-lg shadow-sm p-3">
 			<div class="flex items-center justify-between mb-3">
 				<h3 class="text-base font-semibold flex items-center">
 					<i class="pi pi-filter text-gray-500 mr-2"></i>
 					Filtros
 				</h3>
-				<button @click="showMobileFilters = false" class="md:hidden text-gray-500">
+				<button class="md:hidden text-gray-500"
+					@click="showMobileFilters = false">
 					<i class="pi pi-times"></i>
 				</button>
 			</div>
@@ -39,9 +42,12 @@
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Buscar productos</h4>
 					<div class="flex flex-col space-y-2">
-						<input v-model="localSearchQuery" class="w-full p-2 border rounded text-sm"
-							placeholder="Nombre del producto..." type="text" @keydown.enter.prevent="applySearchFilter"
-							@keydown.esc.prevent="localSearchQuery = ''" />
+						<input v-model="localSearchQuery"
+							class="w-full p-2 border rounded text-sm"
+							placeholder="Nombre del producto..."
+							type="text"
+							@keydown.enter.prevent="applySearchFilter"
+							@keydown.esc.prevent="localSearchQuery = ''"/>
 						<button
 							class="w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
 							@click="applySearchFilter">
@@ -54,25 +60,33 @@
 				<!-- Categorías -->
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Categorías</h4>
-					<div v-if="loading" class="py-1 text-center text-gray-500">
+					<div v-if="loading"
+						class="py-1 text-center text-gray-500">
 						<i class="pi pi-spin pi-spinner mr-2"></i>
 						Cargando...
 					</div>
-					<div v-else class="max-h-120 overflow-y-auto pr-1 category-list">
-						<div v-for="categoria in categoriasList" :key="categoria.codigo_categoria" class="mb-1">
+					<div v-else
+						class="max-h-120 overflow-y-auto pr-1 category-list">
+						<div v-for="categoria in categoriasList"
+							:key="categoria.codigo_categoria"
+							class="mb-1">
 							<div :class="{ 'bg-gray-100': isSelectedCategory(categoria.codigo_categoria) }"
 								class="flex items-center justify-between cursor-pointer p-1 rounded hover:bg-gray-50"
 								@click="toggleCategory(categoria.codigo_categoria)">
 								<div class="flex items-center">
 									<input :id="`cat-${categoria.codigo_categoria}`"
 										:checked="isSelectedCategory(categoria.codigo_categoria)"
-										class="mr-2 h-4 w-4 text-gray-700 rounded" type="checkbox"
-										@change="toggleCategory(categoria.codigo_categoria)" @click.stop />
-									<label :for="`cat-${categoria.codigo_categoria}`" class="cursor-pointer text-sm"
+										class="mr-2 h-4 w-4 text-gray-700 rounded"
+										type="checkbox"
+										@change="toggleCategory(categoria.codigo_categoria)"
+										@click.stop/>
+									<label :for="`cat-${categoria.codigo_categoria}`"
+										class="cursor-pointer text-sm"
 										@click.stop>
 										{{ categoria.desc_categoria }}
-										<span class="text-xs text-gray-500 ml-1">({{ categoria.total_categoria
-										}})</span>
+										<span class="text-xs text-gray-500 ml-1">({{
+												categoria.total_categoria
+											}})</span>
 									</label>
 								</div>
 								<button v-if="hasSubcategories(categoria.codigo_categoria)"
@@ -87,18 +101,20 @@
 							<div v-if="expandedCategories.includes(categoria.codigo_categoria) && hasSubcategories(categoria.codigo_categoria)"
 								class="ml-5 mt-1 subcategory-list">
 								<div v-for="subcategoria in getSubcategoriesByCategory(categoria.codigo_categoria)"
-									:key="subcategoria.codigo_subcategoria" class="mb-1">
+									:key="subcategoria.codigo_subcategoria"
+									class="mb-1">
 									<div class="flex items-center p-1 rounded hover:bg-gray-50">
 										<input :id="`subcat-${subcategoria.codigo_subcategoria}`"
 											:checked="isSelectedSubcategory(subcategoria.codigo_subcategoria)"
-											class="mr-2 h-4 w-4 text-gray-700 rounded" type="checkbox"
-											@change="toggleSubcategory(subcategoria.codigo_subcategoria, categoria.codigo_categoria)" />
+											class="mr-2 h-4 w-4 text-gray-700 rounded"
+											type="checkbox"
+											@change="toggleSubcategory(subcategoria.codigo_subcategoria, categoria.codigo_categoria)"/>
 										<label :for="`subcat-${subcategoria.codigo_subcategoria}`"
 											class="cursor-pointer text-xs">
 											{{ subcategoria.desc_subcategoria }}
 											<span class="text-xs text-gray-500 ml-1">({{
-												subcategoria.total_subcategoria
-											}})</span>
+													subcategoria.total_subcategoria
+												}})</span>
 										</label>
 									</div>
 								</div>
@@ -110,10 +126,12 @@
 				<!-- Rango de precio -->
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Rango de precio</h4>
-					<PriceSlider :min-price="categoryPriceRange.min" :max-price="categoryPriceRange.max"
+					<PriceSlider :initial-max="localPriceMax || categoryPriceRange.max"
 						:initial-min="localPriceMin || categoryPriceRange.min"
-						:initial-max="localPriceMax || categoryPriceRange.max" @update:min="handleMinPriceChange"
-						@update:max="handleMaxPriceChange" />
+						:max-price="categoryPriceRange.max"
+						:min-price="categoryPriceRange.min"
+						@update:min="handleMinPriceChange"
+						@update:max="handleMaxPriceChange"/>
 					<button
 						class="mt-3 w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
 						@click="applyPriceFilter">
@@ -134,13 +152,14 @@
 	</div>
 </template>
 
-<script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { FilterData } from '~/types';
+<script lang="ts"
+	setup>
+import {computed, nextTick, ref, watch} from 'vue';
+import {useRouter} from 'vue-router';
+import {FilterData} from '~/types';
 import emitter from '~/utils/eventBus';
-import { useFiltersData } from '~/composables/useFiltersData';
-import { useProductoStore } from '~/stores/productoStore';
+import {useFiltersData} from '~/composables/useFiltersData';
+import {useProductoStore} from '~/stores/productoStore';
 
 // Props
 const props = defineProps({
@@ -204,7 +223,7 @@ const handleMaxPriceChange = (value: number) => {
 };
 
 // Obtener datos de filtros
-const { filtrosData, loading } = useFiltersData();
+const {filtrosData, loading} = useFiltersData();
 
 // Calcular rango de precios para la categoría seleccionada
 const categoryPriceRange = computed(() => {
@@ -224,7 +243,7 @@ const categoryPriceRange = computed(() => {
 	}
 
 	if (filteredProducts.length === 0) {
-		return { min: 0, max: maxPriceLimit };
+		return {min: 0, max: maxPriceLimit};
 	}
 
 	return {
@@ -234,8 +253,9 @@ const categoryPriceRange = computed(() => {
 });
 
 // Watch para actualizar el rango de precios cuando cambian las categorías
-watch([localSelectedCategories, localSelectedSubcategories], () => {
-	const { min, max } = categoryPriceRange.value;
+watch([localSelectedCategories,
+	localSelectedSubcategories], () => {
+	const {min, max} = categoryPriceRange.value;
 	localPriceMin.value = min;
 	localPriceMax.value = max;
 	// Emitir los nuevos valores
@@ -392,7 +412,7 @@ const toggleCategory = (categoryId: number) => {
 
 // Seleccionar/deseleccionar subcategoría
 const toggleSubcategory = (subcategoryId: number,
-	categoryId: number) => {
+						   categoryId: number) => {
 	if (isSelectedSubcategory(subcategoryId)) {
 		// Si la subcategoría está seleccionada, la quitamos
 		localSelectedSubcategories.value = localSelectedSubcategories.value.filter(id => id !== subcategoryId);
@@ -472,7 +492,7 @@ const clearAllFilters = () => {
 
 // Actualizar parámetros de URL
 const updateUrlParams = () => {
-	const query = { ...router.currentRoute.value.query };
+	const query = {...router.currentRoute.value.query};
 
 	// Categorías
 	if (localSelectedCategories.value.length > 0) {
@@ -508,7 +528,7 @@ const updateUrlParams = () => {
 		delete query.q;
 	}
 
-	router.push({ query });
+	router.push({query});
 };
 
 // Estado para controlar la visibilidad en móvil
@@ -549,7 +569,6 @@ const applyFiltersAndCloseMobile = () => {
 input[type="checkbox"] {
 	width: 16px !important;
 	height: 16px !important;
-	margin-right: 5px;
 }
 
 /* Prevenir scroll del body cuando el panel móvil está abierto */
