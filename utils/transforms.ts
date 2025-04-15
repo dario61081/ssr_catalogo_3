@@ -1,4 +1,4 @@
-import {CategoriaResponse, ProductoResponse} from "~/types";
+import { CategoriaResponse, ProductoResponse } from "~/types";
 
 export const mapToProducto = (data: ProductoResponse) => {
 	console.log(data)
@@ -9,6 +9,7 @@ export const mapToProducto = (data: ProductoResponse) => {
 		codigo_categoria: data.DIV_CLAS,
 		desc_categoria: data.DIV_CLAS_DESC,
 		precio: data.PRECIO,
+		precio_valor: data.PRECIO_VALOR,
 		imagen: data.ART_DIR_IMAG1 || '',
 		imagen_2: data.ART_DIR_IMAG2 || '',
 		imagen_3: data.ART_DIR_IMAG3 || '',

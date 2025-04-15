@@ -34,9 +34,11 @@ export interface ProductoResponse {
 	MARC_DESC: string;
 	ART_DESC_PRINCIPAL_APP: string | null;
 	ART_DESC_LARGA_APP: string | null;
+	PRECIO_VALOR: number;
 	ACTIVO: boolean;
 	ACTUALIZADO: string;
 	SYNC_TOKEN: string;
+
 }
 
 export interface Categoria {

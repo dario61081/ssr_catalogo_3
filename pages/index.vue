@@ -2,8 +2,9 @@
   <div>
     <div class="container mx-auto max-w-6xl px-4 py-6">
       <IndexHero :slides="slides" />
+      <IndexCategoriesGrid />
       <IndexTop20Products />
-      <!-- <IndexCategoriesGrid /> -->
+
     </div>
   </div>
   <ProductModalPreview :isOpen="showProductPreview" :productId="selectedProductId"
