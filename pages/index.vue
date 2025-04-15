@@ -16,6 +16,18 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import ProductModalPreview from '~/components/ProductModalPreview.vue';
 import emitter from '~/utils/eventBus';
 
+// Definir título y meta tags para SEO
+useHead({
+  title: 'Bienvenidos a Paraná Hogar',
+  meta: [
+    {
+      name: 'description',
+      content: 'Tienda online de muebles, electrodomésticos y artículos para el hogar con los mejores precios y calidad.'
+    }
+  ]
+});
+
+
 const showProductPreview = ref(false);
 const selectedProductId = ref(null);
 
