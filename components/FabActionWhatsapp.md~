@@ -1,0 +1,8 @@
+````html
+
+<FabActionWhatsapp
+	phoneNumber="5493764XXXXX"
+	defaultMessage="Hola, me interesa el producto XYZ"
+/>
+````
+
