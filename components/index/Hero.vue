@@ -8,6 +8,10 @@
                 <img :src="banners[activeIndex].imagen" :alt="banners[activeIndex].titulo"
                     class="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
                     style="z-index:0; left:0; top:0; right:0; bottom:0; margin:0; padding:0;" loading="lazy" />
+                <!-- Marca de agua logo -->
+                <img src="/img/logo.svg" alt="Marca de agua logo"
+                    class="absolute left-8 bottom-8 opacity-50 pointer-events-none select-none"
+                    style="z-index:1; width:180px; max-width:30vw; min-width:80px; filter: brightness(0) invert(1) drop-shadow(0 2px 8px #fff8);" />
                 <!-- Overlay de color de fondo del banner -->
                 <div v-if="showLabels" class="absolute inset-0 pointer-events-none"
                     :style="`background: ${banners[activeIndex].fondo_color || 'linear-gradient(to top right, #111827cc, #374151cc)'}; opacity:0.85; z-index:2;`">
