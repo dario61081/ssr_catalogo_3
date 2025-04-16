@@ -21,15 +21,26 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useCategoriaStore } from '~/stores/categoriaStore';
+import { Categoria, CategoriaResponse } from '~/types';
+
 const loading = ref(false)
+const error = ref<string | null>(null)
+const categorias = ref<Categoria[]>([])
 
-loading.value = true
-const response = await $fetch('https://panel.colchonesparana.com.py/articulos/divisiones/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC/TODOS')
-const categorias = response.map((item: any) => mapToCategoria(item)).filter(item => item.imagen)
+onMounted(async () => {
+  loading.value = true
 
-loading.value = false
+  try {
+    const response = await $fetch<CategoriaResponse[]>('https://panel.colchonesparana.com.py/articulos/divisiones/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC/TODOS')
+    categorias.value = response.map((item: CategoriaResponse) => mapToCategoria(item)).filter(item => item.imagen)
+  } catch (err) {
+    error.value = 'No se pudieron cargar las categorías.'
+
+  } finally {
+    loading.value = false
+  }
+
+})
 
 </script>
 

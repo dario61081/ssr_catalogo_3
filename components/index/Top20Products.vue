@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full">
+    <div class="w-full overflow-hidden h-[400px]">
         <div v-if="loading" class="flex justify-center items-center py-10 overflow-hidden">
             <i class="pi pi-spin pi-spinner text-2xl text-gray-400"></i>
             <span class="ml-2 text-gray-500">Cargando productos...</span>
@@ -8,10 +8,15 @@
             <i class="pi pi-exclamation-triangle mr-2"></i>{{ error }}
         </div>
         <div v-else>
-            <div class="relative">
-                <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 px-2 sm:px-0 justify-center text-center">
+            <div class="relative overflow-hidden">
+
+
+                <div :key="activeIndex"
+                    class="w-full grid grid-cols-4 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 px-2 sm:px-0 justify-center text-center">
                     <ProductCardSmall v-for="prod in currentSlide" :key="prod.codigo" :product="prod" v-lazy-src />
                 </div>
+
+
                 <!-- Navegación -->
                 <button v-if="slides.length > 1" @click="prev"
                     class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-gray-800/60 hover:bg-gray-700/80 text-white rounded-full w-8 h-8 flex items-center justify-center shadow transition">
@@ -34,31 +39,32 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useProductoStore } from '~/stores/productoStore';
 import ProductCardSmall from '../ProductCardSmall.vue';
-import { useRouter } from 'vue-router';
+import { ProductoResponse } from '~/types';
 
-const productoStore = useProductoStore();
+
 const activeIndex = ref(0);
 const loading = ref(false);
 const error = ref<string | null>(null);
 let autoSlideTimer: ReturnType<typeof setTimeout> | null = null;
 
+const productos = ref<Producto[]>([])
+
+
 onMounted(async () => {
-    if (!productoStore.productos.length) {
-        try {
-            loading.value = true;
-            await productoStore.fetchProductos();
-        } catch (e) {
-            error.value = 'No se pudieron cargar los productos.';
-        } finally {
-            loading.value = false;
-        }
+    loading.value = true
+    try {
+        const response = await $fetch<ProductoResponse[]>('https://panel.colchonesparana.com.py/api/v2/articulos/top/20/$2y$10$FOLP83QuixpjN7lgAU8acOM4SIiOQlBYMbK6mHppi5Lo0kraspEkC')
+        productos.value = response.map((item: ProductoResponse) => mapToProducto(item))
+    } catch (err) {
+        error.value = 'No se pudieron cargar los productos.'
+    } finally {
+        loading.value = false
     }
     startAutoSlide();
 });
 
-const top20 = computed(() => productoStore.productos.slice(0, 20));
+const top20 = computed(() => productos.value.slice(0, 20));
 
 const CARDS_PER_SLIDE = 4; // Cambia a 5 si prefieres
 
@@ -105,8 +111,63 @@ function stopAutoSlide() {
 }
 
 import { onUnmounted } from 'vue';
+import { Producto } from '~/types';
 onUnmounted(() => {
     stopAutoSlide();
 });
 
 </script>
+
+<style scoped>
+.slidefade-enter-active,
+.slidefade-leave-active {
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.slidefade-enter-from {
+    opacity: 0;
+    transform: translateX(80px);
+}
+
+.slidefade-enter-to {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.slidefade-leave-from {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.slidefade-leave-to {
+    opacity: 0;
+    transform: translateX(-80px);
+}
+</style>
+
+
+<style scoped>
+.fade-enter-active {
+    transition: opacity 0.5s;
+    z-index: 2;
+}
+
+.fade-leave-active {
+    transition: opacity 0.5s;
+    z-index: 1;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
+}
+</style>
