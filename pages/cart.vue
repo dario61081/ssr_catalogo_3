@@ -184,7 +184,7 @@
 	<!-- Checkout Modal -->
 	<div v-if="showCheckoutModal"
 		class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-		<div class="bg-white rounded-lg w-full max-w-2xl">
+		<div class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
 			<div class="p-4 border-b flex justify-between items-center">
 				<h3 class="text-lg font-semibold">Finalizar Compra</h3>
 				<button @click="showCheckoutModal = false" class="text-gray-500 hover:text-gray-700">
