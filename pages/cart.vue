@@ -193,40 +193,41 @@
 			</div>
 
 			<div class="p-6">
+				<div class="flex justify-center mb-6">
+					<div class="flex space-x-4">
+						<div :class="['px-3 py-1 rounded-full text-xs font-semibold', checkoutStep === 1 ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700']">1. Información del cliente</div>
+						<div :class="['px-3 py-1 rounded-full text-xs font-semibold', checkoutStep === 2 ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700']">2. Forma de pago</div>
+						<div :class="['px-3 py-1 rounded-full text-xs font-semibold', checkoutStep === 3 ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700']">3. Resumen</div>
+					</div>
+				</div>
 				<form @submit.prevent="confirmOrder" class="space-y-6">
-					<!-- Customer Information -->
-					<div class="space-y-4">
+					<!-- Paso 1: Información del cliente -->
+					<div v-if="checkoutStep === 1" class="space-y-4">
 						<h4 class="font-medium text-gray-900">Información del Cliente</h4>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">CI o RUC</label>
-							<input v-model="customerInfo.ruc" type="text" required
-								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+							<input v-model="customerInfo.ruc" type="text" required class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
-							<input v-model="customerInfo.name" type="text" required
-								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+							<input v-model="customerInfo.name" type="text" required class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-							<input v-model="customerInfo.telefono" type="text" required
-								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+							<input v-model="customerInfo.telefono" type="text" required class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-							<input v-model="customerInfo.email" type="email" required
-								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+							<input v-model="customerInfo.email" type="email" required class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Dirección de envío</label>
-							<textarea v-model="customerInfo.address" required rows="3"
-								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500"></textarea>
+							<textarea v-model="customerInfo.address" required rows="3" class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500"></textarea>
 
 							<!-- Geolocation checkbox -->
 							<div class="mt-2">
 								<label class="flex items-center space-x-2 text-sm text-gray-600">
-									<input v-model="useGeolocation" type="checkbox"
-										class="rounded border-gray-300 text-gray-700 focus:ring-gray-500">
+									<input v-model="useGeolocation" type="checkbox" class="rounded border-gray-300 text-gray-700 focus:ring-gray-500">
 									<span>Georeferenciar mi ubicación</span>
 								</label>
 							</div>
@@ -238,26 +239,22 @@
 									Mueve el pin para ajustar tu ubicación exacta
 								</p>
 								<div v-if="customerInfo.coordinates" class="text-xs text-gray-500 mt-1">
-									Coordenadas: {{ customerInfo.coordinates.lat.toFixed(6) }}, {{
-										customerInfo.coordinates.lng.toFixed(6) }}
+									Coordenadas: {{ customerInfo.coordinates.lat.toFixed(6) }}, {{ customerInfo.coordinates.lng.toFixed(6) }}
 								</div>
 							</div>
 						</div>
 					</div>
 
-					<!-- Payment Methods -->
-					<div class="space-y-4">
+					<!-- Paso 2: Forma de pago -->
+					<div v-if="checkoutStep === 2" class="space-y-4">
 						<h4 class="font-medium text-gray-900">Método de Pago</h4>
-
 						<div class="space-y-2">
 							<label class="flex items-center space-x-3">
-								<input v-model="customerInfo.paymentMethod" type="radio" value="efectivo contraentrega"
-									name="payment">
+								<input v-model="customerInfo.paymentMethod" type="radio" value="efectivo contraentrega" name="payment">
 								<span>Efectivo contraentrega</span>
 							</label>
 							<label class="flex items-center space-x-3">
-								<input v-model="customerInfo.paymentMethod" type="radio" value="transferencia"
-									name="payment">
+								<input v-model="customerInfo.paymentMethod" type="radio" value="transferencia" name="payment">
 								<span>Transferencia bancaria</span>
 							</label>
 							<label class="flex items-center space-x-3">
@@ -270,24 +267,21 @@
 							</label>
 						</div>
 
-
 						<!-- QR Payment Panel -->
 						<div v-if="customerInfo.paymentMethod === 'qr'" class="mt-4 p-4 border rounded-lg">
 							<h5 class="font-medium text-gray-900 mb-3">Código QR para pago</h5>
 							<div class="flex flex-col items-center">
-								<div class="bg-white p-4 rounded-lg shadow-sm border mb-3">
-									<!-- Simulated QR code - In production, replace with actual QR generation -->
-									<img :src="`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(generateQRData())}`"
-										alt="QR Code para pago" class="w-48 h-48" />
-								</div>
-								<p class="text-sm text-gray-600 text-center">
-									Escanea este código QR con tu aplicación de pago preferida
-								</p>
-								<p class="text-sm font-medium text-gray-900 mt-2">
-									Monto a pagar: Gs. {{ formatPrice(total) }}
-								</p>
-								<p v-if="isProcessingPayment" class="text-sm text-gray-600 mt-2">{{ paymentStatus }}</p>
+								<!-- Simulated QR code - In production, replace with actual QR generation -->
+								<img :src="`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(generateQRData())}`"
+									alt="QR Code para pago" class="w-48 h-48" />
 							</div>
+							<p class="text-sm text-gray-600 text-center">
+								Escanea este código QR con tu aplicación de pago preferida
+							</p>
+							<p class="text-sm font-medium text-gray-900 mt-2">
+								Monto a pagar: Gs. {{ formatPrice(total) }}
+							</p>
+							<p v-if="isProcessingPayment" class="text-sm text-gray-600 mt-2">{{ paymentStatus }}</p>
 						</div>
 
 						<!-- Credit Card Payment Panel -->
@@ -298,8 +292,7 @@
 									<label class="block text-sm font-medium text-gray-700 mb-1">
 										Número de Tarjeta
 									</label>
-									<input v-model="cardInfo.number" type="text" maxlength="19"
-										placeholder="1234 5678 9012 3456"
+									<input v-model="cardInfo.number" type="text" maxlength="19" placeholder="1234 5678 9012 3456"
 										class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
 										@input="formatCardNumber" />
 								</div>
@@ -332,35 +325,42 @@
 						</div>
 					</div>
 
-					<!-- Order Summary -->
-					<div class="border-t pt-4">
-						<h4 class="font-medium text-gray-900 mb-2">Resumen</h4>
-						<div class="text-sm space-y-1">
-							<div class="flex justify-between">
-								<span>Subtotal:</span>
-								<span>Gs. {{ formatPrice(subtotal) }}</span>
-							</div>
-							<div class="flex justify-between">
-								<span>Envío:</span>
-								<span>{{ shipping > 0 ? `Gs. ${formatPrice(shipping)}` : 'A cotizar' }}</span>
-							</div>
-							<div class="flex justify-between">
-								<span>Descuento:</span>
-								<span class="text-green-600">- Gs. {{ formatPrice(discount) }}</span>
-							</div>
-							<div class="flex justify-between font-bold mt-2 pt-2 border-t">
-								<span>Total:</span>
-								<span>Gs. {{ formatPrice(total) }}</span>
+					<!-- Paso 3: Resumen -->
+					<div v-if="checkoutStep === 3">
+						<div class="border-t pt-4">
+							<h4 class="font-medium text-gray-900 mb-2">Resumen</h4>
+							<div class="text-sm space-y-1">
+								<div class="flex justify-between">
+									<span>Subtotal:</span>
+									<span>Gs. {{ formatPrice(subtotal) }}</span>
+								</div>
+								<div class="flex justify-between">
+									<span>Envío:</span>
+									<span>{{ shipping > 0 ? `Gs. ${formatPrice(shipping)}` : 'A cotizar' }}</span>
+								</div>
+								<div class="flex justify-between">
+									<span>Descuento:</span>
+									<span class="text-green-600">- Gs. {{ formatPrice(discount) }}</span>
+								</div>
+								<div class="flex justify-between font-bold mt-2 pt-2 border-t">
+									<span>Total:</span>
+									<span>Gs. {{ formatPrice(total) }}</span>
+								</div>
 							</div>
 						</div>
 					</div>
 
-					<div class="flex justify-end space-x-3">
-						<button type="button" @click="showCheckoutModal = false"
-							class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-50">
+					<div class="flex justify-end space-x-3 pt-4">
+						<button type="button" @click="showCheckoutModal = false" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-50">
 							Cancelar
 						</button>
-						<button type="submit" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
+						<button v-if="checkoutStep > 1" type="button" class="px-4 py-2 border rounded text-gray-700 hover:bg-gray-100" @click="checkoutStep--">
+							Atrás
+						</button>
+						<button v-if="checkoutStep < 3" type="button" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" @click="nextCheckoutStep">
+							Siguiente
+						</button>
+						<button v-if="checkoutStep === 3" type="submit" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
 							Enviar pedido
 						</button>
 					</div>
@@ -399,11 +399,38 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch, onBeforeUnmount, nextTick } from 'vue';
+
+// Wizard step control
+const checkoutStep = ref(1);
+
+function nextCheckoutStep() {
+  // Validaciones mínimas por paso
+  if (checkoutStep.value === 1) {
+    if (!customerInfo.value.ruc || !customerInfo.value.name || !customerInfo.value.telefono || !customerInfo.value.email || !customerInfo.value.address) {
+      alert('Por favor, completa todos los campos requeridos.');
+      return;
+    }
+  }
+  if (checkoutStep.value === 2) {
+    if (!customerInfo.value.paymentMethod) {
+      alert('Selecciona una forma de pago.');
+      return;
+    }
+    if (customerInfo.value.paymentMethod === 'tarjeta') {
+      if (!cardInfo.value.number || !cardInfo.value.expiry || !cardInfo.value.cvv || !cardInfo.value.name) {
+        alert('Completa los datos de la tarjeta.');
+        return;
+      }
+    }
+  }
+  if (checkoutStep.value < 3) checkoutStep.value++;
+}
+
 import { useCartStore } from '~/stores/cartStore';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
 import { CartItem } from '~/types';
 import emitter from '~/utils/eventBus';
-import L from 'leaflet';
+// import L from 'leaflet'; // SSR FIX: Importar dinámicamente en initMap
 
 // Definir título y meta tags para SEO
 useHead({
@@ -692,6 +719,9 @@ onBeforeUnmount(() => {
 // Initialize map
 const initMap = async () => {
 	if (typeof window === 'undefined') return;
+
+	// Importar Leaflet dinámicamente solo en cliente
+	const L = (await import('leaflet')).default;
 
 	await nextTick();
 	const mapContainer = document.getElementById('map');
