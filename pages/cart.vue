@@ -166,7 +166,7 @@
 								class="w-full bg-gray-700 hover:bg-gray-800 text-white py-3 px-4 rounded-md flex items-center justify-center transition-colors"
 								@click="showCheckoutModal = true">
 								<i class="pi pi-check-circle mr-2"></i>
-								Proceder al pago
+								Finalizar compra
 							</button>
 
 							<div class="mt-4 text-center">
@@ -200,6 +200,11 @@
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
 							<input v-model="customerInfo.name" type="text" required
+								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+						</div>
+						<div>
+							<label class="block text-sm font-medium text-gray-700 mb-1">CI o RUC</label>
+							<input v-model="customerInfo.ruc" type="text" required
 								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
 						</div>
 						<div>
@@ -413,6 +418,7 @@ const orderId = ref('ORD123456'); // Example order ID
 const showCheckoutModal = ref(false);
 const customerInfo = ref({
 	name: '',
+	ruc: '',
 	email: '',
 	address: '',
 	paymentMethod: 'contraentrega',
