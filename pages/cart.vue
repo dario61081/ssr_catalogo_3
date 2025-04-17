@@ -131,7 +131,7 @@
 								<span class="font-medium">{{
 									shipping > 0 ?
 										`Gs. ${formatPrice(shipping)}` :
-										'Gratis'
+										'A cotizar'
 								}}</span>
 							</div>
 
@@ -248,12 +248,17 @@
 					<!-- Payment Methods -->
 					<div class="space-y-4">
 						<h4 class="font-medium text-gray-900">Método de Pago</h4>
-						
+
 						<div class="space-y-2">
 							<label class="flex items-center space-x-3">
 								<input v-model="customerInfo.paymentMethod" type="radio" value="efectivo contraentrega"
 									name="payment">
 								<span>Efectivo contraentrega</span>
+							</label>
+							<label class="flex items-center space-x-3">
+								<input v-model="customerInfo.paymentMethod" type="radio" value="transferencia"
+									name="payment">
+								<span>Transferencia bancaria</span>
 							</label>
 							<label class="flex items-center space-x-3">
 								<input v-model="customerInfo.paymentMethod" type="radio" value="tarjeta" name="payment">
@@ -264,7 +269,7 @@
 								<span>Pago con QR</span>
 							</label>
 						</div>
-						
+
 
 						<!-- QR Payment Panel -->
 						<div v-if="customerInfo.paymentMethod === 'qr'" class="mt-4 p-4 border rounded-lg">
