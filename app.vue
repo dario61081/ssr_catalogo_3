@@ -94,7 +94,7 @@ onMounted(() => {
 <style>
 /* Estilos globales */
 body {
-  font-family: 'Inter', sans-serif;
+
   color: #333;
   line-height: 1.5;
 }
