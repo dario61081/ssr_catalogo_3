@@ -201,28 +201,39 @@
 					</div>
 				</div>
 				<form @submit.prevent="confirmOrder" class="space-y-6">
+<!-- Indicadores de error -->
 					<!-- Paso 1: Información del cliente -->
 					<div v-if="checkoutStep === 1" class="space-y-4">
 						<h4 class="font-medium text-gray-900">Información del Cliente</h4>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">CI o RUC</label>
-							<input v-model="customerInfo.ruc" type="text" required class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+							<input v-model="customerInfo.ruc" type="text" required placeholder="Ej: 1234567-8 o 80012345-6"
+  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.ruc ? 'border-red-500' : '']">
+<p v-if="customerErrors.ruc" class="text-xs text-red-600 mt-1">{{ customerErrors.ruc }}</p>
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
-							<input v-model="customerInfo.name" type="text" required class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+							<input v-model="customerInfo.name" type="text" required placeholder="Ej: Juan Pérez"
+  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.name ? 'border-red-500' : '']">
+<p v-if="customerErrors.name" class="text-xs text-red-600 mt-1">{{ customerErrors.name }}</p>
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-							<input v-model="customerInfo.telefono" type="text" required class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+							<input v-model="customerInfo.telefono" type="text" required placeholder="Ej: 0981 123456"
+  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.telefono ? 'border-red-500' : '']">
+<p v-if="customerErrors.telefono" class="text-xs text-red-600 mt-1">{{ customerErrors.telefono }}</p>
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-							<input v-model="customerInfo.email" type="email" required class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+							<input v-model="customerInfo.email" type="email" required placeholder="Ej: correo@ejemplo.com"
+  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.email ? 'border-red-500' : '']">
+<p v-if="customerErrors.email" class="text-xs text-red-600 mt-1">{{ customerErrors.email }}</p>
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Dirección de envío</label>
-							<textarea v-model="customerInfo.address" required rows="3" class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500"></textarea>
+							<textarea v-model="customerInfo.address" required rows="3" placeholder="Ej: Av. Principal 1234, Asunción"
+  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.address ? 'border-red-500' : '']"></textarea>
+<p v-if="customerErrors.address" class="text-xs text-red-600 mt-1">{{ customerErrors.address }}</p>
 
 							<!-- Geolocation checkbox -->
 							<div class="mt-2">
@@ -403,13 +414,35 @@ import { computed, onMounted, ref, watch, onBeforeUnmount, nextTick } from 'vue'
 // Wizard step control
 const checkoutStep = ref(1);
 
+// Estado de errores para validación de cliente
+const customerErrors = reactive({
+  ruc: '',
+  name: '',
+  telefono: '',
+  email: '',
+  address: ''
+});
+
 function nextCheckoutStep() {
-  // Validaciones mínimas por paso
+  // Validar campos requeridos
   if (checkoutStep.value === 1) {
-    if (!customerInfo.value.ruc || !customerInfo.value.name || !customerInfo.value.telefono || !customerInfo.value.email || !customerInfo.value.address) {
-      alert('Por favor, completa todos los campos requeridos.');
-      return;
+    let valid = true;
+    customerErrors.ruc = customerInfo.value.ruc.trim() ? '' : 'El CI o RUC es requerido';
+    customerErrors.name = customerInfo.value.name.trim() ? '' : 'El nombre es requerido';
+    customerErrors.telefono = customerInfo.value.telefono.trim() ? '' : 'El teléfono es requerido';
+    customerErrors.email = customerInfo.value.email.trim() ? '' : 'El email es requerido';
+    customerErrors.address = customerInfo.value.address.trim() ? '' : 'La dirección es requerida';
+
+    // Validación básica de email
+    if (customerInfo.value.email && !/^\S+@\S+\.\S+$/.test(customerInfo.value.email)) {
+      customerErrors.email = 'El email no es válido';
     }
+
+    // Si hay algún error, no avanzar
+    for (const key in customerErrors) {
+      if (customerErrors[key]) valid = false;
+    }
+    if (!valid) return;
   }
   if (checkoutStep.value === 2) {
     if (!customerInfo.value.paymentMethod) {
