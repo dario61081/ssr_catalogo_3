@@ -131,7 +131,7 @@
 								<span class="font-medium">{{
 									shipping > 0 ?
 										`Gs. ${formatPrice(shipping)}` :
-										'A cotizar'
+										'A cotizar '
 								}}</span>
 							</div>
 
