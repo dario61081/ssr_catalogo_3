@@ -195,78 +195,92 @@
 			<div class="p-6">
 				<div class="flex justify-center mb-6">
 					<div class="flex space-x-4">
-						<div :class="['px-3 py-1 rounded-full text-xs font-semibold', checkoutStep === 1 ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700']">1. Información del cliente</div>
-						<div :class="['px-3 py-1 rounded-full text-xs font-semibold', checkoutStep === 2 ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700']">2. Forma de pago</div>
-						<div :class="['px-3 py-1 rounded-full text-xs font-semibold', checkoutStep === 3 ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700']">3. Resumen</div>
+						<div
+							:class="['px-3 py-1 rounded-full text-xs font-semibold', checkoutStep === 1 ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700']">
+							1. Información del cliente</div>
+						<div
+							:class="['px-3 py-1 rounded-full text-xs font-semibold', checkoutStep === 2 ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700']">
+							2. Forma de pago</div>
+						<div
+							:class="['px-3 py-1 rounded-full text-xs font-semibold', checkoutStep === 3 ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-700']">
+							3. Resumen</div>
 					</div>
 				</div>
 				<form @submit.prevent="confirmOrder" class="space-y-6">
-<!-- Indicadores de error -->
+					<!-- Indicadores de error -->
 					<!-- Paso 1: Información del cliente -->
 					<div v-if="checkoutStep === 1" class="space-y-4">
 						<h4 class="font-medium text-gray-900">Información del Cliente</h4>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">CI o RUC</label>
-							<input v-model="customerInfo.ruc" type="text" required placeholder="Ej: 1234567-8 o 80012345-6"
-  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.ruc ? 'border-red-500' : '']">
-<p v-if="customerErrors.ruc" class="text-xs text-red-600 mt-1">{{ customerErrors.ruc }}</p>
+							<input v-model="customerInfo.ruc" type="text" required
+								placeholder="Ej: 1234567-8 o 80012345-6"
+								:class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.ruc ? 'border-red-500' : '']">
+							<p v-if="customerErrors.ruc" class="text-xs text-red-600 mt-1">{{ customerErrors.ruc }}</p>
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
 							<input v-model="customerInfo.name" type="text" required placeholder="Ej: Juan Pérez"
-  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.name ? 'border-red-500' : '']">
-<p v-if="customerErrors.name" class="text-xs text-red-600 mt-1">{{ customerErrors.name }}</p>
+								:class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.name ? 'border-red-500' : '']">
+							<p v-if="customerErrors.name" class="text-xs text-red-600 mt-1">{{ customerErrors.name }}
+							</p>
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
 							<input v-model="customerInfo.telefono" type="text" required placeholder="Ej: 0981 123456"
-  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.telefono ? 'border-red-500' : '']">
-<p v-if="customerErrors.telefono" class="text-xs text-red-600 mt-1">{{ customerErrors.telefono }}</p>
+								:class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.telefono ? 'border-red-500' : '']">
+							<p v-if="customerErrors.telefono" class="text-xs text-red-600 mt-1">{{
+								customerErrors.telefono }}</p>
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-							<input v-model="customerInfo.email" type="email" required placeholder="Ej: correo@ejemplo.com"
-  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.email ? 'border-red-500' : '']">
-<p v-if="customerErrors.email" class="text-xs text-red-600 mt-1">{{ customerErrors.email }}</p>
+							<input v-model="customerInfo.email" type="email" required
+								placeholder="Ej: correo@ejemplo.com"
+								:class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.email ? 'border-red-500' : '']">
+							<p v-if="customerErrors.email" class="text-xs text-red-600 mt-1">{{ customerErrors.email }}
+							</p>
 						</div>
 						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Dirección de envío</label>
-							<textarea v-model="customerInfo.address" required rows="3" placeholder="Ej: Av. Principal 1234, Asunción"
-  :class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.address ? 'border-red-500' : '']"></textarea>
-<p v-if="customerErrors.address" class="text-xs text-red-600 mt-1">{{ customerErrors.address }}</p>
+							<textarea v-model="customerInfo.address" required rows="3"
+								placeholder="Ej: Av. Mcal. 1234, Asunción"
+								:class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.address ? 'border-red-500' : '']"></textarea>
+							<p v-if="customerErrors.address" class="text-xs text-red-600 mt-1">{{ customerErrors.address
+								}}</p>
 
 							<!-- Geolocation checkbox -->
 							<div class="mt-2">
-  <div class="flex items-center space-x-3">
-    <label class="flex items-center space-x-2 text-sm text-gray-600 m-0">
-      <input v-model="useGeolocation" type="checkbox" class="rounded border-gray-300 text-gray-700 focus:ring-gray-500">
-      <span>Georeferenciar mi ubicación</span>
-    </label>
-    <button v-if="useGeolocation" type="button"
-      @click="detectCurrentLocation"
-      class="bg-white border border-gray-300 rounded px-3 py-1 text-xs shadow hover:bg-gray-100"
-    >
-      Detectar mi ubicación
-    </button>
-  </div>
-</div>
+								<div class="flex items-center space-x-3">
+									<label class="flex items-center space-x-2 text-sm text-gray-600 m-0">
+										<input v-model="useGeolocation" type="checkbox"
+											class="rounded border-gray-300 text-gray-700 focus:ring-gray-500">
+										<span>Georeferenciar mi ubicación</span>
+									</label>
+									<button v-if="useGeolocation" type="button" @click="detectCurrentLocation"
+										class="bg-white border border-gray-300 rounded px-3 py-1 text-xs shadow hover:bg-gray-100">
+										Detectar mi ubicación
+									</button>
+								</div>
+							</div>
 
 							<!-- Map container -->
 							<div v-if="useGeolocation" class="mt-3 relative">
-  <div id="map" class="h-64 rounded-lg border"></div>
-  <transition name="fade">
-    <div v-if="showLocationMsg" class="absolute left-1/2 -translate-x-1/2 top-2 z-20 bg-yellow-50 border border-yellow-400 text-yellow-800 px-4 py-2 rounded shadow text-xs flex items-center gap-2">
-      <i class="pi pi-map-marker"></i>
-      Por favor, permite el acceso a tu ubicación para detectarla automáticamente.
-    </div>
-  </transition>
-  <p class="text-sm text-gray-500 mt-1">
-    Mueve el pin para ajustar tu ubicación exacta
-  </p>
-  <div v-if="customerInfo.coordinates" class="text-xs text-gray-500 mt-1">
-    Coordenadas: {{ customerInfo.coordinates.lat.toFixed(6) }}, {{ customerInfo.coordinates.lng.toFixed(6) }}
-  </div>
-</div>
+								<div id="map" class="h-64 rounded-lg border"></div>
+								<transition name="fade">
+									<div v-if="showLocationMsg"
+										class="absolute left-1/2 -translate-x-1/2 top-2 z-20 bg-yellow-50 border border-yellow-400 text-yellow-800 px-4 py-2 rounded shadow text-xs flex items-center gap-2">
+										<i class="pi pi-map-marker"></i>
+										Por favor, permite el acceso a tu ubicación para detectarla automáticamente.
+									</div>
+								</transition>
+								<p class="text-sm text-gray-500 mt-1">
+									Mueve el pin para ajustar tu ubicación exacta
+								</p>
+								<div v-if="customerInfo.coordinates" class="text-xs text-gray-500 mt-1">
+									Coordenadas: {{ customerInfo.coordinates.lat.toFixed(6) }}, {{
+										customerInfo.coordinates.lng.toFixed(6) }}
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -275,11 +289,13 @@
 						<h4 class="font-medium text-gray-900">Método de Pago</h4>
 						<div class="space-y-2">
 							<label class="flex items-center space-x-3">
-								<input v-model="customerInfo.paymentMethod" type="radio" value="efectivo contraentrega" name="payment">
+								<input v-model="customerInfo.paymentMethod" type="radio" value="efectivo contraentrega"
+									name="payment">
 								<span>Efectivo contraentrega</span>
 							</label>
 							<label class="flex items-center space-x-3">
-								<input v-model="customerInfo.paymentMethod" type="radio" value="transferencia" name="payment">
+								<input v-model="customerInfo.paymentMethod" type="radio" value="transferencia"
+									name="payment">
 								<span>Transferencia bancaria</span>
 							</label>
 							<label class="flex items-center space-x-3">
@@ -317,7 +333,8 @@
 									<label class="block text-sm font-medium text-gray-700 mb-1">
 										Número de Tarjeta
 									</label>
-									<input v-model="cardInfo.number" type="text" maxlength="19" placeholder="1234 5678 9012 3456"
+									<input v-model="cardInfo.number" type="text" maxlength="19"
+										placeholder="1234 5678 9012 3456"
 										class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
 										@input="formatCardNumber" />
 								</div>
@@ -376,16 +393,21 @@
 					</div>
 
 					<div class="flex justify-end space-x-3 pt-4">
-						<button type="button" @click="showCheckoutModal = false" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-50">
+						<button type="button" @click="showCheckoutModal = false"
+							class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-50">
 							Cancelar
 						</button>
-						<button v-if="checkoutStep > 1" type="button" class="px-4 py-2 border rounded text-gray-700 hover:bg-gray-100" @click="checkoutStep--">
+						<button v-if="checkoutStep > 1" type="button"
+							class="px-4 py-2 border rounded text-gray-700 hover:bg-gray-100" @click="checkoutStep--">
 							Atrás
 						</button>
-						<button v-if="checkoutStep < 3" type="button" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800" @click="nextCheckoutStep">
+						<button v-if="checkoutStep < 3" type="button"
+							class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800"
+							@click="nextCheckoutStep">
 							Siguiente
 						</button>
-						<button v-if="checkoutStep === 3" type="submit" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
+						<button v-if="checkoutStep === 3" type="submit"
+							class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
 							Enviar pedido
 						</button>
 					</div>
@@ -430,47 +452,47 @@ const checkoutStep = ref(1);
 
 // Estado de errores para validación de cliente
 const customerErrors = reactive({
-  ruc: '',
-  name: '',
-  telefono: '',
-  email: '',
-  address: ''
+	ruc: '',
+	name: '',
+	telefono: '',
+	email: '',
+	address: ''
 });
 
 function nextCheckoutStep() {
-  // Validar campos requeridos
-  if (checkoutStep.value === 1) {
-    let valid = true;
-    customerErrors.ruc = customerInfo.value.ruc.trim() ? '' : 'El CI o RUC es requerido';
-    customerErrors.name = customerInfo.value.name.trim() ? '' : 'El nombre es requerido';
-    customerErrors.telefono = customerInfo.value.telefono.trim() ? '' : 'El teléfono es requerido';
-    customerErrors.email = customerInfo.value.email.trim() ? '' : 'El email es requerido';
-    customerErrors.address = customerInfo.value.address.trim() ? '' : 'La dirección es requerida';
+	// Validar campos requeridos
+	if (checkoutStep.value === 1) {
+		let valid = true;
+		customerErrors.ruc = customerInfo.value.ruc.trim() ? '' : 'El CI o RUC es requerido';
+		customerErrors.name = customerInfo.value.name.trim() ? '' : 'El nombre es requerido';
+		customerErrors.telefono = customerInfo.value.telefono.trim() ? '' : 'El teléfono es requerido';
+		customerErrors.email = customerInfo.value.email.trim() ? '' : 'El email es requerido';
+		customerErrors.address = customerInfo.value.address.trim() ? '' : 'La dirección es requerida';
 
-    // Validación básica de email
-    if (customerInfo.value.email && !/^\S+@\S+\.\S+$/.test(customerInfo.value.email)) {
-      customerErrors.email = 'El email no es válido';
-    }
+		// Validación básica de email
+		if (customerInfo.value.email && !/^\S+@\S+\.\S+$/.test(customerInfo.value.email)) {
+			customerErrors.email = 'El email no es válido';
+		}
 
-    // Si hay algún error, no avanzar
-    for (const key in customerErrors) {
-      if (customerErrors[key]) valid = false;
-    }
-    if (!valid) return;
-  }
-  if (checkoutStep.value === 2) {
-    if (!customerInfo.value.paymentMethod) {
-      alert('Selecciona una forma de pago.');
-      return;
-    }
-    if (customerInfo.value.paymentMethod === 'tarjeta') {
-      if (!cardInfo.value.number || !cardInfo.value.expiry || !cardInfo.value.cvv || !cardInfo.value.name) {
-        alert('Completa los datos de la tarjeta.');
-        return;
-      }
-    }
-  }
-  if (checkoutStep.value < 3) checkoutStep.value++;
+		// Si hay algún error, no avanzar
+		for (const key in customerErrors) {
+			if (customerErrors[key]) valid = false;
+		}
+		if (!valid) return;
+	}
+	if (checkoutStep.value === 2) {
+		if (!customerInfo.value.paymentMethod) {
+			alert('Selecciona una forma de pago.');
+			return;
+		}
+		if (customerInfo.value.paymentMethod === 'tarjeta') {
+			if (!cardInfo.value.number || !cardInfo.value.expiry || !cardInfo.value.cvv || !cardInfo.value.name) {
+				alert('Completa los datos de la tarjeta.');
+				return;
+			}
+		}
+	}
+	if (checkoutStep.value < 3) checkoutStep.value++;
 }
 
 import { useCartStore } from '~/stores/cartStore';
@@ -765,80 +787,80 @@ onBeforeUnmount(() => {
 
 // Initialize map
 const initMap = async () => {
-  if (typeof window === 'undefined') return;
+	if (typeof window === 'undefined') return;
 
-  // Importar Leaflet dinámicamente solo en cliente
-  const L = (await import('leaflet')).default;
+	// Importar Leaflet dinámicamente solo en cliente
+	const L = (await import('leaflet')).default;
 
-  await nextTick();
-  const mapContainer = document.getElementById('map');
-  if (!mapContainer || map.value) return;
+	await nextTick();
+	const mapContainer = document.getElementById('map');
+	if (!mapContainer || map.value) return;
 
-  // Asunción coordinates
-  const defaultPosition = {
-    lat: -25.2867,
-    lng: -57.3333
-  };
+	// Asunción coordinates
+	const defaultPosition = {
+		lat: -25.2867,
+		lng: -57.3333
+	};
 
-  map.value = L.map('map').setView([defaultPosition.lat, defaultPosition.lng], 13);
+	map.value = L.map('map').setView([defaultPosition.lat, defaultPosition.lng], 13);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map.value);
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map.value);
 
-  // Custom icon for the marker
-  const icon = L.icon({
-    iconUrl: '/images/marker-icon.png',
-    shadowUrl: '/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-  });
+	// Custom icon for the marker
+	const icon = L.icon({
+		iconUrl: '/images/marker-icon.png',
+		shadowUrl: '/images/marker-shadow.png',
+		iconSize: [25, 41],
+		iconAnchor: [12, 41]
+	});
 
-  // Guardar icon global para usar en el botón
-  window._leafletMarkerIcon = icon;
+	// Guardar icon global para usar en el botón
+	window._leafletMarkerIcon = icon;
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        map.value.setView([latitude, longitude], 15);
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				const { latitude, longitude } = position.coords;
+				map.value.setView([latitude, longitude], 15);
 
-        marker.value = L.marker([latitude, longitude], {
-          draggable: true,
-          icon
-        }).addTo(map.value);
+				marker.value = L.marker([latitude, longitude], {
+					draggable: true,
+					icon
+				}).addTo(map.value);
 
-        customerInfo.value.coordinates = { lat: latitude, lng: longitude };
+				customerInfo.value.coordinates = { lat: latitude, lng: longitude };
 
-        marker.value.on('dragend', () => {
-          const pos = marker.value.getLatLng();
-          customerInfo.value.coordinates = {
-            lat: pos.lat,
-            lng: pos.lng
-          };
-        });
-      },
-      () => {
-        // If geolocation fails, use default position (Asunción)
-        marker.value = L.marker([defaultPosition.lat, defaultPosition.lng], {
-          draggable: true,
-          icon
-        }).addTo(map.value);
+				marker.value.on('dragend', () => {
+					const pos = marker.value.getLatLng();
+					customerInfo.value.coordinates = {
+						lat: pos.lat,
+						lng: pos.lng
+					};
+				});
+			},
+			() => {
+				// If geolocation fails, use default position (Asunción)
+				marker.value = L.marker([defaultPosition.lat, defaultPosition.lng], {
+					draggable: true,
+					icon
+				}).addTo(map.value);
 
-        customerInfo.value.coordinates = defaultPosition;
+				customerInfo.value.coordinates = defaultPosition;
 
-        marker.value.on('dragend', () => {
-          const pos = marker.value.getLatLng();
-          customerInfo.value.coordinates = {
-            lat: pos.lat,
-            lng: pos.lng
-          };
-        });
-      }
-    );
-  } else {
-    alert('Geolocalización no soportada por tu navegador.');
-  }
+				marker.value.on('dragend', () => {
+					const pos = marker.value.getLatLng();
+					customerInfo.value.coordinates = {
+						lat: pos.lat,
+						lng: pos.lng
+					};
+				});
+			}
+		);
+	} else {
+		alert('Geolocalización no soportada por tu navegador.');
+	}
 };
 
 // Mensaje para solicitar permiso de ubicación
@@ -846,39 +868,39 @@ const showLocationMsg = ref(false);
 
 // Evento para detectar ubicación actual desde el botón
 const detectCurrentLocation = async () => {
-  if (typeof window === 'undefined' || !map.value) return;
-  const L = (await import('leaflet')).default;
-  if (!navigator.geolocation) {
-    alert('Geolocalización no soportada por tu navegador.');
-    return;
-  }
-  showLocationMsg.value = true;
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      showLocationMsg.value = false;
-      const { latitude, longitude } = position.coords;
-      map.value.setView([latitude, longitude], 15);
-      if (marker.value) {
-        marker.value.setLatLng([latitude, longitude]);
-      } else {
-        // Si no existe el marker aún, crearlo
-        const icon = window._leafletMarkerIcon || L.icon({
-          iconUrl: '/images/marker-icon.png',
-          shadowUrl: '/images/marker-shadow.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41]
-        });
-        marker.value = L.marker([latitude, longitude], {
-          draggable: true,
-          icon
-        }).addTo(map.value);
-      }
-      customerInfo.value.coordinates = { lat: latitude, lng: longitude };
-    },
-    () => {
-      showLocationMsg.value = false;
-      alert('No se pudo obtener tu ubicación actual.');
-    }
-  );
+	if (typeof window === 'undefined' || !map.value) return;
+	const L = (await import('leaflet')).default;
+	if (!navigator.geolocation) {
+		alert('Geolocalización no soportada por tu navegador.');
+		return;
+	}
+	showLocationMsg.value = true;
+	navigator.geolocation.getCurrentPosition(
+		(position) => {
+			showLocationMsg.value = false;
+			const { latitude, longitude } = position.coords;
+			map.value.setView([latitude, longitude], 15);
+			if (marker.value) {
+				marker.value.setLatLng([latitude, longitude]);
+			} else {
+				// Si no existe el marker aún, crearlo
+				const icon = window._leafletMarkerIcon || L.icon({
+					iconUrl: '/images/marker-icon.png',
+					shadowUrl: '/images/marker-shadow.png',
+					iconSize: [25, 41],
+					iconAnchor: [12, 41]
+				});
+				marker.value = L.marker([latitude, longitude], {
+					draggable: true,
+					icon
+				}).addTo(map.value);
+			}
+			customerInfo.value.coordinates = { lat: latitude, lng: longitude };
+		},
+		() => {
+			showLocationMsg.value = false;
+			alert('No se pudo obtener tu ubicación actual.');
+		}
+	);
 };
 </script>
