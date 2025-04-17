@@ -198,13 +198,18 @@
 					<div class="space-y-4">
 						<h4 class="font-medium text-gray-900">Información del Cliente</h4>
 						<div>
+							<label class="block text-sm font-medium text-gray-700 mb-1">CI o RUC</label>
+							<input v-model="customerInfo.ruc" type="text" required
+								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
+						</div>
+						<div>
 							<label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
 							<input v-model="customerInfo.name" type="text" required
 								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
 						</div>
 						<div>
-							<label class="block text-sm font-medium text-gray-700 mb-1">CI o RUC</label>
-							<input v-model="customerInfo.ruc" type="text" required
+							<label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+							<input v-model="customerInfo.telefono" type="text" required
 								class="w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
 						</div>
 						<div>
@@ -243,11 +248,12 @@
 					<!-- Payment Methods -->
 					<div class="space-y-4">
 						<h4 class="font-medium text-gray-900">Método de Pago</h4>
+						
 						<div class="space-y-2">
 							<label class="flex items-center space-x-3">
-								<input v-model="customerInfo.paymentMethod" type="radio" value="contraentrega"
+								<input v-model="customerInfo.paymentMethod" type="radio" value="efectivo contraentrega"
 									name="payment">
-								<span>Pago contra entrega</span>
+								<span>Efectivo contraentrega</span>
 							</label>
 							<label class="flex items-center space-x-3">
 								<input v-model="customerInfo.paymentMethod" type="radio" value="tarjeta" name="payment">
@@ -258,6 +264,7 @@
 								<span>Pago con QR</span>
 							</label>
 						</div>
+						
 
 						<!-- QR Payment Panel -->
 						<div v-if="customerInfo.paymentMethod === 'qr'" class="mt-4 p-4 border rounded-lg">
@@ -349,7 +356,7 @@
 							Cancelar
 						</button>
 						<button type="submit" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
-							Confirmar Orden
+							Enviar pedido
 						</button>
 					</div>
 				</form>
@@ -419,9 +426,10 @@ const showCheckoutModal = ref(false);
 const customerInfo = ref({
 	name: '',
 	ruc: '',
+	telefono: '',
 	email: '',
 	address: '',
-	paymentMethod: 'contraentrega',
+	paymentMethod: 'efectivo contraentrega',
 	coordinates: null
 });
 const cardInfo = ref({
