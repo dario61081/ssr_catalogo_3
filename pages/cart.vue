@@ -342,7 +342,7 @@
 							</div>
 							<div class="flex justify-between">
 								<span>Envío:</span>
-								<span>{{ shipping > 0 ? `Gs. ${formatPrice(shipping)}` : 'Gratis' }}</span>
+								<span>{{ shipping > 0 ? `Gs. ${formatPrice(shipping)}` : 'A cotizar' }}</span>
 							</div>
 							<div class="flex justify-between">
 								<span>Descuento:</span>
