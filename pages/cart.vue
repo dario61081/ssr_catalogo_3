@@ -246,7 +246,7 @@
 								placeholder="Ej: Av. Mcal. 1234, Asunción"
 								:class="['w-full p-2 border rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500', customerErrors.address ? 'border-red-500' : '']"></textarea>
 							<p v-if="customerErrors.address" class="text-xs text-red-600 mt-1">{{ customerErrors.address
-								}}</p>
+							}}</p>
 
 							<!-- Geolocation checkbox -->
 							<div class="mt-2">
@@ -661,7 +661,9 @@ const confirmOrder = async () => {
 		customerInfo: {
 			email: customerInfo.value.email,
 			address: customerInfo.value.address,
-			coordinates: customerInfo.value.coordinates
+			coordinates: customerInfo.value.coordinates,
+			telephone: customerInfo.value.telefono,
+			ruc: customerInfo.value.ruc
 		},
 		total: total.value,
 		subtotal: subtotal.value,
