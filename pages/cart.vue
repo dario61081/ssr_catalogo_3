@@ -184,7 +184,7 @@
 	<!-- Checkout Modal -->
 	<div v-if="showCheckoutModal"
 		class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-		<div class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+		<div class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto sm:overflow-auto">
 			<div class="p-4 border-b flex justify-between items-center">
 				<h3 class="text-lg font-semibold">Finalizar Compra</h3>
 				<button @click="showCheckoutModal = false" class="text-gray-500 hover:text-gray-700">
@@ -237,22 +237,36 @@
 
 							<!-- Geolocation checkbox -->
 							<div class="mt-2">
-								<label class="flex items-center space-x-2 text-sm text-gray-600">
-									<input v-model="useGeolocation" type="checkbox" class="rounded border-gray-300 text-gray-700 focus:ring-gray-500">
-									<span>Georeferenciar mi ubicación</span>
-								</label>
-							</div>
+  <div class="flex items-center space-x-3">
+    <label class="flex items-center space-x-2 text-sm text-gray-600 m-0">
+      <input v-model="useGeolocation" type="checkbox" class="rounded border-gray-300 text-gray-700 focus:ring-gray-500">
+      <span>Georeferenciar mi ubicación</span>
+    </label>
+    <button v-if="useGeolocation" type="button"
+      @click="detectCurrentLocation"
+      class="bg-white border border-gray-300 rounded px-3 py-1 text-xs shadow hover:bg-gray-100"
+    >
+      Detectar mi ubicación
+    </button>
+  </div>
+</div>
 
 							<!-- Map container -->
-							<div v-if="useGeolocation" class="mt-3">
-								<div id="map" class="h-64 rounded-lg border"></div>
-								<p class="text-sm text-gray-500 mt-1">
-									Mueve el pin para ajustar tu ubicación exacta
-								</p>
-								<div v-if="customerInfo.coordinates" class="text-xs text-gray-500 mt-1">
-									Coordenadas: {{ customerInfo.coordinates.lat.toFixed(6) }}, {{ customerInfo.coordinates.lng.toFixed(6) }}
-								</div>
-							</div>
+							<div v-if="useGeolocation" class="mt-3 relative">
+  <div id="map" class="h-64 rounded-lg border"></div>
+  <transition name="fade">
+    <div v-if="showLocationMsg" class="absolute left-1/2 -translate-x-1/2 top-2 z-20 bg-yellow-50 border border-yellow-400 text-yellow-800 px-4 py-2 rounded shadow text-xs flex items-center gap-2">
+      <i class="pi pi-map-marker"></i>
+      Por favor, permite el acceso a tu ubicación para detectarla automáticamente.
+    </div>
+  </transition>
+  <p class="text-sm text-gray-500 mt-1">
+    Mueve el pin para ajustar tu ubicación exacta
+  </p>
+  <div v-if="customerInfo.coordinates" class="text-xs text-gray-500 mt-1">
+    Coordenadas: {{ customerInfo.coordinates.lat.toFixed(6) }}, {{ customerInfo.coordinates.lng.toFixed(6) }}
+  </div>
+</div>
 						</div>
 					</div>
 
@@ -751,76 +765,120 @@ onBeforeUnmount(() => {
 
 // Initialize map
 const initMap = async () => {
-	if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') return;
 
-	// Importar Leaflet dinámicamente solo en cliente
-	const L = (await import('leaflet')).default;
+  // Importar Leaflet dinámicamente solo en cliente
+  const L = (await import('leaflet')).default;
 
-	await nextTick();
-	const mapContainer = document.getElementById('map');
-	if (!mapContainer || map.value) return;
+  await nextTick();
+  const mapContainer = document.getElementById('map');
+  if (!mapContainer || map.value) return;
 
-	// Asunción coordinates
-	const defaultPosition = {
-		lat: -25.2867,
-		lng: -57.3333
-	};
+  // Asunción coordinates
+  const defaultPosition = {
+    lat: -25.2867,
+    lng: -57.3333
+  };
 
-	map.value = L.map('map').setView([defaultPosition.lat, defaultPosition.lng], 13);
+  map.value = L.map('map').setView([defaultPosition.lat, defaultPosition.lng], 13);
 
-	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-	}).addTo(map.value);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map.value);
 
-	// Custom icon for the marker
-	const icon = L.icon({
-		iconUrl: '/images/marker-icon.png',
-		shadowUrl: '/images/marker-shadow.png',
-		iconSize: [25, 41],
-		iconAnchor: [12, 41]
-	});
+  // Custom icon for the marker
+  const icon = L.icon({
+    iconUrl: '/images/marker-icon.png',
+    shadowUrl: '/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+  });
 
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(
-			(position) => {
-				const { latitude, longitude } = position.coords;
-				map.value.setView([latitude, longitude], 15);
+  // Guardar icon global para usar en el botón
+  window._leafletMarkerIcon = icon;
 
-				marker.value = L.marker([latitude, longitude], {
-					draggable: true,
-					icon
-				}).addTo(map.value);
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        map.value.setView([latitude, longitude], 15);
 
-				customerInfo.value.coordinates = { lat: latitude, lng: longitude };
+        marker.value = L.marker([latitude, longitude], {
+          draggable: true,
+          icon
+        }).addTo(map.value);
 
-				marker.value.on('dragend', () => {
-					const pos = marker.value.getLatLng();
-					customerInfo.value.coordinates = {
-						lat: pos.lat,
-						lng: pos.lng
-					};
-				});
-			},
-			() => {
-				// If geolocation fails, use default position (Asunción)
-				marker.value = L.marker([defaultPosition.lat, defaultPosition.lng], {
-					draggable: true,
-					icon
-				}).addTo(map.value);
+        customerInfo.value.coordinates = { lat: latitude, lng: longitude };
 
-				customerInfo.value.coordinates = defaultPosition;
+        marker.value.on('dragend', () => {
+          const pos = marker.value.getLatLng();
+          customerInfo.value.coordinates = {
+            lat: pos.lat,
+            lng: pos.lng
+          };
+        });
+      },
+      () => {
+        // If geolocation fails, use default position (Asunción)
+        marker.value = L.marker([defaultPosition.lat, defaultPosition.lng], {
+          draggable: true,
+          icon
+        }).addTo(map.value);
 
-				marker.value.on('dragend', () => {
-					const pos = marker.value.getLatLng();
-					customerInfo.value.coordinates = {
-						lat: pos.lat,
-						lng: pos.lng
-					};
-				});
-			}
-		);
-	} else {
-		alert('Geolocalización no soportada por tu navegador.');
-	}
+        customerInfo.value.coordinates = defaultPosition;
+
+        marker.value.on('dragend', () => {
+          const pos = marker.value.getLatLng();
+          customerInfo.value.coordinates = {
+            lat: pos.lat,
+            lng: pos.lng
+          };
+        });
+      }
+    );
+  } else {
+    alert('Geolocalización no soportada por tu navegador.');
+  }
+};
+
+// Mensaje para solicitar permiso de ubicación
+const showLocationMsg = ref(false);
+
+// Evento para detectar ubicación actual desde el botón
+const detectCurrentLocation = async () => {
+  if (typeof window === 'undefined' || !map.value) return;
+  const L = (await import('leaflet')).default;
+  if (!navigator.geolocation) {
+    alert('Geolocalización no soportada por tu navegador.');
+    return;
+  }
+  showLocationMsg.value = true;
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      showLocationMsg.value = false;
+      const { latitude, longitude } = position.coords;
+      map.value.setView([latitude, longitude], 15);
+      if (marker.value) {
+        marker.value.setLatLng([latitude, longitude]);
+      } else {
+        // Si no existe el marker aún, crearlo
+        const icon = window._leafletMarkerIcon || L.icon({
+          iconUrl: '/images/marker-icon.png',
+          shadowUrl: '/images/marker-shadow.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41]
+        });
+        marker.value = L.marker([latitude, longitude], {
+          draggable: true,
+          icon
+        }).addTo(map.value);
+      }
+      customerInfo.value.coordinates = { lat: latitude, lng: longitude };
+    },
+    () => {
+      showLocationMsg.value = false;
+      alert('No se pudo obtener tu ubicación actual.');
+    }
+  );
 };
 </script>
