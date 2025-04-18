@@ -2,47 +2,36 @@
 	<div class="catalog-page">
 		<div class="container mx-auto max-w-6xl px-4 py-6">
 			<!-- Breadcrumb -->
-			<BreadCrumb :items="[{ text: 'Catálogo' }]"
-				class="mb-6"/>
+			<BreadCrumb :items="[{ text: 'Catálogo' }]" class="mb-6" />
 
 			<h1 class="text-2xl font-bold text-gray-900 mb-6">Catálogo de Productos</h1>
 
-			<div v-if="loading"
-				class="flex justify-center py-16">
-				<LoadingSpinner/>
+			<div v-if="loading" class="flex justify-center py-16">
+				<LoadingSpinner />
 			</div>
 
-			<div v-else-if="error"
-				class="text-center py-16">
+			<div v-else-if="error" class="text-center py-16">
 				<div class="text-red-500 mb-4">
 					<i class="pi pi-exclamation-triangle text-4xl"></i>
 				</div>
 				<h2 class="text-xl font-semibold text-gray-800 mb-2">Error al cargar el catálogo</h2>
 				<p class="text-gray-600">{{ error }}</p>
-				<button
-					class="mt-4 bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
-					@click="()=>loadData()"
-				>
+				<button class="mt-4 bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
+					@click="() => loadData()">
 					Reintentar
 				</button>
 			</div>
 
-			<div v-else
-				class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+			<div v-else class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 				<!-- Sidebar de filtros -->
 				<div class="lg:col-span-1">
-					<FilterSidebar
-						v-model:selectedCategories="filterState.categorias"
-						v-model:selectedSubcategories="filterState.subcategorias"
-						:priceMax="filterState.precioMax"
-						:priceMin="filterState.precioMin"
-						:searchQuery="filterState.searchQuery"
+					<FilterSidebar v-model:selectedCategories="filterState.categorias"
+						v-model:selectedSubcategories="filterState.subcategorias" :priceMax="filterState.precioMax"
+						:priceMin="filterState.precioMin" :searchQuery="filterState.searchQuery"
 						@update:priceMin="filterState.precioMin = $event"
 						@update:priceMax="filterState.precioMax = $event"
-						@update:searchQuery="filterState.searchQuery = $event"
-						@filter-changed="applyFilters"
-						@clear-filters="clearFilters"
-					/>
+						@update:searchQuery="filterState.searchQuery = $event" @filter-changed="applyFilters"
+						@clear-filters="clearFilters" />
 				</div>
 
 				<!-- Listado de productos -->
@@ -56,28 +45,19 @@
 							</p>
 						</div>
 
-						<SortOptions
-							v-model:sortBy="filterState.sortBy"
-							@sort-changed="applyFilters"
-						/>
+						<SortOptions v-model:sortBy="filterState.sortBy" @sort-changed="applyFilters" />
 					</div>
 
 					<!-- Loading de productos -->
-					<div v-if="loading || filterLoading"
-						class="mb-6">
-						<ProductGridLoading/>
+					<div v-if="loading || filterLoading" class="mb-6">
+						<ProductGridLoading />
 					</div>
 
 					<!-- Productos -->
 					<div v-if="!loading && !filterLoading && filteredProducts.length > 0"
 						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-						<div v-for="product in paginatedProducts"
-							:key="product.codigo"
-							class="h-full">
-							<ProductCard 
-								:product="product"
-								:showActions="true"
-							/>
+						<div v-for="product in paginatedProducts" :key="product.codigo" class="h-full">
+							<ProductCard :product="product" :showActions="true" />
 						</div>
 					</div>
 
@@ -88,38 +68,27 @@
 						</div>
 						<h2 class="text-xl font-semibold text-gray-800 mb-2">No se encontraron productos</h2>
 						<p class="text-gray-600 mb-4">Intenta con otros filtros o categorías</p>
-						<button
-							class="bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
-							@click="()=>{clearFilters(false)}"
-						>
+						<button class="bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
+							@click="() => { clearFilters(false) }">
 							Limpiar filtros
 						</button>
 					</div>
 
 					<!-- Paginación -->
-					<div v-if="totalPages > 1"
-						class="flex justify-center mt-8">
+					<div v-if="totalPages > 1" class="flex justify-center mt-8">
 						<div class="flex space-x-1">
 							<button
 								:class="currentPage === 1 ? 'text-gray-400 border-gray-200 cursor-not-allowed' : 'text-gray-700 border-gray-300 hover:bg-gray-50'"
-								:disabled="currentPage === 1"
-								class="px-3 py-1 rounded border"
-								@click="goToPage(currentPage - 1)"
-							>
+								:disabled="currentPage === 1" class="px-3 py-1 rounded border"
+								@click="goToPage(currentPage - 1)">
 								<i class="pi pi-chevron-left"></i>
 							</button>
 
-							<button
-								v-for="page in paginationItems"
-								:key="`page-${page.value}`"
-								:class="[
-                  page.type === 'ellipsis' ? 'text-gray-400 border-gray-200 cursor-default' : '',
-                  page.type === 'page' && page.value === currentPage ? 'bg-gray-700 text-white border-gray-700' : '',
-                  page.type === 'page' && page.value !== currentPage ? 'text-gray-700 border-gray-300 hover:bg-gray-50' : ''
-                ]"
-								class="px-3 py-1 rounded border"
-								@click="page.type === 'page' && goToPage(page.value)"
-							>
+							<button v-for="page in paginationItems" :key="`page-${page.value}`" :class="[
+								page.type === 'ellipsis' ? 'text-gray-400 border-gray-200 cursor-default' : '',
+								page.type === 'page' && page.value === currentPage ? 'bg-gray-700 text-white border-gray-700' : '',
+								page.type === 'page' && page.value !== currentPage ? 'text-gray-700 border-gray-300 hover:bg-gray-50' : ''
+							]" class="px-3 py-1 rounded border" @click="page.type === 'page' && goToPage(page.value)">
 								{{
 									page.type === 'ellipsis' ?
 										'...' :
@@ -129,10 +98,8 @@
 
 							<button
 								:class="currentPage === totalPages ? 'text-gray-400 border-gray-200 cursor-not-allowed' : 'text-gray-700 border-gray-300 hover:bg-gray-50'"
-								:disabled="currentPage === totalPages"
-								class="px-3 py-1 rounded border"
-								@click="goToPage(currentPage + 1)"
-							>
+								:disabled="currentPage === totalPages" class="px-3 py-1 rounded border"
+								@click="goToPage(currentPage + 1)">
 								<i class="pi pi-chevron-right"></i>
 							</button>
 						</div>
@@ -141,25 +108,21 @@
 			</div>
 		</div>
 
-		
+
 		<!-- Modal de vista previa de producto -->
-		<ProductModalPreview
-			:isOpen="showProductPreview"
-			:productId="selectedProductId"
-			@close="showProductPreview = false"
-		/>
+		<ProductModalPreview :isOpen="showProductPreview" :productId="selectedProductId"
+			@close="showProductPreview = false" />
 	</div>
 </template>
 
-<script lang="ts"
-	setup>
-import {computed, onMounted, ref, watch} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
-import {useProductoStore} from '~/stores/productoStore';
-import {useFavoritesStore} from '~/stores/favoritesStore';
-import {useCartStore} from '~/stores/cartStore';
-import {useFiltersData} from '~/composables/useFiltersData';
-import type {FilterState, SortCriteria} from '~/types';
+<script lang="ts" setup>
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useProductoStore } from '~/stores/productoStore';
+import { useFavoritesStore } from '~/stores/favoritesStore';
+import { useCartStore } from '~/stores/cartStore';
+import { useFiltersData } from '~/composables/useFiltersData';
+import type { FilterState, SortCriteria } from '~/types';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
 import FilterSidebar from '~/components/FilterSidebar.vue';
 import SortOptions from '~/components/SortOptions.vue';
@@ -185,11 +148,11 @@ const selectedProductId = ref('');
 
 // Escuchar evento de vista previa de producto
 onMounted(() => {
-    // @ts-ignore - Ignore event typing issues as we're using a custom event bus
-    emitter.on('product:preview', (productId) => {
-        selectedProductId.value = productId;
-        showProductPreview.value = true;
-    });
+	// @ts-ignore - Ignore event typing issues as we're using a custom event bus
+	emitter.on('product:preview', (productId) => {
+		selectedProductId.value = productId;
+		showProductPreview.value = true;
+	});
 });
 
 // Router y route
@@ -202,7 +165,7 @@ const favoritesStore = useFavoritesStore();
 const cartStore = useCartStore();
 
 // Obtener datos de filtros
-const {filtrosData, loading: filtersLoading} = useFiltersData();
+const { filtrosData, loading: filtersLoading } = useFiltersData();
 
 // Estado
 const loading = ref(true);
@@ -217,7 +180,7 @@ const filterState = ref<FilterState>({
 	precioMin: 0,
 	precioMax: 0,
 	searchQuery: '',
-	sortBy: 'nombre_asc'
+	sortBy: 'recientes'
 });
 
 // Getters computados
@@ -268,25 +231,25 @@ const filteredProducts = computed(() => {
 	switch (filterState.value.sortBy) {
 		case 'nombre_asc':
 			result.sort((a,
-						 b) => a.nombre.localeCompare(b.nombre));
+				b) => a.nombre.localeCompare(b.nombre));
 			break;
 		case 'nombre_desc':
 			result.sort((a,
-						 b) => b.nombre.localeCompare(a.nombre));
+				b) => b.nombre.localeCompare(a.nombre));
 			break;
 		case 'precio_asc':
 			result.sort((a,
-						 b) => a.precio - b.precio);
+				b) => a.precio - b.precio);
 			break;
 		case 'precio_desc':
 			result.sort((a,
-						 b) => b.precio - a.precio);
+				b) => b.precio - a.precio);
 			break;
 		case 'recientes':
 			// Aquí podríamos ordenar por fecha si tuviéramos ese dato
 			// Por ahora, usamos el código como aproximación (asumiendo que códigos más altos son más recientes)
 			result.sort((a,
-						 b) => b.codigo - a.codigo);
+				b) => b.codigo - a.codigo);
 			break;
 	}
 
@@ -307,35 +270,35 @@ const totalPages = computed(() => {
 
 // Elementos de paginación
 const paginationItems = computed(() => {
-    const items: Array<{ type: 'page' | 'ellipsis'; value: number }> = [];
-    const maxVisiblePages = 5;
+	const items: Array<{ type: 'page' | 'ellipsis'; value: number }> = [];
+	const maxVisiblePages = 5;
 
-    if (totalPages.value <= maxVisiblePages) {
-        for (let i = 1; i <= totalPages.value; i++) {
-            items.push({ type: 'page', value: i });
-        }
-    } else {
-        items.push({ type: 'page', value: 1 });
+	if (totalPages.value <= maxVisiblePages) {
+		for (let i = 1; i <= totalPages.value; i++) {
+			items.push({ type: 'page', value: i });
+		}
+	} else {
+		items.push({ type: 'page', value: 1 });
 
-        let startPage = Math.max(2, currentPage.value - Math.floor(maxVisiblePages / 2));
-        let endPage = Math.min(totalPages.value - 1, startPage + maxVisiblePages - 3);
+		let startPage = Math.max(2, currentPage.value - Math.floor(maxVisiblePages / 2));
+		let endPage = Math.min(totalPages.value - 1, startPage + maxVisiblePages - 3);
 
-        if (startPage > 2) {
-            items.push({ type: 'ellipsis', value: Math.floor((1 + startPage) / 2) });
-        }
+		if (startPage > 2) {
+			items.push({ type: 'ellipsis', value: Math.floor((1 + startPage) / 2) });
+		}
 
-        for (let i = startPage; i <= endPage; i++) {
-            items.push({ type: 'page', value: i });
-        }
+		for (let i = startPage; i <= endPage; i++) {
+			items.push({ type: 'page', value: i });
+		}
 
-        if (endPage < totalPages.value - 1) {
-            items.push({ type: 'ellipsis', value: Math.floor((endPage + totalPages.value) / 2) });
-        }
+		if (endPage < totalPages.value - 1) {
+			items.push({ type: 'ellipsis', value: Math.floor((endPage + totalPages.value) / 2) });
+		}
 
-        items.push({ type: 'page', value: totalPages.value });
-    }
+		items.push({ type: 'page', value: totalPages.value });
+	}
 
-    return items;
+	return items;
 });
 
 // Cargar datos iniciales
@@ -379,10 +342,10 @@ const goToPage = (page: number) => {
 	if (page >= 1 && page <= totalPages.value) {
 		currentPage.value = page;
 		// Actualizar la URL con el parámetro de página
-		const query = {...route.query, page: page.toString()};
-		router.push({query});
+		const query = { ...route.query, page: page.toString() };
+		router.push({ query });
 		// Scroll al inicio de los productos
-		window.scrollTo({top: 0, behavior: 'smooth'});
+		window.scrollTo({ top: 0, behavior: 'smooth' });
 	}
 };
 
@@ -431,7 +394,7 @@ const applyFilters = async () => {
 	await new Promise(resolve => setTimeout(resolve, 1000));
 
 	// Actualizar la URL con los nuevos parámetros
-	await router.push({query});
+	await router.push({ query });
 
 	// Desactivar el estado de carga
 	filterLoading.value = false;
@@ -458,7 +421,7 @@ const clearFilters = async (redirectToHome = true) => {
 
 	// Limpiar los parámetros de la URL
 	if (redirectToHome) {
-		await router.push({query: {}});
+		await router.push({ query: {} });
 	}
 
 	// Desactivar estado de carga después de un breve retraso para asegurar que la UI se actualice
@@ -526,7 +489,7 @@ const applyFiltersFromUrl = () => {
 // Observar cambios en la ruta para actualizar filtros
 watch(() => route.query, () => {
 	applyFiltersFromUrl();
-}, {deep: true});
+}, { deep: true });
 
 // Cargar datos al montar el componente
 onMounted(() => {
