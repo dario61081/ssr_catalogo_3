@@ -54,11 +54,12 @@ function updateMaxValue(e) {
             <div class="price-max">{{ maxVal }}</div>
         </div> -->
 
+
         <div class="slider-container">
-            <input type="range" :min="min" :max="max" :step="step" :value="minVal" class="thumb thumb--min"
-                @input="updateMinValue">
-            <input type="range" :min="min" :max="max" :step="step" :value="maxVal" class="thumb thumb--max"
-                @input="updateMaxValue">
+            <input type="range" :min="props.min" :max="props.max" :step="props.step" :value="minVal"
+                class="thumb thumb--min" @input="updateMinValue">
+            <input type="range" :min="props.min" :max="props.max" :step="props.step" :value="maxVal"
+                class="thumb thumb--max" @input="updateMaxValue">
 
             <div class="slider">
                 <div class="slider__track"></div>
@@ -101,14 +102,14 @@ function updateMaxValue(e) {
     width: 100%;
     height: 100%;
     border-radius: 3px;
-    background-color: #e5e7eb;
+    background-color: var(--border-color);
 }
 
 .slider__range {
     position: absolute;
     height: 100%;
     border-radius: 3px;
-    background-color: #3b82f6;
+    background-color: var(--color-primary);
 }
 
 .thumb {
@@ -131,10 +132,15 @@ function updateMaxValue(e) {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background-color: #3b82f6;
+    background-color: var(--color-primary);
     border: 2px solid white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.thumb:hover::-webkit-slider-thumb {
+    background-color: var(--color-primary-dark);
 }
 
 .thumb::-moz-range-thumb {
@@ -142,9 +148,10 @@ function updateMaxValue(e) {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background-color: #3b82f6;
+    background-color: var(--color-primary);
     border: 2px solid white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 </style>

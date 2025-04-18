@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
+import DoubleRangeSlider from './ui/DoubleRangeSlider.vue';
 
 interface Props {
-	minPrice?: number;
-	maxPrice?: number;
-	initialMin?: number;
-	initialMax?: number;
-}
+	priceRangeMin?: number;
+	priceRangeMax?: number;
+	selectedPriceMin?: number;
+	selectedPriceMax?: number;
+} 
 
 const props = withDefaults(defineProps<Props>(), {
-	minPrice: 0,
-	maxPrice: 10000,
-	initialMin: 0,
-	initialMax: 10000
+	priceRangeMin: 0,
+	priceRangeMax: 10000,
+	selectedPriceMin: 0,
+	selectedPriceMax: 10000
 });
 
 const emit = defineEmits<{
@@ -20,15 +21,36 @@ const emit = defineEmits<{
 	(e: 'update:max', value: number): void;
 }>();
 
-const minVal = ref(props.initialMin);
-const maxVal = ref(props.initialMax);
+const minVal = ref(props.selectedPriceMin);
+const maxVal = ref(props.selectedPriceMax);
+
+// Solo resetea los valores seleccionados si el padre cambia explícitamente initialMin o initialMax
+watch(
+	[() => props.selectedPriceMin, () => props.selectedPriceMax],
+	([newSelectedMin, newSelectedMax], [oldSelectedMin, oldSelectedMax]) => {
+		if (newSelectedMin !== oldSelectedMin) minVal.value = newSelectedMin ?? props.priceRangeMin;
+		if (newSelectedMax !== oldSelectedMax) maxVal.value = newSelectedMax ?? props.priceRangeMax;
+	}
+);
+
+// Al cambiar los límites, solo ajusta si la selección del usuario queda fuera del nuevo rango
+watch(
+	[() => props.priceRangeMin, () => props.priceRangeMax],
+	([newRangeMin, newRangeMax]) => {
+		if (minVal.value < newRangeMin) minVal.value = newRangeMin;
+		if (maxVal.value > newRangeMax) maxVal.value = newRangeMax;
+		// Mantiene la selección del usuario si sigue siendo válida
+		if (minVal.value > maxVal.value) minVal.value = maxVal.value;
+		if (maxVal.value < minVal.value) maxVal.value = minVal.value;
+	}
+);
 
 const minThumbPosition = computed(() => {
-	return ((minVal.value - props.minPrice) / (props.maxPrice - props.minPrice)) * 100;
+	return ((minVal.value - props.priceRangeMin) / (props.priceRangeMax - props.priceRangeMin)) * 100;
 });
 
 const maxThumbPosition = computed(() => {
-	return ((maxVal.value - props.minPrice) / (props.maxPrice - props.minPrice)) * 100;
+	return ((maxVal.value - props.priceRangeMin) / (props.priceRangeMax - props.priceRangeMin)) * 100;
 });
 
 const trackStyle = computed(() => {
@@ -51,14 +73,12 @@ watch([minVal, maxVal], ([newMin, newMax]) => {
 	emit('update:max', newMax);
 });
 
-const updateMinValue = (event: Event) => {
-	const value = Number((event.target as HTMLInputElement).value);
-	minVal.value = Math.min(value, maxVal.value);
+const onMinValueChange = (val: number) => {
+	minVal.value = Math.min(val, maxVal.value);
 };
 
-const updateMaxValue = (event: Event) => {
-	const value = Number((event.target as HTMLInputElement).value);
-	maxVal.value = Math.max(value, minVal.value);
+const onMaxValueChange = (val: number) => {
+	maxVal.value = Math.max(val, minVal.value);
 };
 </script>
 
@@ -69,23 +89,20 @@ const updateMaxValue = (event: Event) => {
 			<div class="price-separator">-</div>
 			<div class="price-max">{{ formatPrice(maxVal) }}</div>
 		</div>
-
-		<div class="slider-container">
-			<input type="range" :min="minPrice" :max="maxPrice" :value="minVal" class="thumb thumb--min"
-				@input="updateMinValue">
-			<input type="range" :min="minPrice" :max="maxPrice" :value="maxVal" class="thumb thumb--max"
-				@input="updateMaxValue">
-
-			<div class="slider">
-				<div class="slider__track"></div>
-				<div class="slider__range" :style="trackStyle"></div>
-			</div>
-		</div>
+		<DoubleRangeSlider 
+		:min="priceRangeMin" 
+		:max="priceRangeMax" 
+		:step="10" 
+		:minValue="minVal" 
+		:maxValue="maxVal"
+			@update:minValue="onMinValueChange" @update:maxValue="onMaxValueChange" />
 	</div>
+
 </template>
 
 <style scoped>
 .price-slider {
+
 	width: 100%;
 	padding: 1rem 0;
 }
@@ -100,6 +117,7 @@ const updateMaxValue = (event: Event) => {
 }
 
 .slider-container {
+	outline: blue thin solid;
 	position: relative;
 	width: 100%;
 	height: 24px;
@@ -111,6 +129,7 @@ const updateMaxValue = (event: Event) => {
 	height: 4px;
 	top: 50%;
 	transform: translateY(-50%);
+	overflow: hidden;
 }
 
 .slider__track {

@@ -112,10 +112,13 @@
 				<!-- Rango de precio -->
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Rango de precio</h4>
-					<PriceSlider :initial-max="localPriceMax || categoryPriceRange.max"
-						:initial-min="localPriceMin || categoryPriceRange.min" :max-price="categoryPriceRange.max"
-						:min-price="categoryPriceRange.min" @update:min="handleMinPriceChange"
-						@update:max="handleMaxPriceChange" />
+					<PriceSlider 
+					:price-range-max="categoryPriceRange.max"
+					:price-range-min="categoryPriceRange.min"
+					:selected-price-max="localPriceMax || categoryPriceRange.max"
+					:selected-price-min="localPriceMin || categoryPriceRange.min"
+					@update:min="handleMinPriceChange"
+					@update:max="handleMaxPriceChange" />
 					<button
 						class="mt-3 w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
 						@click="applyPriceFilter">

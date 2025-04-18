@@ -25,9 +25,12 @@
 			<div v-else class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 				<!-- Sidebar de filtros -->
 				<div class="lg:col-span-1">
-					<FilterSidebar v-model:selectedCategories="filterState.categorias"
-						v-model:selectedSubcategories="filterState.subcategorias" :priceMax="filterState.precioMax"
-						:priceMin="filterState.precioMin" :searchQuery="filterState.searchQuery"
+					<FilterSidebar 
+					v-model:selectedCategories="filterState.categorias"
+						v-model:selectedSubcategories="filterState.subcategorias" 
+						:priceMax="filterState.precioMax"
+						:priceMin="filterState.precioMin"
+						:searchQuery="filterState.searchQuery"
 						@update:priceMin="filterState.precioMin = $event"
 						@update:priceMax="filterState.precioMax = $event"
 						@update:searchQuery="filterState.searchQuery = $event" @filter-changed="applyFilters"
@@ -406,14 +409,17 @@ const clearFilters = async (redirectToHome = true) => {
 	filterLoading.value = true;
 
 	// Resetear el estado de filtros
-	console.log('Limpiando filtros');
+	if (import.meta.dev) {
+		console.log('Limpiando filtros');
+	}
+
 	filterState.value = {
 		categorias: [],
 		subcategorias: [],
 		precioMin: 0,
 		precioMax: 0,
 		searchQuery: '',
-		sortBy: 'nombre_asc'
+		sortBy: 'recientes'
 	};
 
 	// Resetear la página actual
@@ -427,7 +433,7 @@ const clearFilters = async (redirectToHome = true) => {
 	// Desactivar estado de carga después de un breve retraso para asegurar que la UI se actualice
 	setTimeout(() => {
 		filterLoading.value = false;
-	}, 300);
+	}, 200);
 };
 
 // Aplicar filtros desde la URL
@@ -441,7 +447,7 @@ const applyFiltersFromUrl = () => {
 		precioMin: 0,
 		precioMax: 0,
 		searchQuery: '',
-		sortBy: 'nombre_asc'
+		sortBy: 'recientes'
 	};
 
 	// Categorías
@@ -482,8 +488,9 @@ const applyFiltersFromUrl = () => {
 	} else {
 		currentPage.value = 1; // Asegurar que la página sea 1 si no se especifica
 	}
-
-	console.log('Filtros aplicados desde URL:', filterState.value);
+	if (import.meta.dev) {
+		console.log('Filtros aplicados desde URL:', filterState.value);
+	}
 };
 
 // Observar cambios en la ruta para actualizar filtros
