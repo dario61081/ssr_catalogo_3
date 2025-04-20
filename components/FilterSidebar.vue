@@ -115,8 +115,8 @@
 					<PriceSlider 
 					:price-range-max="categoryPriceRange.max"
 					:price-range-min="categoryPriceRange.min"
-					:selected-price-max="localPriceMax || categoryPriceRange.max"
-					:selected-price-min="localPriceMin || categoryPriceRange.min"
+					:selected-price-max="localPriceMax !== null && localPriceMax !== undefined ? localPriceMax : categoryPriceRange.max"
+					:selected-price-min="localPriceMin !== null && localPriceMin !== undefined ? localPriceMin : categoryPriceRange.min"
 					@update:min="handleMinPriceChange"
 					@update:max="handleMaxPriceChange" />
 					<button
