@@ -12,7 +12,7 @@
 
 
                 <div :key="activeIndex"
-                    class="w-full grid grid-cols-1 gap-2 px-2 justify-center text-center overflow-y-auto max-h-[400px]">
+                    class="w-full grid grid-cols-1 lg:grid-cols-4 gap-2 px-2 justify-center text-center overflow-y-auto max-h-[400px]">
                     <ProductCardSmall v-for="prod in currentSlide" :key="prod.codigo" :product="prod" v-lazy-src />
                 </div>
 
