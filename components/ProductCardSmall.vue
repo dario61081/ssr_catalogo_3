@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="product-card-small bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden scale-90">
+		class="product-card-small bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden scale-90 w-full sm:w-full">
 		<!-- Imagen del producto -->
 		<div class="relative pt-[100%] overflow-hidden">
 			<NuxtLink :to="`/product/${product.codigo}`" class="block" @click.right.prevent="openPreview"
