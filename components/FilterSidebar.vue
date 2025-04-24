@@ -9,7 +9,8 @@
 		</button>
 
 		<!-- Overlay para móvil -->
-		<div v-if="showMobileFilters" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+		<div v-if="showMobileFilters"
+			class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
 			@click="showMobileFilters = false">
 		</div>
 
@@ -19,13 +20,15 @@
 			'-translate-x-full': !showMobileFilters,
 			'translate-x-0': showMobileFilters,
 			'lg:translate-x-0 lg:static lg:w-auto': true
-		}" class="filter-sidebar bg-white rounded-lg shadow-sm p-3">
+		}"
+			class="filter-sidebar bg-white rounded-lg shadow-sm p-3">
 			<div class="flex items-center justify-between mb-3">
 				<h3 class="text-base font-semibold flex items-center">
 					<i class="pi pi-filter text-gray-500 mr-2"></i>
 					Filtros
 				</h3>
-				<button class="lg:hidden text-gray-500" @click="showMobileFilters = false">
+				<button class="lg:hidden text-gray-500"
+					@click="showMobileFilters = false">
 					<i class="pi pi-times"></i>
 				</button>
 			</div>
@@ -40,9 +43,12 @@
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Buscar productos</h4>
 					<div class="flex flex-col space-y-2">
-						<input v-model="localSearchQuery" class="w-full p-2 border rounded text-sm"
-							placeholder="Nombre del producto..." type="text" @keydown.enter.prevent="applySearchFilter"
-							@keydown.esc.prevent="localSearchQuery = ''" />
+						<input v-model="localSearchQuery"
+							class="w-full p-2 border rounded text-sm"
+							placeholder="Nombre del producto..."
+							type="text"
+							@keydown.enter.prevent="applySearchFilter"
+							@keydown.esc.prevent="localSearchQuery = ''"/>
 						<button
 							class="w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
 							@click="applySearchFilter">
@@ -55,26 +61,33 @@
 				<!-- Categorías -->
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Categorías</h4>
-					<div v-if="loading" class="py-1 text-center text-gray-500">
+					<div v-if="loading"
+						class="py-1 text-center text-gray-500">
 						<i class="pi pi-spin pi-spinner mr-2"></i>
 						Cargando...
 					</div>
-					<div v-else class="max-h-120 overflow-y-auto pr-1 category-list">
-						<div v-for="categoria in categoriasList" :key="categoria.codigo_categoria" class="mb-1">
+					<div v-else
+						class="max-h-120 overflow-y-auto pr-1 category-list">
+						<div v-for="categoria in categoriasList"
+							:key="categoria.codigo_categoria"
+							class="mb-1">
 							<div :class="{ 'bg-gray-100': isSelectedCategory(categoria.codigo_categoria) }"
 								class="flex items-center justify-between cursor-pointer p-1 rounded hover:bg-gray-50"
 								@click="toggleCategory(categoria.codigo_categoria)">
 								<div class="flex items-center">
 									<input :id="`cat-${categoria.codigo_categoria}`"
 										:checked="isSelectedCategory(categoria.codigo_categoria)"
-										class="mr-2 h-4 w-4 text-gray-700 rounded" type="checkbox"
-										@change="toggleCategory(categoria.codigo_categoria)" @click.stop />
-									<label :for="`cat-${categoria.codigo_categoria}`" class="cursor-pointer text-sm"
+										class="mr-2 h-4 w-4 text-gray-700 rounded"
+										type="checkbox"
+										@change="toggleCategory(categoria.codigo_categoria)"
+										@click.stop/>
+									<label :for="`cat-${categoria.codigo_categoria}`"
+										class="cursor-pointer text-sm"
 										@click.stop>
 										{{ categoria.desc_categoria }}
 										<span class="text-xs text-gray-500 ml-1">({{
-											categoria.total_categoria
-										}})</span>
+												categoria.total_categoria
+											}})</span>
 									</label>
 								</div>
 								<button v-if="hasSubcategories(categoria.codigo_categoria)"
@@ -89,18 +102,20 @@
 							<div v-if="expandedCategories.includes(categoria.codigo_categoria) && hasSubcategories(categoria.codigo_categoria)"
 								class="ml-5 mt-1 subcategory-list">
 								<div v-for="subcategoria in getSubcategoriesByCategory(categoria.codigo_categoria)"
-									:key="subcategoria.codigo_subcategoria" class="mb-1">
+									:key="subcategoria.codigo_subcategoria"
+									class="mb-1">
 									<div class="flex items-center p-1 rounded hover:bg-gray-50">
 										<input :id="`subcat-${subcategoria.codigo_subcategoria}`"
 											:checked="isSelectedSubcategory(subcategoria.codigo_subcategoria)"
-											class="mr-2 h-4 w-4 text-gray-700 rounded" type="checkbox"
-											@change="toggleSubcategory(subcategoria.codigo_subcategoria, categoria.codigo_categoria)" />
+											class="mr-2 h-4 w-4 text-gray-700 rounded"
+											type="checkbox"
+											@change="toggleSubcategory(subcategoria.codigo_subcategoria, categoria.codigo_categoria)"/>
 										<label :for="`subcat-${subcategoria.codigo_subcategoria}`"
 											class="cursor-pointer text-xs">
 											{{ subcategoria.desc_subcategoria }}
 											<span class="text-xs text-gray-500 ml-1">({{
-												subcategoria.total_subcategoria
-											}})</span>
+													subcategoria.total_subcategoria
+												}})</span>
 										</label>
 									</div>
 								</div>
@@ -112,13 +127,20 @@
 				<!-- Rango de precio -->
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Rango de precio</h4>
-					<PriceSlider 
-					:price-range-max="categoryPriceRange.max"
-					:price-range-min="categoryPriceRange.min"
-					:selected-price-max="localPriceMax !== null && localPriceMax !== undefined ? localPriceMax : categoryPriceRange.max"
-					:selected-price-min="localPriceMin !== null && localPriceMin !== undefined ? localPriceMin : categoryPriceRange.min"
-					@update:min="handleMinPriceChange"
-					@update:max="handleMaxPriceChange" />
+					<PriceSlider
+						:price-range-max="categoryPriceRange.max"
+						:price-range-min="categoryPriceRange.min"
+						:selected-price-min="selectedPriceMin"
+						:selected-price-max="selectedPriceMax"
+						@update:min="handleMinPriceChange"
+						@update:max="handleMaxPriceChange"/>
+					<!--					<PriceSlider-->
+					<!--						:price-range-max="categoryPriceRange.max"-->
+					<!--						:price-range-min="categoryPriceRange.min"-->
+					<!--						:selected-price-max="localPriceMax !== null && localPriceMax !== undefined ? localPriceMax : categoryPriceRange.max"-->
+					<!--						:selected-price-min="localPriceMin !== null && localPriceMin !== undefined ? localPriceMin : categoryPriceRange.min"-->
+					<!--						@update:min="handleMinPriceChange"-->
+					<!--						@update:max="handleMaxPriceChange"/>-->
 					<button
 						class="mt-3 w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
 						@click="applyPriceFilter">
@@ -139,13 +161,14 @@
 	</div>
 </template>
 
-<script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { FilterData } from '~/types';
+<script lang="ts"
+	setup>
+import {computed, nextTick, ref, watch} from 'vue';
+import {useRouter} from 'vue-router';
+import {FilterData} from '~/types';
 import emitter from '~/utils/eventBus';
-import { useFiltersData } from '~/composables/useFiltersData';
-import { useProductoStore } from '~/stores/productoStore';
+import {useFiltersData} from '~/composables/useFiltersData';
+import {useProductoStore} from '~/stores/productoStore';
 
 // Props
 const props = defineProps({
@@ -168,6 +191,18 @@ const props = defineProps({
 	searchQuery: {
 		type: String,
 		default: ''
+	},
+	filteredProducts: {
+		type: Array,
+		default: () => []
+	},
+	selectedPriceMin: {
+		type: Number,
+		default: 0
+	},
+	selectedPriceMax: {
+		type: Number,
+		default: 0
 	}
 });
 
@@ -209,27 +244,39 @@ const handleMaxPriceChange = (value: number) => {
 };
 
 // Obtener datos de filtros
-const { filtrosData, loading } = useFiltersData();
+const {filtrosData, loading} = useFiltersData();
 
 // Calcular rango de precios para la categoría seleccionada
 const categoryPriceRange = computed(() => {
 	const productos = productoStore.productos;
 	let filteredProducts = productos;
 
-	if (localSelectedCategories.value.length > 0) {
+	const hasCategoryFilter = localSelectedCategories.value.length > 0;
+	const hasSubcategoryFilter = localSelectedSubcategories.value.length > 0;
+
+	// Si NO hay categoría ni subcategoría seleccionada, usar los productos filtrados actuales
+	if (!hasCategoryFilter && !hasSubcategoryFilter && props.filteredProducts.length > 0) {
+		return {
+			min: Math.min(...props.filteredProducts.map(p => p.precio)),
+			max: Math.max(...props.filteredProducts.map(p => p.precio))
+		};
+	}
+
+	if (hasCategoryFilter) {
 		filteredProducts = productos.filter(prod =>
 			localSelectedCategories.value.includes(prod.codigo_division)
 		);
 	}
 
-	if (localSelectedSubcategories.value.length > 0) {
+	if (hasSubcategoryFilter) {
 		filteredProducts = filteredProducts.filter(prod =>
 			localSelectedSubcategories.value.includes(prod.codigo_categoria)
 		);
 	}
 
+	// Si no hay productos en el filtro, mostrar 0-0
 	if (filteredProducts.length === 0) {
-		return { min: 0, max: maxPriceLimit };
+		return {min: 0, max: 0};
 	}
 
 	return {
@@ -241,13 +288,13 @@ const categoryPriceRange = computed(() => {
 // Watch para actualizar el rango de precios cuando cambian las categorías
 watch([localSelectedCategories,
 	localSelectedSubcategories], () => {
-		const { min, max } = categoryPriceRange.value;
-		localPriceMin.value = min;
-		localPriceMax.value = max;
-		// Emitir los nuevos valores
-		emit('update:priceMin', min);
-		emit('update:priceMax', max);
-	});
+	const {min, max} = categoryPriceRange.value;
+	localPriceMin.value = min;
+	localPriceMax.value = max;
+	// Emitir los nuevos valores
+	emit('update:priceMin', min);
+	emit('update:priceMax', max);
+});
 
 // Sincronizar props con estado local
 watch(() => props.selectedCategories, (newVal) => {
@@ -256,6 +303,15 @@ watch(() => props.selectedCategories, (newVal) => {
 
 watch(() => props.selectedSubcategories, (newVal) => {
 	localSelectedSubcategories.value = [...newVal];
+});
+
+// ACTUALIZADO: sincronizar SIEMPRE los valores locales del slider con los props seleccionados
+watch(() => props.selectedPriceMin, (newVal) => {
+	localPriceMin.value = newVal;
+});
+
+watch(() => props.selectedPriceMax, (newVal) => {
+	localPriceMax.value = newVal;
 });
 
 watch(() => props.priceMin, (newVal) => {
@@ -398,7 +454,7 @@ const toggleCategory = (categoryId: number) => {
 
 // Seleccionar/deseleccionar subcategoría
 const toggleSubcategory = (subcategoryId: number,
-	categoryId: number) => {
+						   categoryId: number) => {
 	if (isSelectedSubcategory(subcategoryId)) {
 		// Si la subcategoría está seleccionada, la quitamos
 		localSelectedSubcategories.value = localSelectedSubcategories.value.filter(id => id !== subcategoryId);
@@ -478,7 +534,7 @@ const clearAllFilters = () => {
 
 // Actualizar parámetros de URL
 const updateUrlParams = () => {
-	const query = { ...router.currentRoute.value.query };
+	const query = {...router.currentRoute.value.query};
 
 	// Categorías
 	if (localSelectedCategories.value.length > 0) {
@@ -514,7 +570,7 @@ const updateUrlParams = () => {
 		delete query.q;
 	}
 
-	router.push({ query });
+	router.push({query});
 };
 
 // Estado para controlar la visibilidad en móvil

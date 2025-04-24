@@ -24,26 +24,20 @@ const emit = defineEmits<{
 const minVal = ref(props.selectedPriceMin);
 const maxVal = ref(props.selectedPriceMax);
 
-// Solo resetea los valores seleccionados si el padre cambia explícitamente initialMin o initialMax
-watch(
-	[() => props.selectedPriceMin, () => props.selectedPriceMax],
-	([newSelectedMin, newSelectedMax], [oldSelectedMin, oldSelectedMax]) => {
-		if (newSelectedMin !== oldSelectedMin) minVal.value = newSelectedMin ?? props.priceRangeMin;
-		if (newSelectedMax !== oldSelectedMax) maxVal.value = newSelectedMax ?? props.priceRangeMax;
-	}
-);
-
-// Al cambiar los límites, solo ajusta si la selección del usuario queda fuera del nuevo rango
-watch(
-	[() => props.priceRangeMin, () => props.priceRangeMax],
-	([newRangeMin, newRangeMax]) => {
-		if (minVal.value < newRangeMin) minVal.value = newRangeMin;
-		if (maxVal.value > newRangeMax) maxVal.value = newRangeMax;
-		// Mantiene la selección del usuario si sigue siendo válida
-		if (minVal.value > maxVal.value) minVal.value = maxVal.value;
-		if (maxVal.value < minVal.value) maxVal.value = minVal.value;
-	}
-);
+// Mejorar la sincronización de los valores internos con los props
+watch([
+  () => props.selectedPriceMin, 
+  () => props.selectedPriceMax, 
+  () => props.priceRangeMin, 
+  () => props.priceRangeMax
+], ([newSelectedMin, newSelectedMax, newRangeMin, newRangeMax]) => {
+  // Si los valores seleccionados quedan fuera del nuevo rango, ajustarlos
+  minVal.value = Math.max(newSelectedMin ?? newRangeMin, newRangeMin);
+  maxVal.value = Math.min(newSelectedMax ?? newRangeMax, newRangeMax);
+  // Garantizar consistencia
+  if (minVal.value > maxVal.value) minVal.value = maxVal.value;
+  if (maxVal.value < minVal.value) maxVal.value = minVal.value;
+});
 
 const minThumbPosition = computed(() => {
 	return ((minVal.value - props.priceRangeMin) / (props.priceRangeMax - props.priceRangeMin)) * 100;

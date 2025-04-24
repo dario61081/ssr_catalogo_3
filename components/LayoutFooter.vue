@@ -438,6 +438,9 @@
 					<p class="text-gray-400 text-xs mb-2 md:mb-0">
 						&copy; {{ new Date().getFullYear() }} Paraná Hogar. Todos los derechos reservados.
 					</p>
+					<!--					<p class="text-gray-400 text-xs mb-2 md:mb-0">-->
+					<!--						Revisi&oacute;n: {{ compilacion }}-->
+					<!--					</p>-->
 					<div class="flex flex-wrap gap-3 text-xs text-gray-400">
 						<a class="hover:text-white"
 							href="/info/privacidad">Política de Privacidad
@@ -451,12 +454,14 @@
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</footer>
 </template>
 
 <script>
 export default {
+
 	data() {
 		return {
 			openSections: {
@@ -465,7 +470,7 @@ export default {
 				service: false,
 				contact: false,
 				branches: false
-			}
+			},
 		}
 	},
 	methods: {
