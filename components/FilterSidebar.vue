@@ -39,25 +39,6 @@
 					Filtros
 				</h3> -->
 
-				<!-- Buscador -->
-				<div class="mb-5">
-					<h4 class="font-medium text-gray-700 mb-1 text-sm">Buscar productos</h4>
-					<div class="flex flex-col space-y-2">
-						<input v-model="localSearchQuery"
-							class="w-full p-2 border rounded text-sm"
-							placeholder="Nombre del producto..."
-							type="text"
-							@keydown.enter.prevent="applySearchFilter"
-							@keydown.esc.prevent="localSearchQuery = ''"/>
-						<button
-							class="w-full bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded text-xs transition-colors flex items-center justify-center"
-							@click="applySearchFilter">
-							<i class="pi pi-search mr-2"></i>
-							Buscar
-						</button>
-					</div>
-				</div>
-
 				<!-- Categorías -->
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Categorías</h4>
@@ -124,14 +105,15 @@
 					</div>
 				</div>
 
+
 				<!-- Rango de precio -->
 				<div class="mb-5">
 					<h4 class="font-medium text-gray-700 mb-1 text-sm">Rango de precio</h4>
 					<PriceSlider
 						:price-range-max="categoryPriceRange.max"
 						:price-range-min="categoryPriceRange.min"
-						:selected-price-min="selectedPriceMin"
-						:selected-price-max="selectedPriceMax"
+						:selected-price-max="localPriceMax !== undefined ? localPriceMax : categoryPriceRange.max"
+						:selected-price-min="localPriceMin !== undefined ? localPriceMin : categoryPriceRange.min"
 						@update:min="handleMinPriceChange"
 						@update:max="handleMaxPriceChange"/>
 					<!--					<PriceSlider-->
@@ -169,6 +151,7 @@ import {FilterData} from '~/types';
 import emitter from '~/utils/eventBus';
 import {useFiltersData} from '~/composables/useFiltersData';
 import {useProductoStore} from '~/stores/productoStore';
+import PriceFilter from "~/components/ui/PriceFilter.vue";
 
 // Props
 const props = defineProps({
@@ -195,14 +178,6 @@ const props = defineProps({
 	filteredProducts: {
 		type: Array,
 		default: () => []
-	},
-	selectedPriceMin: {
-		type: Number,
-		default: 0
-	},
-	selectedPriceMax: {
-		type: Number,
-		default: 0
 	}
 });
 
@@ -303,15 +278,6 @@ watch(() => props.selectedCategories, (newVal) => {
 
 watch(() => props.selectedSubcategories, (newVal) => {
 	localSelectedSubcategories.value = [...newVal];
-});
-
-// ACTUALIZADO: sincronizar SIEMPRE los valores locales del slider con los props seleccionados
-watch(() => props.selectedPriceMin, (newVal) => {
-	localPriceMin.value = newVal;
-});
-
-watch(() => props.selectedPriceMax, (newVal) => {
-	localPriceMax.value = newVal;
 });
 
 watch(() => props.priceMin, (newVal) => {

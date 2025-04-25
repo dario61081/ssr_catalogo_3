@@ -21,30 +21,43 @@ const emit = defineEmits<{
 	(e: 'update:max', value: number): void;
 }>();
 
-const minVal = ref(props.selectedPriceMin);
-const maxVal = ref(props.selectedPriceMax);
+// NUEVO: objeto reactivo para v-model del rango
+const priceRangeValue = ref({ min: props.selectedPriceMin, max: props.selectedPriceMax });
 
-// Mejorar la sincronización de los valores internos con los props
+// Sincroniza priceRangeValue si cambian los props
 watch([
-  () => props.selectedPriceMin, 
-  () => props.selectedPriceMax, 
-  () => props.priceRangeMin, 
+  () => props.selectedPriceMin,
+  () => props.selectedPriceMax
+], ([newMin, newMax]) => {
+  priceRangeValue.value = { min: newMin, max: newMax };
+});
+
+// Ajusta priceRangeValue si cambian los límites
+watch([
+  () => props.priceRangeMin,
   () => props.priceRangeMax
-], ([newSelectedMin, newSelectedMax, newRangeMin, newRangeMax]) => {
-  // Si los valores seleccionados quedan fuera del nuevo rango, ajustarlos
-  minVal.value = Math.max(newSelectedMin ?? newRangeMin, newRangeMin);
-  maxVal.value = Math.min(newSelectedMax ?? newRangeMax, newRangeMax);
-  // Garantizar consistencia
-  if (minVal.value > maxVal.value) minVal.value = maxVal.value;
-  if (maxVal.value < minVal.value) maxVal.value = minVal.value;
+], ([newRangeMin, newRangeMax]) => {
+  let min = priceRangeValue.value.min;
+  let max = priceRangeValue.value.max;
+  if (min < newRangeMin) min = newRangeMin;
+  if (max > newRangeMax) max = newRangeMax;
+  if (min > max) min = max;
+  if (max < min) max = min;
+  priceRangeValue.value = { min, max };
+});
+
+// Emitir cambios al padre
+watch(priceRangeValue, (val) => {
+  emit('update:min', val.min);
+  emit('update:max', val.max);
 });
 
 const minThumbPosition = computed(() => {
-	return ((minVal.value - props.priceRangeMin) / (props.priceRangeMax - props.priceRangeMin)) * 100;
+	return ((priceRangeValue.value.min - props.priceRangeMin) / (props.priceRangeMax - props.priceRangeMin)) * 100;
 });
 
 const maxThumbPosition = computed(() => {
-	return ((maxVal.value - props.priceRangeMin) / (props.priceRangeMax - props.priceRangeMin)) * 100;
+	return ((priceRangeValue.value.max - props.priceRangeMin) / (props.priceRangeMax - props.priceRangeMin)) * 100;
 });
 
 const trackStyle = computed(() => {
@@ -61,35 +74,20 @@ const formatPrice = (price: number) => {
 		maximumFractionDigits: 0
 	}).format(price);
 };
-
-watch([minVal, maxVal], ([newMin, newMax]) => {
-	emit('update:min', newMin);
-	emit('update:max', newMax);
-});
-
-const onMinValueChange = (val: number) => {
-	minVal.value = Math.min(val, maxVal.value);
-};
-
-const onMaxValueChange = (val: number) => {
-	maxVal.value = Math.max(val, minVal.value);
-};
 </script>
 
 <template>
 	<div class="price-slider">
 		<div class="price-display">
-			<div class="price-min">{{ formatPrice(minVal) }}</div>
+			<div class="price-min">{{ formatPrice(priceRangeValue.min) }}</div>
 			<div class="price-separator">-</div>
-			<div class="price-max">{{ formatPrice(maxVal) }}</div>
+			<div class="price-max">{{ formatPrice(priceRangeValue.max) }}</div>
 		</div>
 		<DoubleRangeSlider 
 		:min="priceRangeMin" 
 		:max="priceRangeMax" 
 		:step="10" 
-		:minValue="minVal" 
-		:maxValue="maxVal"
-			@update:minValue="onMinValueChange" @update:maxValue="onMaxValueChange" />
+		v-model="priceRangeValue" />
 	</div>
 
 </template>

@@ -28,21 +28,32 @@
 			<div v-else
 				class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 				<!-- Sidebar de filtros -->
-				<div class="lg:col-span-1">
-					<FilterSidebar
-						v-model:selectedCategories="filterState.categorias"
-						v-model:selectedSubcategories="filterState.subcategorias"
-						:priceMax="filterState.precioMax"
-						:priceMin="filterState.precioMin"
-						:searchQuery="filterState.searchQuery"
-						:filteredProducts="filteredProducts"
-						:selectedPriceMin="filterState.precioMin"
-						:selectedPriceMax="filterState.precioMax"
-						@update:priceMin="filterState.precioMin = $event"
-						@update:priceMax="filterState.precioMax = $event"
-						@update:searchQuery="filterState.searchQuery = $event"
-						@filter-changed="applyFilters"
-						@clear-filters="clearFilters"/>
+				<div class="lg:col-span-1 bg-white rounded-lg shadow-sm p-4">
+					<h3 class="mb-2">
+						<i class="pi pi-filter"></i>
+						<b>Filtros</b>
+					</h3>
+					<FilterSearch v-model="filterState.searchQuery"/>
+					<FilterCategories
+						@update:selectedCategories="filterState.categorias = $event"
+						@update:selectedSubcategories="filterState.subcategorias = $event"
+					/>
+
+					<!--					<FilterSidebar-->
+					<!--						v-model:selectedCategories="filterState.categorias"-->
+					<!--						v-model:selectedSubcategories="filterState.subcategorias"-->
+					<!--						:filteredProducts="filteredProducts"-->
+					<!--						:priceMax="filterState.precioMax"-->
+					<!--						:priceMin="filterState.precioMin"-->
+					<!--						:searchQuery="filterState.searchQuery"-->
+					<!--						:selectedPriceMax="filterState.precioMax"-->
+					<!--						:selectedPriceMin="filterState.precioMin"-->
+					<!--						@update:priceMin="filterState.precioMin = $event"-->
+					<!--						@update:priceMax="filterState.precioMax = $event"-->
+					<!--						@update:searchQuery="filterState.searchQuery = $event"-->
+					<!--						@filter-changed="applyFilters"-->
+					<!--						@clear-filters="clearFilters"/>-->
+					<FilterClear @clear="clearFilters"/>
 				</div>
 
 				<!-- Listado de productos -->
@@ -149,12 +160,14 @@ import {useCartStore} from '~/stores/cartStore';
 import {useFiltersData} from '~/composables/useFiltersData';
 import type {FilterState, SortCriteria} from '~/types';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
-import FilterSidebar from '~/components/FilterSidebar.vue';
 import SortOptions from '~/components/SortOptions.vue';
 import BreadCrumb from '~/components/BreadCrumb.vue';
 import ProductModalPreview from '~/components/ProductModalPreview.vue';
 import emitter from '~/utils/eventBus';
 import ProductGridLoading from "~/components/ProductGridLoading.vue";
+import FilterSearch from "~/components/FilterSearch.vue";
+import FilterCategories from '~/components/FilterCategories.vue';
+import FilterClear from '~/components/FilterClear.vue';
 
 // Definir título y meta tags para SEO
 useHead({

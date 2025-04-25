@@ -1,12 +1,12 @@
-<script setup>
+<script lang="ts"
+	setup>
 /**
  * DoubleRangeSlider
  * Componente de control deslizante doble para seleccionar un rango de valores numéricos.
  * Permite ajustar valores mínimo y máximo dentro de un rango definido.
  *
  * Props:
- * - minValue: Valor mínimo seleccionado inicialmente (Number, default: 0)
- * - maxValue: Valor máximo seleccionado inicialmente (Number, default: 100)
+ * - modelValue: Objeto con valores mínimo y máximo seleccionados inicialmente (Object, default: {min: 0, max: 100})
  * - min: Valor mínimo permitido en el slider (Number, default: 0)
  * - max: Valor máximo permitido en el slider (Number, default: 1000)
  * - step: Incremento de cada paso (Number, default: 1)
@@ -23,54 +23,56 @@
  * - handleMaxInput: Maneja el cambio del valor máximo.
  *
  * Emits:
- * - update:minValue: Se emite cuando cambia el valor mínimo seleccionado
- * - update:maxValue: Se emite cuando cambia el valor máximo seleccionado
+ * - update:modelValue: Se emite cuando cambia el objeto de valores seleccionados
  *
  * Uso:
- * <DoubleRangeSlider :min-value="10" :max-value="500" :min="0" :max="1000" :step="5" />
+ * <DoubleRangeSlider v-model="{ min: 10, max: 500 }" :min="0" :max="1000" :step="5" />
  */
 import {computed, ref, watch} from 'vue';
 import DoubleRangeSliderLabel from "~/components/ui/DoubleRangeSliderLabel.vue";
 
 const sliderProps = defineProps({
-	minValue: {type: Number, default: 0},
-	maxValue: {type: Number, default: 100},
-	min: {type: Number, default: 0},
-	max: {type: Number, default: 1000},
-	step: {type: Number, default: 1}
+	modelValue: {
+		type: Object,
+		required: true,
+		default: () => ({ min: 0, max: 100 })
+	},
+	min: { type: Number, default: 0 },
+	max: { type: Number, default: 1000 },
+	step: { type: Number, default: 1 }
 });
 
-const emit = defineEmits(['update:minValue',
-	'update:maxValue']);
+const emit = defineEmits(['update:modelValue']);
 
-const selectedMin = ref(sliderProps.minValue);
-const selectedMax = ref(sliderProps.maxValue);
+const selectedMin = ref(sliderProps.modelValue.min);
+const selectedMax = ref(sliderProps.modelValue.max);
 const showLabels = ref(false);
 
-watch(() => sliderProps.minValue, (newVal) => {
-	selectedMin.value = newVal;
-});
+// Sincronizar con cambios externos
+watch(
+	() => sliderProps.modelValue,
+	(newVal) => {
+		selectedMin.value = newVal.min;
+		selectedMax.value = newVal.max;
+	},
+	{ deep: true }
+);
 
-watch(() => sliderProps.maxValue, (newVal) => {
-	selectedMax.value = newVal;
-});
-
-watch([selectedMin,
-	selectedMax], ([newMin, newMax]) => {
-	emit('update:minValue', newMin);
-	emit('update:maxValue', newMax);
+// Emitir update:modelValue cuando cambian los valores
+watch([selectedMin, selectedMax], ([newMin, newMax]) => {
+	emit('update:modelValue', { min: newMin, max: newMax });
 });
 
 const rangeStyle = computed(() => {
 	const left = ((selectedMin.value - sliderProps.min) / (sliderProps.max - sliderProps.min)) * 100;
 	const width = ((selectedMax.value - selectedMin.value) / (sliderProps.max - sliderProps.min)) * 100;
-	return {left: `${left}%`, width: `${width}%`};
+	return { left: `${left}%`, width: `${width}%` };
 });
 
 const labelMinStyle = computed(() => {
 	const percent = ((selectedMin.value - sliderProps.min) / (sliderProps.max - sliderProps.min)) * 100;
 	return {
-		left: `calc(${percent}% - 16px)` // Ajuste para centrar sobre el knob
+		left: `calc(${percent}% - 16px)`
 	};
 });
 const labelMaxStyle = computed(() => {
@@ -96,13 +98,20 @@ function handleMaxInput(e) {
 <template>
 	<div class="double-range-slider">
 		<div class="slider-container"
-			@mouseenter="showLabels = true" @mouseleave="showLabels = false">
+			@mouseenter="showLabels = true"
+			@mouseleave="showLabels = false">
 			<div class="slider-labels">
 				<Transition name="fade">
-					<DoubleRangeSliderLabel v-if="showLabels" :style="labelMinStyle" labelClass="slider-label--min" :value="selectedMin" />
+					<DoubleRangeSliderLabel v-if="showLabels"
+						:style="labelMinStyle"
+						:value="selectedMin"
+						labelClass="slider-label--min"/>
 				</Transition>
 				<Transition name="fade">
-					<DoubleRangeSliderLabel v-if="showLabels" :style="labelMaxStyle" labelClass="slider-label--max" :value="selectedMax" />
+					<DoubleRangeSliderLabel v-if="showLabels"
+						:style="labelMaxStyle"
+						:value="selectedMax"
+						labelClass="slider-label--max"/>
 				</Transition>
 			</div>
 			<input :max="sliderProps.max"
@@ -216,12 +225,14 @@ function handleMaxInput(e) {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.7s;
+	transition: opacity 0.7s;
 }
+
 .fade-enter-from, .fade-leave-to {
-  opacity: 0;
+	opacity: 0;
 }
+
 .fade-enter-to, .fade-leave-from {
-  opacity: 1;
+	opacity: 1;
 }
 </style>
