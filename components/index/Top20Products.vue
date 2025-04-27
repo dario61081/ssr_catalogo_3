@@ -15,7 +15,7 @@
                 </button>
                 <!-- Carrusel horizontal -->
                 <div ref="scrollContainer" class="flex flex-row gap-3 px-2 w-full overflow-x-auto hide-scrollbar">
-                    <ProductCardSmall v-for="prod in productos" :key="prod.codigo" :product="prod" v-lazy-src class="min-w-[200px] max-w-[200px] w-[200px]" />
+                    <ProductCardSmall v-for="prod in productos" :key="prod.codigo" :product="prod" v-lazy-src class="min-w-[217px] max-w-[217px] w-[217px]" />
                 </div>
                 <!-- Botón Derecha -->
                 <button @click="scrollRight" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-gray-800/70 hover:bg-gray-700/90 text-white rounded-full w-8 h-8 flex items-center justify-center shadow transition">
