@@ -84,7 +84,7 @@ export interface FilterData {
 	total_subcategoria: number
 }
 
-export type SortCriteria = 'nombre_asc' | 'nombre_desc' | 'precio_asc' | 'precio_desc' | 'recientes';
+export type SortCriteria = 'recientes' | 'nombre_asc' | 'nombre_desc' | 'precio_asc' | 'precio_desc';
 
 export interface FilterState {
 	categorias: number[];

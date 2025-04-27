@@ -74,7 +74,7 @@
 						<div v-for="product in paginatedProducts"
 							:key="product.codigo"
 							class="h-full">
-							<ProductCard 
+							<ProductCard
 								:product="product"
 								:showActions="true"
 							/>
@@ -141,7 +141,7 @@
 			</div>
 		</div>
 
-		
+
 		<!-- Modal de vista previa de producto -->
 		<ProductModalPreview
 			:isOpen="showProductPreview"
@@ -185,11 +185,11 @@ const selectedProductId = ref('');
 
 // Escuchar evento de vista previa de producto
 onMounted(() => {
-    // @ts-ignore - Ignore event typing issues as we're using a custom event bus
-    emitter.on('product:preview', (productId) => {
-        selectedProductId.value = productId;
-        showProductPreview.value = true;
-    });
+	// @ts-ignore - Ignore event typing issues as we're using a custom event bus
+	emitter.on('product:preview', (productId) => {
+		selectedProductId.value = productId;
+		showProductPreview.value = true;
+	});
 });
 
 // Router y route
@@ -217,7 +217,7 @@ const filterState = ref<FilterState>({
 	precioMin: 0,
 	precioMax: 0,
 	searchQuery: '',
-	sortBy: 'nombre_asc'
+	sortBy: 'recientes'
 });
 
 // Getters computados
@@ -307,35 +307,35 @@ const totalPages = computed(() => {
 
 // Elementos de paginación
 const paginationItems = computed(() => {
-    const items: Array<{ type: 'page' | 'ellipsis'; value: number }> = [];
-    const maxVisiblePages = 5;
+	const items: Array<{ type: 'page' | 'ellipsis'; value: number }> = [];
+	const maxVisiblePages = 5;
 
-    if (totalPages.value <= maxVisiblePages) {
-        for (let i = 1; i <= totalPages.value; i++) {
-            items.push({ type: 'page', value: i });
-        }
-    } else {
-        items.push({ type: 'page', value: 1 });
+	if (totalPages.value <= maxVisiblePages) {
+		for (let i = 1; i <= totalPages.value; i++) {
+			items.push({type: 'page', value: i});
+		}
+	} else {
+		items.push({type: 'page', value: 1});
 
-        let startPage = Math.max(2, currentPage.value - Math.floor(maxVisiblePages / 2));
-        let endPage = Math.min(totalPages.value - 1, startPage + maxVisiblePages - 3);
+		let startPage = Math.max(2, currentPage.value - Math.floor(maxVisiblePages / 2));
+		let endPage = Math.min(totalPages.value - 1, startPage + maxVisiblePages - 3);
 
-        if (startPage > 2) {
-            items.push({ type: 'ellipsis', value: Math.floor((1 + startPage) / 2) });
-        }
+		if (startPage > 2) {
+			items.push({type: 'ellipsis', value: Math.floor((1 + startPage) / 2)});
+		}
 
-        for (let i = startPage; i <= endPage; i++) {
-            items.push({ type: 'page', value: i });
-        }
+		for (let i = startPage; i <= endPage; i++) {
+			items.push({type: 'page', value: i});
+		}
 
-        if (endPage < totalPages.value - 1) {
-            items.push({ type: 'ellipsis', value: Math.floor((endPage + totalPages.value) / 2) });
-        }
+		if (endPage < totalPages.value - 1) {
+			items.push({type: 'ellipsis', value: Math.floor((endPage + totalPages.value) / 2)});
+		}
 
-        items.push({ type: 'page', value: totalPages.value });
-    }
+		items.push({type: 'page', value: totalPages.value});
+	}
 
-    return items;
+	return items;
 });
 
 // Cargar datos iniciales
@@ -450,7 +450,7 @@ const clearFilters = async (redirectToHome = true) => {
 		precioMin: 0,
 		precioMax: 0,
 		searchQuery: '',
-		sortBy: 'nombre_asc'
+		sortBy: 'recientes'
 	};
 
 	// Resetear la página actual
@@ -478,7 +478,7 @@ const applyFiltersFromUrl = () => {
 		precioMin: 0,
 		precioMax: 0,
 		searchQuery: '',
-		sortBy: 'nombre_asc'
+		sortBy: 'recientes'
 	};
 
 	// Categorías
