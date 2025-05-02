@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 export const useGenerators = () => {
 
     const generateUUID4 = () => {
@@ -8,8 +9,14 @@ export const useGenerators = () => {
 
     }
 
+    const getCurretTimestampCart = () => {
+        return dayjs().format('DD/MM/YYYY HH:mm:ss');
+    }
+
+
     return {
-        generateUUID4
+        generateUUID4,
+        getCurretTimestampCart
     }
 
 }

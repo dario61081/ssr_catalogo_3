@@ -1,5 +1,6 @@
 import { ConfirmedOrder, CartItem } from '~/types';
 import { IFormaPago } from '~/types/payments';
+import { useGenerators } from '~/composables/useGenerators';
 
 
 
@@ -56,7 +57,7 @@ export function createConfirmedOrder(checkoutData: CheckoutData): ConfirmedOrder
 
     return {
         orderId: checkoutData.orderId,
-        date: dayjs().format('DD/MM/YYYY HH:mm:ss'), // Formato de fecha
+        date: useGenerators().getCurretTimestampCart(), // Formato de fecha
         orderStatus: 'P', // Estado inicial de la orden
         customerName: checkoutData.customerInfo.name,
         customerInfo: {
