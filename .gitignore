@@ -24,3 +24,7 @@ logs
 !.env.example
 .qodo
 bun.lock
+*.vue~
+*.ts~
+*.lock
+*.lock
