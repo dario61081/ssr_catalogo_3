@@ -8,7 +8,7 @@
         <!-- QR Payment Panel -->
         <div v-if="selectedPaymentMethod.tipo_codigo === 5" class="mt-4 p-5 border rounded-xl bg-gray-50">
             <h5 class="font-medium text-gray-900 mb-4 flex items-center">
-                <i class="pi pi-qrcode mr-2 text-orange-500"></i> Código QR para pago
+                <i class="pi pi-qrcode mr-2 text-gray-800"></i> Código QR para pago
             </h5>
             <div class="flex flex-col items-center">
                 <!-- Simulated QR code -->
@@ -22,7 +22,7 @@
                 <p class="text-sm font-medium text-gray-900 mt-2">
                     Monto a pagar: Gs. {{ formatPrice(total) }}
                 </p>
-                <p v-if="isProcessingPayment" class="text-sm flex items-center justify-center mt-3 text-orange-600">
+                <p v-if="isProcessingPayment" class="text-sm flex items-center justify-center mt-3 text-gray-800">
                     <i class="pi pi-spin pi-spinner mr-2"></i> {{ paymentStatus }}
                 </p>
             </div>
@@ -32,7 +32,7 @@
         <div v-if="selectedPaymentMethod.tipo_codigo === 3 || selectedPaymentMethod.tipo_codigo === 4"
             class="mt-4 p-5 border rounded-xl bg-gray-50">
             <h5 class="font-medium text-gray-900 mb-4 flex items-center">
-                <i class="pi pi-credit-card mr-2 text-orange-500"></i> Datos de la Tarjeta
+                <i class="pi pi-credit-card mr-2 text-gray-800"></i> Datos de la Tarjeta
             </h5>
             <div class="space-y-4">
                 <div>
@@ -40,7 +40,7 @@
                         Número de Tarjeta
                     </label>
                     <input v-model="cardInfo.number" type="text" maxlength="19" placeholder="1234 5678 9012 3456"
-                        class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
+                        class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800"
                         @input="formatCardNumber" />
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -49,7 +49,7 @@
                             Fecha de Vencimiento
                         </label>
                         <input v-model="cardInfo.expiry" type="text" maxlength="5" placeholder="MM/YY"
-                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400"
+                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800"
                             @input="formatExpiryDate" />
                     </div>
                     <div>
@@ -57,7 +57,7 @@
                             CVV
                         </label>
                         <input v-model="cardInfo.cvv" type="password" maxlength="4" placeholder="123"
-                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400" />
+                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800" />
                     </div>
                 </div>
                 <div>
@@ -65,9 +65,9 @@
                         Nombre en la Tarjeta
                     </label>
                     <input v-model="cardInfo.name" type="text" placeholder="Como aparece en la tarjeta"
-                        class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400" />
+                        class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800" />
                 </div>
-                <p v-if="isProcessingPayment" class="text-sm flex items-center justify-center mt-3 text-orange-600">
+                <p v-if="isProcessingPayment" class="text-sm flex items-center justify-center mt-3 text-gray-800">
                     <i class="pi pi-spin pi-spinner mr-2"></i> {{ paymentStatus }}
                 </p>
             </div>

@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+            <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
                 <div class="text-sm space-y-2">
                     <div class="flex justify-between">
                         <span class="text-gray-700">Subtotal:</span>
@@ -67,9 +67,9 @@
                         <span class="text-gray-700">Descuento:</span>
                         <span class="text-green-600 font-medium">- Gs. {{ formatPrice(discount) }}</span>
                     </div>
-                    <div class="flex justify-between font-bold mt-3 pt-3 border-t border-orange-200">
+                    <div class="flex justify-between font-bold mt-3 pt-3 border-t border-gray-300">
                         <span>Total a pagar:</span>
-                        <span class="text-orange-600">Gs. {{ formatPrice(total) }}</span>
+                        <span class="text-gray-800">Gs. {{ formatPrice(total) }}</span>
                     </div>
                 </div>
             </div>

@@ -3,7 +3,7 @@
         class="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto sm:overflow-auto shadow-2xl">
             <div
-                class="p-5 border-b relative bg-gradient-to-r from-orange-400 via-orange-300 to-orange-100 flex justify-center items-center h-24 overflow-hidden">
+                class="p-5 border-b relative bg-gradient-to-r from-gray-700 via-gray-600 to-gray-500 flex justify-center items-center h-24 overflow-hidden">
                 <!-- Imagen de fondo con efecto de perspectiva -->
                 <div class="absolute inset-0 opacity-15 flex justify-center items-center overflow-hidden">
                     <img src="/images/cart.png" alt="Carrito de compra"
@@ -15,7 +15,7 @@
                     <div class="bg-white bg-opacity-80 px-5 py-2 rounded-full shadow-sm flex items-center">
                         <h3 class="text-xl font-semibold text-gray-800">Finalizar Compra</h3>
                         <div
-                            class="ml-3 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                            class="ml-3 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center text-white text-xs font-bold">
                             {{ items.length }}
                         </div>
                     </div>
@@ -23,7 +23,7 @@
 
                 <!-- Botón cerrar -->
                 <button @click="close"
-                    class="absolute top-3 right-3 text-white hover:text-gray-100 bg-orange-500 bg-opacity-70 hover:bg-opacity-100 rounded-full p-2 transition-colors">
+                    class="absolute top-3 right-3 text-white hover:text-gray-100 bg-gray-800 bg-opacity-70 hover:bg-opacity-100 rounded-full p-2 transition-colors">
                     <i class="pi pi-times"></i>
                 </button>
             </div>
@@ -33,14 +33,14 @@
                 <div class="mb-8 relative">
                     <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
                         <div :style="`width: ${(checkoutStep / 3) * 100}%`"
-                            class="transition-all duration-500 shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-orange-500">
+                            class="transition-all duration-500 shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gray-800">
                         </div>
                     </div>
                     <div class="flex justify-between mt-2">
                         <div class="flex flex-col items-center">
                             <div :class="[
                                 'w-8 h-8 rounded-full flex items-center justify-center text-xs',
-                                checkoutStep >= 1 ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700'
+                                checkoutStep >= 1 ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700'
                             ]">
                                 1
                             </div>
@@ -49,7 +49,7 @@
                         <div class="flex flex-col items-center">
                             <div :class="[
                                 'w-8 h-8 rounded-full flex items-center justify-center text-xs',
-                                checkoutStep >= 2 ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700'
+                                checkoutStep >= 2 ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700'
                             ]">
                                 2
                             </div>
@@ -58,7 +58,7 @@
                         <div class="flex flex-col items-center">
                             <div :class="[
                                 'w-8 h-8 rounded-full flex items-center justify-center text-xs',
-                                checkoutStep === 3 ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700'
+                                checkoutStep === 3 ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700'
                             ]">
                                 3
                             </div>
@@ -93,12 +93,12 @@
                             <i class="pi pi-arrow-left mr-1"></i> Atrás
                         </button>
                         <button v-if="checkoutStep < 3" type="button"
-                            class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+                            class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors"
                             @click="nextCheckoutStep">
                             Siguiente <i class="pi pi-arrow-right ml-1"></i>
                         </button>
                         <button v-if="checkoutStep === 3" type="submit"
-                            class="px-5 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all transform hover:scale-[1.02]">
+                            class="px-5 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-all transform hover:scale-[1.02]">
                             <i class="pi pi-check mr-1"></i> Confirmar pedido
                         </button>
                     </div>

@@ -3,15 +3,15 @@
         <div v-for="method in paymentMethods" :key="method.tipo_codigo" @click="selectMethod(method)" :class="[
             'p-4 border rounded-lg cursor-pointer transition-all',
             selectedMethodId === method.tipo_codigo ?
-                'border-orange-500 bg-orange-50 shadow-sm' :
-                'hover:border-orange-200 hover:bg-gray-50'
+                'border-gray-800 bg-gray-50 shadow-sm' :
+                'hover:border-gray-500 hover:bg-gray-50'
         ]">
             <div class="flex items-center">
                 <div :class="[
                     'w-5 h-5 rounded-full border flex items-center justify-center',
-                    selectedMethodId === method.tipo_codigo ? 'border-orange-500' : 'border-gray-300'
+                    selectedMethodId === method.tipo_codigo ? 'border-gray-800' : 'border-gray-300'
                 ]">
-                    <div v-if="selectedMethodId === method.tipo_codigo" class="w-3 h-3 rounded-full bg-orange-500">
+                    <div v-if="selectedMethodId === method.tipo_codigo" class="w-3 h-3 rounded-full bg-gray-800">
                     </div>
                 </div>
                 <span class="ml-2 font-medium">{{ getDisplayName(method.tipo_descripcion) }}</span>

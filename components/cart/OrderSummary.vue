@@ -49,7 +49,7 @@
 
             <!-- Botón de checkout -->
             <button
-                class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg flex items-center justify-center transition-all transform hover:scale-[1.02] shadow-md hover:shadow-lg"
+                class="w-full bg-gray-800 hover:bg-gray-900 text-white py-3 px-4 rounded-lg flex items-center justify-center transition-all transform hover:scale-[1.02] shadow-md hover:shadow-lg"
                 @click="$emit('show-checkout')">
                 <i class="pi pi-shopping-cart mr-2"></i>
                 Finalizar compra
