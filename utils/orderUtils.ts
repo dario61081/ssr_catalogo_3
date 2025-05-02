@@ -1,6 +1,6 @@
 import { ConfirmedOrder, CartItem } from '~/types';
 import { IFormaPago } from '~/types/payments';
-import dayjs from 'dayjs';
+
 
 
 interface CheckoutData {
