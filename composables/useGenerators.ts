@@ -1,6 +1,11 @@
 
 export const useGenerators = () => {
 
+    /**
+     * 
+     * @returns {string} UUID v4
+     * @description This function generates a UUID v4
+     */
     const generateUUID4 = () => {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -9,6 +14,11 @@ export const useGenerators = () => {
 
     }
 
+    /**
+     * 
+     * @returns {string} current timestamp in format DD/MM/YYYY HH:mm:ss
+     * @description This function returns the current timestamp in format DD/MM/YYYY HH:mm:ss
+     */
     const getCurretTimestampCart = () => {
         //get current timestamp and format it to DD/MM/YYYY HH:mm:ss
         const date = new Date();
