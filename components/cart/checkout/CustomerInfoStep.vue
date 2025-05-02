@@ -5,7 +5,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">CI o RUC</label>
                 <input v-model="customerInfo.ruc" type="text" required placeholder="Ej: 1234567-8 o 80012345-6" :class="[
-                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all',
+                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all',
                     errors.ruc ? 'border-red-500 bg-red-50' : ''
                 ]">
                 <p v-if="errors.ruc" class="text-xs text-red-600 mt-1">{{ errors.ruc }}</p>
@@ -13,7 +13,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
                 <input v-model="customerInfo.name" type="text" required placeholder="Ej: Juan Pérez" :class="[
-                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all',
+                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all',
                     errors.name ? 'border-red-500 bg-red-50' : ''
                 ]">
                 <p v-if="errors.name" class="text-xs text-red-600 mt-1">{{ errors.name }}</p>
@@ -21,7 +21,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
                 <input v-model="customerInfo.telefono" type="text" required placeholder="Ej: 0981 123456" :class="[
-                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all',
+                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all',
                     errors.telefono ? 'border-red-500 bg-red-50' : ''
                 ]">
                 <p v-if="errors.telefono" class="text-xs text-red-600 mt-1">{{ errors.telefono }}</p>
@@ -29,7 +29,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <input v-model="customerInfo.email" type="email" required placeholder="Ej: correo@ejemplo.com" :class="[
-                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all',
+                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all',
                     errors.email ? 'border-red-500 bg-red-50' : ''
                 ]">
                 <p v-if="errors.email" class="text-xs text-red-600 mt-1">{{ errors.email }}</p>
@@ -39,7 +39,7 @@
             <label class="block text-sm font-medium text-gray-700 mb-1">Dirección de envío</label>
             <textarea v-model="customerInfo.address" required rows="2" placeholder="Ej: Av. Mcal. 1234, Asunción"
                 :class="[
-                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition-all',
+                    'w-full p-3 border rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all',
                     errors.address ? 'border-red-500 bg-red-50' : ''
                 ]"></textarea>
             <p v-if="errors.address" class="text-xs text-red-600 mt-1">{{ errors.address }}</p>
@@ -49,11 +49,11 @@
                 <div class="flex items-center space-x-3">
                     <label class="flex items-center space-x-2 text-sm text-gray-600 m-0">
                         <input v-model="useGeolocationModel" type="checkbox"
-                            class="rounded border-gray-300 text-orange-500 focus:ring-orange-400">
+                            class="rounded border-gray-300 text-gray-800 focus:ring-gray-700">
                         <span>Georeferenciar mi ubicación</span>
                     </label>
                     <button v-if="useGeolocationModel" type="button" @click="detectCurrentLocation"
-                        class="bg-white border border-orange-200 text-orange-500 rounded-lg px-3 py-1.5 text-xs shadow-sm hover:bg-orange-50 transition-colors">
+                        class="bg-white border border-gray-300 text-gray-800 rounded-lg px-3 py-1.5 text-xs shadow-sm hover:bg-gray-100 transition-colors">
                         <i class="pi pi-map-marker mr-1"></i> Detectar mi ubicación
                     </button>
                 </div>

@@ -97,6 +97,12 @@ body {
 	font-size: 1rem;
 }
 
+/* Estilos para modales */
+body.modal-open {
+	overflow: hidden;
+	padding-right: 17px; /* Evita el salto de contenido por la barra de scroll */
+}
+
 /* Responsive */
 @media (max-width: 640px) {
 	.container {

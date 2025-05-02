@@ -425,6 +425,26 @@ watch(useGeolocation, async (newVal) => {
     }
 });
 
+// Watch for modal visibility changes and toggle body scroll lock
+watch(() => props.show, (newVal) => {
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+        if (newVal) {
+            // Bloquear scroll de la página cuando el modal está abierto
+            document.body.classList.add('modal-open');
+        } else {
+            // Restaurar scroll de la página cuando el modal se cierra
+            document.body.classList.remove('modal-open');
+
+            // Limpiar timers y estados
+            if (qrPaymentCheckInterval.value) {
+                clearInterval(qrPaymentCheckInterval.value);
+                isProcessingPayment.value = false;
+                paymentStatus.value = '';
+            }
+        }
+    }
+});
+
 // Stop QR payment check on modal close
 watch(() => props.show, (newVal) => {
     if (!newVal && qrPaymentCheckInterval.value) {
@@ -443,6 +463,11 @@ onBeforeUnmount(() => {
     if (map.value) {
         map.value.remove();
         map.value = null;
+    }
+
+    // Asegurarse de que se elimine la clase modal-open cuando se desmonte el componente
+    if (typeof document !== 'undefined') {
+        document.body.classList.remove('modal-open');
     }
 });
 
