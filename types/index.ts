@@ -1,3 +1,6 @@
+import { OrderStatus } from "./orders_status";
+import { IFormaPago } from "./payments";
+
 export interface CategoriaResponse {
 	DIV_CODIGO: number;
 	DIV_DESC: string;
@@ -113,4 +116,24 @@ export interface FiltersResponse {
 	"DCLAS_CATALOGO": string,
 	"DCLAS_DIR_IMAGEN": string | null,
 	"SUBDIV_CANT_TOTAL": number
+}
+
+// Tipo para órdenes confirmadas
+export interface ConfirmedOrder {
+	orderId: string;
+	orderStatus: OrderStatus;
+	date: string;
+	customerName: string;
+	customerInfo: {
+		email: string;
+		address: string;
+		coordinates: { lat: number; lng: number } | null;
+		telephone: string;
+		ruc: string;
+	};
+	total: number;
+	subtotal: number;
+	discount: number;
+	paymentMethod: IFormaPago;
+	items: CartItem[];
 }
