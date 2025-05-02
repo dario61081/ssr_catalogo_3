@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+
 export const useGenerators = () => {
 
     const generateUUID4 = () => {
@@ -10,7 +10,17 @@ export const useGenerators = () => {
     }
 
     const getCurretTimestampCart = () => {
-        return dayjs().format('DD/MM/YYYY HH:mm:ss');
+        //get current timestamp and format it to DD/MM/YYYY HH:mm:ss
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
     }
 
 
@@ -20,3 +30,5 @@ export const useGenerators = () => {
     }
 
 }
+
+
