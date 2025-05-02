@@ -1,172 +1,63 @@
 <template>
 	<div class="catalog-page">
 		<div class="container mx-auto max-w-6xl px-4 py-6">
-			<!-- Breadcrumb -->
-			<BreadCrumb :items="[{ text: 'Catálogo' }]"
-				class="mb-6"/>
+			<!-- Cabecera del catálogo con título y breadcrumb -->
+			<CatalogHeader title="Catálogo de Productos" />
 
-			<h1 class="text-2xl font-bold text-gray-900 mb-6">Catálogo de Productos</h1>
-
-			<div v-if="loading"
-				class="flex justify-center py-16">
-				<LoadingSpinner/>
+			<div v-if="loading" class="flex justify-center py-16">
+				<LoadingSpinner />
 			</div>
 
-			<div v-else-if="error"
-				class="text-center py-16">
-				<div class="text-red-500 mb-4">
-					<i class="pi pi-exclamation-triangle text-4xl"></i>
-				</div>
-				<h2 class="text-xl font-semibold text-gray-800 mb-2">Error al cargar el catálogo</h2>
-				<p class="text-gray-600">{{ error }}</p>
-				<button
-					class="mt-4 bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
-					@click="()=>loadData()"
-				>
-					Reintentar
-				</button>
+			<div v-else-if="error">
+				<CatalogEmpty :error="error" @retry="loadData" />
 			</div>
 
-			<div v-else
-				class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+			<div v-else class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 				<!-- Sidebar de filtros -->
 				<div class="lg:col-span-1">
-					<FilterSidebar
-						v-model:selectedCategories="filterState.categorias"
-						v-model:selectedSubcategories="filterState.subcategorias"
-						:priceMax="filterState.precioMax"
-						:priceMin="filterState.precioMin"
-						:searchQuery="filterState.searchQuery"
+					<FilterSidebar v-model:selectedCategories="filterState.categorias"
+						v-model:selectedSubcategories="filterState.subcategorias" :priceMax="filterState.precioMax"
+						:priceMin="filterState.precioMin" :searchQuery="filterState.searchQuery"
 						@update:priceMin="filterState.precioMin = $event"
 						@update:priceMax="filterState.precioMax = $event"
-						@update:searchQuery="filterState.searchQuery = $event"
-						@filter-changed="applyFilters"
-						@clear-filters="clearFilters"
-					/>
+						@update:searchQuery="filterState.searchQuery = $event" @filter-changed="applyFilters"
+						@clear-filters="clearFilters" />
 				</div>
 
 				<!-- Listado de productos -->
 				<div class="lg:col-span-3">
-					<!-- Opciones de ordenamiento y vista -->
-					<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-						<div class="flex items-center">
-							<p class="text-gray-700 mr-2">
-								<span class="font-medium">{{ filteredProducts.length }}</span>
-								productos encontrados
-							</p>
-						</div>
-
-						<SortOptions
-							v-model:sortBy="filterState.sortBy"
-							@sort-changed="applyFilters"
-						/>
-					</div>
-
-					<!-- Loading de productos -->
-					<div v-if="loading || filterLoading"
-						class="mb-6">
-						<ProductGridLoading/>
-					</div>
-
-					<!-- Productos -->
-					<div v-if="!loading && !filterLoading && filteredProducts.length > 0"
-						class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-						<div v-for="product in paginatedProducts"
-							:key="product.codigo"
-							class="h-full">
-							<ProductCard
-								:product="product"
-								:showActions="true"
-							/>
-						</div>
-					</div>
-
-					<div v-else-if="!loading && !filterLoading && filteredProducts.length === 0"
-						class="text-center py-16 bg-gray-50 rounded-lg">
-						<div class="text-gray-400 mb-4">
-							<i class="pi pi-search text-4xl"></i>
-						</div>
-						<h2 class="text-xl font-semibold text-gray-800 mb-2">No se encontraron productos</h2>
-						<p class="text-gray-600 mb-4">Intenta con otros filtros o categorías</p>
-						<button
-							class="bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
-							@click="()=>{clearFilters(false)}"
-						>
-							Limpiar filtros
-						</button>
-					</div>
-
-					<!-- Paginación -->
-					<div v-if="totalPages > 1"
-						class="flex justify-center mt-8">
-						<div class="flex space-x-1">
-							<button
-								:class="currentPage === 1 ? 'text-gray-400 border-gray-200 cursor-not-allowed' : 'text-gray-700 border-gray-300 hover:bg-gray-50'"
-								:disabled="currentPage === 1"
-								class="px-3 py-1 rounded border"
-								@click="goToPage(currentPage - 1)"
-							>
-								<i class="pi pi-chevron-left"></i>
-							</button>
-
-							<button
-								v-for="page in paginationItems"
-								:key="`page-${page.value}`"
-								:class="[
-                  page.type === 'ellipsis' ? 'text-gray-400 border-gray-200 cursor-default' : '',
-                  page.type === 'page' && page.value === currentPage ? 'bg-gray-700 text-white border-gray-700' : '',
-                  page.type === 'page' && page.value !== currentPage ? 'text-gray-700 border-gray-300 hover:bg-gray-50' : ''
-                ]"
-								class="px-3 py-1 rounded border"
-								@click="page.type === 'page' && goToPage(page.value)"
-							>
-								{{
-									page.type === 'ellipsis' ?
-										'...' :
-										page.value
-								}}
-							</button>
-
-							<button
-								:class="currentPage === totalPages ? 'text-gray-400 border-gray-200 cursor-not-allowed' : 'text-gray-700 border-gray-300 hover:bg-gray-50'"
-								:disabled="currentPage === totalPages"
-								class="px-3 py-1 rounded border"
-								@click="goToPage(currentPage + 1)"
-							>
-								<i class="pi pi-chevron-right"></i>
-							</button>
-						</div>
-					</div>
+					<CatalogProductGrid :products="paginatedProducts" :loading="filterLoading"
+						:totalProducts="filteredProducts.length" :currentPage="currentPage" :totalPages="totalPages"
+						:sortBy="filterState.sortBy"
+						@sort-changed="(newSort) => { filterState.sortBy = newSort; applyFilters(); }"
+						@page-change="goToPage" @clear-filters="clearFilters(false)" />
 				</div>
 			</div>
 		</div>
 
-
 		<!-- Modal de vista previa de producto -->
-		<ProductModalPreview
-			:isOpen="showProductPreview"
-			:productId="selectedProductId"
-			@close="showProductPreview = false"
-		/>
+		<ProductModalPreview :isOpen="showProductPreview" :productId="selectedProductId"
+			@close="showProductPreview = false" />
 	</div>
 </template>
 
-<script lang="ts"
-	setup>
-import {computed, onMounted, ref, watch} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
-import {useProductoStore} from '~/stores/productoStore';
-import {useFavoritesStore} from '~/stores/favoritesStore';
-import {useCartStore} from '~/stores/cartStore';
-import {useFiltersData} from '~/composables/useFiltersData';
-import type {FilterState, SortCriteria} from '~/types';
+<script lang="ts" setup>
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useProductoStore } from '~/stores/productoStore';
+import { useFavoritesStore } from '~/stores/favoritesStore';
+import { useCartStore } from '~/stores/cartStore';
+import { useFiltersData } from '~/composables/useFiltersData';
+import type { FilterState, SortCriteria } from '~/types';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
 import FilterSidebar from '~/components/FilterSidebar.vue';
-import SortOptions from '~/components/SortOptions.vue';
-import BreadCrumb from '~/components/BreadCrumb.vue';
 import ProductModalPreview from '~/components/ProductModalPreview.vue';
 import emitter from '~/utils/eventBus';
-import ProductGridLoading from "~/components/ProductGridLoading.vue";
+
+// Importar componentes del catálogo
+import CatalogHeader from '~/components/catalog/CatalogHeader.vue';
+import CatalogProductGrid from '~/components/catalog/CatalogProductGrid.vue';
+import CatalogEmpty from '~/components/catalog/CatalogEmpty.vue';
 
 // Definir título y meta tags para SEO
 useHead({
@@ -202,7 +93,7 @@ const favoritesStore = useFavoritesStore();
 const cartStore = useCartStore();
 
 // Obtener datos de filtros
-const {filtrosData, loading: filtersLoading} = useFiltersData();
+const { filtrosData, loading: filtersLoading } = useFiltersData();
 
 // Estado
 const loading = ref(true);
@@ -255,38 +146,30 @@ const filteredProducts = computed(() => {
 	if (filterState.value.searchQuery) {
 		const query = filterState.value.searchQuery.toLowerCase();
 		result = result.filter(prod =>
-			prod.nombre.toLowerCase()
-				.includes(query) ||
-			prod.desc_division.toLowerCase()
-				.includes(query) ||
-			prod.desc_categoria.toLowerCase()
-				.includes(query)
+			prod.nombre.toLowerCase().includes(query) ||
+			prod.desc_division.toLowerCase().includes(query) ||
+			prod.desc_categoria.toLowerCase().includes(query)
 		);
 	}
 
 	// Ordenar productos
 	switch (filterState.value.sortBy) {
 		case 'nombre_asc':
-			result.sort((a,
-						 b) => a.nombre.localeCompare(b.nombre));
+			result.sort((a, b) => a.nombre.localeCompare(b.nombre));
 			break;
 		case 'nombre_desc':
-			result.sort((a,
-						 b) => b.nombre.localeCompare(a.nombre));
+			result.sort((a, b) => b.nombre.localeCompare(a.nombre));
 			break;
 		case 'precio_asc':
-			result.sort((a,
-						 b) => a.precio - b.precio);
+			result.sort((a, b) => a.precio - b.precio);
 			break;
 		case 'precio_desc':
-			result.sort((a,
-						 b) => b.precio - a.precio);
+			result.sort((a, b) => b.precio - a.precio);
 			break;
 		case 'recientes':
 			// Aquí podríamos ordenar por fecha si tuviéramos ese dato
 			// Por ahora, usamos el código como aproximación (asumiendo que códigos más altos son más recientes)
-			result.sort((a,
-						 b) => b.codigo - a.codigo);
+			result.sort((a, b) => b.codigo - a.codigo);
 			break;
 	}
 
@@ -303,39 +186,6 @@ const paginatedProducts = computed(() => {
 // Total de páginas
 const totalPages = computed(() => {
 	return Math.ceil(filteredProducts.value.length / itemsPerPage.value);
-});
-
-// Elementos de paginación
-const paginationItems = computed(() => {
-	const items: Array<{ type: 'page' | 'ellipsis'; value: number }> = [];
-	const maxVisiblePages = 5;
-
-	if (totalPages.value <= maxVisiblePages) {
-		for (let i = 1; i <= totalPages.value; i++) {
-			items.push({type: 'page', value: i});
-		}
-	} else {
-		items.push({type: 'page', value: 1});
-
-		let startPage = Math.max(2, currentPage.value - Math.floor(maxVisiblePages / 2));
-		let endPage = Math.min(totalPages.value - 1, startPage + maxVisiblePages - 3);
-
-		if (startPage > 2) {
-			items.push({type: 'ellipsis', value: Math.floor((1 + startPage) / 2)});
-		}
-
-		for (let i = startPage; i <= endPage; i++) {
-			items.push({type: 'page', value: i});
-		}
-
-		if (endPage < totalPages.value - 1) {
-			items.push({type: 'ellipsis', value: Math.floor((endPage + totalPages.value) / 2)});
-		}
-
-		items.push({type: 'page', value: totalPages.value});
-	}
-
-	return items;
 });
 
 // Cargar datos iniciales
@@ -379,10 +229,10 @@ const goToPage = (page: number) => {
 	if (page >= 1 && page <= totalPages.value) {
 		currentPage.value = page;
 		// Actualizar la URL con el parámetro de página
-		const query = {...route.query, page: page.toString()};
-		router.push({query});
+		const query = { ...route.query, page: page.toString() };
+		router.push({ query });
 		// Scroll al inicio de los productos
-		window.scrollTo({top: 0, behavior: 'smooth'});
+		window.scrollTo({ top: 0, behavior: 'smooth' });
 	}
 };
 
@@ -431,7 +281,7 @@ const applyFilters = async () => {
 	await new Promise(resolve => setTimeout(resolve, 1000));
 
 	// Actualizar la URL con los nuevos parámetros
-	await router.push({query});
+	await router.push({ query });
 
 	// Desactivar el estado de carga
 	filterLoading.value = false;
@@ -458,7 +308,7 @@ const clearFilters = async (redirectToHome = true) => {
 
 	// Limpiar los parámetros de la URL
 	if (redirectToHome) {
-		await router.push({query: {}});
+		await router.push({ query: {} });
 	}
 
 	// Desactivar estado de carga después de un breve retraso para asegurar que la UI se actualice
@@ -483,14 +333,12 @@ const applyFiltersFromUrl = () => {
 
 	// Categorías
 	if (query.cat) {
-		filterState.value.categorias = (query.cat as string).split(',')
-			.map(Number);
+		filterState.value.categorias = (query.cat as string).split(',').map(Number);
 	}
 
 	// Subcategorías
 	if (query.subcat) {
-		filterState.value.subcategorias = (query.subcat as string).split(',')
-			.map(Number);
+		filterState.value.subcategorias = (query.subcat as string).split(',').map(Number);
 	}
 
 	// Precio mínimo
@@ -526,7 +374,7 @@ const applyFiltersFromUrl = () => {
 // Observar cambios en la ruta para actualizar filtros
 watch(() => route.query, () => {
 	applyFiltersFromUrl();
-}, {deep: true});
+}, { deep: true });
 
 // Cargar datos al montar el componente
 onMounted(() => {
