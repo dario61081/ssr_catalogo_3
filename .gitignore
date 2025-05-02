@@ -27,6 +27,5 @@ bun.lock
 *.vue~
 *.ts~
 *.lock
-*.lock
-*.lock
-*.lock
+
+*.yml
