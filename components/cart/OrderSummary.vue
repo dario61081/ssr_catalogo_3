@@ -7,8 +7,8 @@
         <div class="p-4">
             <!-- Order ID -->
             <div class="flex justify-between mb-4 pb-4 border-b">
-                <span class="text-gray-600">Orden ID</span>
-                <span class="font-medium font-mono text-gray-800">{{ orderId }}</span>
+                <span class="text-gray-600">Orden #</span>
+                <span class="font-medium font-mono text-gray-800">{{ orderId.toString().substring(0, 8) }}</span>
             </div>
 
             <div class="flex justify-between mb-2">
