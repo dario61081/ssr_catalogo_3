@@ -3,15 +3,10 @@
 		class="product-card-small bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden scale-90">
 		<!-- Imagen del producto -->
 		<div class="relative pt-[100%] overflow-hidden">
-			<NuxtLink :to="`/product/${product.codigo}`"
-				class="block"
-				@click.right.prevent="openPreview"
-				@click.ctrl.prevent="openPreview"
-				@click.meta.prevent="openPreview">
-				<img :alt="product.nombre"
-					:src="product.imagen"
-					class="absolute inset-0 w-full h-full object-contain p-3"
-					loading="lazy"/>
+			<NuxtLink :to="`/product/${product.codigo}`" class="block" @click.right.prevent="openPreview"
+				@click.ctrl.prevent="openPreview" @click.meta.prevent="openPreview">
+				<img :alt="product.nombre" :src="product.imagen"
+					class="absolute inset-0 w-full h-full object-contain p-3" loading="lazy" />
 			</NuxtLink>
 
 			<!-- Etiqueta de stock -->
@@ -28,8 +23,7 @@
 			<button :aria-label="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
 				class="absolute top-2 right-2 bg-white p-2 rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
 				@click.prevent="toggleFavorite">
-				<i :class="[isFavorite ? 'pi-heart-fill text-red-500' : 'pi-heart text-gray-400']"
-					class="pi"></i>
+				<i :class="[isFavorite ? 'pi-heart-fill text-red-500' : 'pi-heart text-gray-400']" class="pi"></i>
 			</button>
 			<!-- Botón de vista previa funcional -->
 			<button aria-label="Vista previa rápida"
@@ -48,11 +42,8 @@
 				<p class="text-xs text-gray-500">{{ product.desc_division }}</p>
 			</div>
 
-			<NuxtLink :to="`/product/${product.codigo}`"
-				class="block"
-				@click.right.prevent="openPreview"
-				@click.ctrl.prevent="openPreview"
-				@click.meta.prevent="openPreview">
+			<NuxtLink :to="`/product/${product.codigo}`" class="block" @click.right.prevent="openPreview"
+				@click.ctrl.prevent="openPreview" @click.meta.prevent="openPreview">
 				<h3
 					class="text-xs font-medium text-gray-900 mb-1 line-clamp-2 min-h-[36px] overflow-hidden hover:text-gray-600">
 					{{ product.nombre }}
@@ -68,11 +59,10 @@
 	</div>
 </template>
 
-<script lang="ts"
-	setup>
-import {computed} from 'vue';
-import {Producto} from '~/types';
-import {useFavoritesStore} from '~/stores/favoritesStore';
+<script lang="ts" setup>
+import { computed } from 'vue';
+import { Producto } from '~/types';
+import { useFavoritesStore } from '~/stores/favoritesStore';
 import emitter from '~/utils/eventBus';
 import ProductRating from "~/components/ProductRating.vue";
 
@@ -86,22 +76,31 @@ const isFavorite = computed(() => favoritesStore.isFavorite(props.product.codigo
 const toggleFavorite = () => {
 	if (isFavorite.value) {
 		favoritesStore.removeFavorite(props.product.codigo);
-		emitter.emit('product:removeFromFavorites', {productId: props.product.codigo});
+		emitter.emit('product:removeFromFavorites', { productId: props.product.codigo });
 	} else {
 		favoritesStore.addFavorite(props.product);
-		emitter.emit('product:addToFavorites', {productId: props.product.codigo});
+		emitter.emit('product:addToFavorites', { productId: props.product.codigo });
 	}
 	emitter.emit('favorites:update', undefined);
 };
 
 // Acción para abrir detalles (vista previa)
 const openPreview = () => {
+	console.log('Vista previa solicitada para producto:', props.product.codigo);
+	// Emitir el evento con el código del producto para que lo capture el componente padre
 	emitter.emit('product:preview', props.product.codigo);
+
+	// Como fallback, también intentamos abrir la URL del producto
+	// if (typeof window !== 'undefined' && !window.location.pathname.includes('/product/')) {
+	// 	// Solo redireccionar si no estamos ya en la página del producto
+	// 	const url = `/product/${props.product.codigo}`;
+	// 	window.open(url, '_blank');
+	// }
 };
 
 // Formatear precio con separadores de miles y símbolo de moneda
 const formatPrice = (price: number): string => {
-	return new Intl.NumberFormat('es-PY', {style: 'currency', currency: 'PYG', minimumFractionDigits: 0}).format(price);
+	return new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG', minimumFractionDigits: 0 }).format(price);
 };
 </script>
 

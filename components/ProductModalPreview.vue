@@ -1,8 +1,8 @@
 <script lang="ts">
-import {defineComponent, ref, watch} from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 import ProductCard from './ProductCard.vue'
-import {Producto} from '~/types'
-import {useProductoStore} from '~/stores/productoStore'
+import { Producto } from '~/types'
+import { useProductoStore } from '~/stores/productoStore'
 
 export default defineComponent({
 	name: "ProductModalPreview",
@@ -21,7 +21,7 @@ export default defineComponent({
 	},
 	emits: ['close'],
 	setup(props,
-		  {emit}) {
+		{ emit }) {
 		const product = ref<Producto | null>(null);
 		const isLoading = ref(false);
 		const error = ref<string | null>(null);
@@ -34,16 +34,31 @@ export default defineComponent({
 			error.value = null;
 
 			try {
-				// Aquí deberíamos obtener el producto desde la API o el store
-				// Por ejemplo:
-				// const response = await fetch(`/api/products/${id}`);
-				// product.value = await response.json();
+				console.log('ProductModalPreview: Cargando producto con ID:', id);
 
-				// Como alternativa, si tenemos un store de productos:
+				// Convertir el ID a número ya que la API y el store esperan un número
+				const idNumerico = parseInt(id);
+
+				if (isNaN(idNumerico)) {
+					console.error('ProductModalPreview: ID no válido, debe ser un número:', id);
+					error.value = 'ID de producto no válido';
+					isLoading.value = false;
+					return;
+				}
+
+				// Obtener el producto desde el store usando fetchProductoById en lugar de getProductoById
 				const productoStore = useProductoStore();
-				product.value = await productoStore.getProductoById(id);
+				const resultado = await productoStore.fetchProductoById(idNumerico);
+
+				if (resultado) {
+					product.value = resultado;
+					console.log('ProductModalPreview: Producto cargado correctamente:', product.value.nombre);
+				} else {
+					console.error('ProductModalPreview: Producto no encontrado con ID:', idNumerico);
+					error.value = 'No se pudo cargar el producto';
+				}
 			} catch (err) {
-				console.error('Error al cargar el producto:', err);
+				console.error('ProductModalPreview: Error al cargar el producto:', err);
 				error.value = 'No se pudo cargar el producto';
 			} finally {
 				isLoading.value = false;
@@ -57,7 +72,7 @@ export default defineComponent({
 			} else {
 				product.value = null;
 			}
-		}, {immediate: true});
+		}, { immediate: true });
 
 		// Observar el estado del modal
 		watch(() => props.isOpen, (isOpen) => {
@@ -91,32 +106,24 @@ export default defineComponent({
 </script>
 
 <template>
-	<div v-if="isOpen"
-		class="product-modal-overlay"
-		@click.self="closeModal">
+	<div v-if="isOpen" class="product-modal-overlay" @click.self="closeModal">
 		<div class="product-modal-container">
 			<div class="product-modal-header">
 				<h2 class="product-modal-title">Vista previa del producto</h2>
-				<button class="product-modal-close"
-					@click="closeModal">
+				<button class="product-modal-close" @click="closeModal">
 					<i class="pi pi-times"></i>
 				</button>
 			</div>
 			<div class="product-modal-body">
-				<ProductCard v-if="product"
-					:product="product"/>
-				<div v-else
-					class="product-modal-loading">
+				<ProductCard v-if="product" :product="product" />
+				<div v-else class="product-modal-loading">
 					<p>Cargando producto...</p>
 				</div>
 			</div>
 			<div class="product-modal-footer">
-				<button class="product-modal-button secondary"
-					@click="closeModal">Cerrar
+				<button class="product-modal-button secondary" @click="closeModal">Cerrar
 				</button>
-				<NuxtLink v-if="product"
-					:to="`/product/${product.codigo}`"
-					class="product-modal-button primary">
+				<NuxtLink v-if="product" :to="`/product/${product.codigo}`" class="product-modal-button primary">
 					Ver detalles completos
 				</NuxtLink>
 			</div>
