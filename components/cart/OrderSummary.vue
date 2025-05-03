@@ -23,7 +23,7 @@
 
             <div class="flex justify-between mb-4 pb-4 border-b">
                 <span class="text-gray-600">Descuento</span>
-                <span class="font-medium text-green-600">- Gs. {{ formatPrice(discount) }}</span>
+                <span class="font-medium text-green-600">Gs. {{ formatPrice(discount) }}</span>
             </div>
 
             <div class="flex justify-between mb-4">
