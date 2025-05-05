@@ -37,6 +37,7 @@
 		"vitest": "^3.1.2"
 	},
 	"devDependencies": {
-		"@nuxtjs/robots": "^5.2.10"
+		"@nuxtjs/robots": "^5.2.10",
+		"@vitest/coverage-v8": "3.1.2"
 	}
 }
