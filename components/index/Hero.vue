@@ -1,6 +1,7 @@
 <template>
     <section
-        class="relative rounded-xl overflow-hidden min-h-[488px] md:min-h-[608px] w-full h-full flex items-center justify-center shadow-lg p-0 m-0 overflow-hidden bg-gray-900">
+        class="relative rounded-xl overflow-hidden min-h-[488px] md:min-h-[608px] w-full h-full flex items-center justify-center shadow-lg p-0 m-0 overflow-hidden bg-gray-900"
+        @mouseenter="pauseAutoplay" @mouseleave="resumeAutoplay">
         <!-- Slide actual -->
         <Transition name="slide">
             <div v-if="banners.length" :key="activeIndex" class="w-full h-full min-h-[488px] md:min-h-[608px] relative">
@@ -50,10 +51,14 @@
             <i class="pi pi-chevron-right text-xl"></i>
         </button>
         <!-- Paginación de slider -->
-        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-            <span v-for="(banner, i) in banners" :key="i" class="w-2 h-2 rounded-full"
-                :class="i === activeIndex ? 'bg-amber-300 opacity-80' : 'bg-white opacity-40'" @click="goTo(i)"
-                style="cursor:pointer"></span>
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20"
+            :class="{ 'paginador-pausado': isPaused }">
+            <span v-for="(banner, i) in banners" :key="i" class="w-2 h-2 rounded-full transition-all duration-300"
+                :class="[
+                    i === activeIndex
+                        ? (isPaused ? 'bg-red-500 opacity-90' : 'bg-amber-300 opacity-80')
+                        : (isPaused ? 'bg-red-200 opacity-50' : 'bg-white opacity-40')
+                ]" @click="goTo(i)" style="cursor:pointer"></span>
         </div>
     </section>
 </template>
@@ -69,6 +74,7 @@ const showVerMas = computed(() => props.showVerMas !== false);
 const activeIndex = ref(0);
 let interval: any = null;
 const banners = ref<Banner[]>([]);
+const isPaused = ref(false);
 
 function next() {
     activeIndex.value = (activeIndex.value + 1) % banners.value.length;
@@ -80,6 +86,23 @@ function goTo(i: number) {
     activeIndex.value = i;
 }
 
+function startAutoplay() {
+    clearInterval(interval);
+    interval = setInterval(() => {
+        if (!isPaused.value) {
+            next();
+        }
+    }, 6000);
+}
+
+function pauseAutoplay() {
+    isPaused.value = true;
+}
+
+function resumeAutoplay() {
+    isPaused.value = false;
+}
+
 // Autoplay y carga de banners
 onMounted(async () => {
     try {
@@ -88,9 +111,7 @@ onMounted(async () => {
     } catch (e) {
         banners.value = [];
     }
-    interval = setInterval(() => {
-        next();
-    }, 6000);
+    startAutoplay();
 });
 onUnmounted(() => {
     clearInterval(interval);
@@ -182,5 +203,12 @@ function mapToBanner(item: BannerResponse): Banner {
     direction: ltr;
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
+}
+
+.paginador-pausado {
+    padding: 4px 8px;
+    background-color: rgba(239, 68, 68, 0.2);
+    border-radius: 12px;
+    transition: all 0.3s ease;
 }
 </style>
