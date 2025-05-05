@@ -2,7 +2,7 @@
   <div class="container mx-auto max-w-6xl px-4 py-6">
     <div v-if="loading" class="text-center py-8 text-gray-500">Cargando categorías...</div>
     <div v-else-if="error" class="text-center py-8 text-red-500">{{ error }}</div>
-    <div v-else class="categories-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div v-else class="categories-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
       <div v-for="cat in categorias"
         class="category-card bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden cursor-pointer">
         <NuxtLink :to="`/catalog?cat=${cat.codigo}`" class="block h-full">
