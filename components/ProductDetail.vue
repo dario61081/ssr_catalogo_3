@@ -1,149 +1,121 @@
 <template>
 	<div class="product-detail">
-		<div v-if="loading"
-			class="flex justify-center items-center py-16">
-			<LoadingSpinner/>
+		<div v-if="loading" class="flex justify-center items-center py-16">
+			<LoadingSpinner />
 		</div>
 
-		<div v-else-if="error"
-			class="text-center py-16">
+		<div v-else-if="error" class="text-center py-16">
 			<div class="text-red-500 mb-4">
 				<i class="pi pi-exclamation-triangle text-4xl"></i>
 			</div>
 			<h2 class="text-xl font-semibold text-gray-800 mb-2">Error al cargar el producto</h2>
 			<p class="text-gray-600">{{ error }}</p>
-			<NuxtLink class="mt-4 inline-block bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
+			<NuxtLink
+				class="mt-4 inline-block bg-gray-700 hover:bg-gray-800 text-white py-2 px-4 rounded transition-colors"
 				to="/catalog">
 				Volver al catálogo
 			</NuxtLink>
 		</div>
 
-		<div v-else-if="product"
-			class="bg-white rounded-lg shadow-sm overflow-hidden">
+		<div v-else-if="product" class="bg-white rounded-lg shadow-sm overflow-hidden">
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
 				<!-- Galería de imágenes -->
 				<div class="product-gallery">
 					<div class="main-image-container mb-4 border rounded-lg overflow-hidden">
-						<img
-							:alt="product.nombre"
-							:src="currentImage"
-							class="w-full h-auto object-contain"
-							style="min-height: 300px; max-height: 500px;"
-						/>
+						<img :alt="product.nombre" :src="currentImage" class="w-full h-auto object-contain"
+							style="min-height: 300px; max-height: 500px;" />
 					</div>
 
 					<div class="thumbnails-container flex space-x-2 overflow-x-auto pb-2">
-						<button
-							v-for="(image, index) in productImages"
-							:key="index"
+						<button v-for="(image, index) in productImages" :key="index"
 							:class="{ 'border-gray-500 border-2': currentImageIndex === index }"
 							class="thumbnail-item min-w-[80px] h-20 border rounded-md overflow-hidden cursor-pointer"
-							@click="setCurrentImage(index)"
-						>
-							<img
-								:alt="`${product.nombre} - Imagen ${index + 1}`"
-								:src="image"
-								class="w-full h-full object-contain"
-							/>
+							@click="setCurrentImage(index)">
+							<img :alt="`${product.nombre} - Imagen ${index + 1}`" :src="image"
+								class="w-full h-full object-contain" />
 						</button>
 					</div>
 				</div>
 
 				<!-- Información del producto -->
 				<div class="product-info">
-					<div class="mb-4">
-						<p class="text-sm text-gray-500 mb-1">{{ product.desc_division }} > {{
-								product.desc_categoria
-							}}</p>
-						<h1 class="text-2xl font-bold text-gray-900 mb-2">{{ product.nombre }}</h1>
+					<div class="mb-6">
+						<p class="text-sm text-gray-500 mb-2">{{ product.desc_division }} > {{
+							product.desc_categoria
+						}}</p>
+						<h1 class="text-2xl font-bold text-gray-900 mb-4">{{ product.nombre }}</h1>
 
-						<ProductRating :rating="Math.floor(Math.random() * (5 - 3 + 1) + 3)"></ProductRating>
-						<div class="flex items-center mb-4">
+						<ProductRating :rating="Math.floor(Math.random() * (5 - 3 + 1) + 3)" class="mb-4">
+						</ProductRating>
+						<div class="flex items-center mb-6">
 							<p class="text-3xl font-bold text-gray-900">
 								Gs. {{ formatPrice(product.precio) }}
 							</p>
 						</div>
 
-						<div class="stock-info mb-4">
-							<p v-if="product.stock > 0"
-								class="text-green-600 flex items-center">
+						<div class="stock-info mb-6">
+							<p v-if="product.stock > 0" class="text-green-600 flex items-center">
 								<i class="pi pi-check-circle mr-1"></i>
 								En stock ({{ product.stock }} disponibles)
 							</p>
-							<p v-else
-								class="text-red-600 flex items-center">
+							<p v-else class="text-red-600 flex items-center">
 								<i class="pi pi-times-circle mr-1"></i>
 								Sin stock
 							</p>
 						</div>
 
 						<!-- Cantidad y botones de acción -->
-						<div class="mt-6">
-							<div class="mb-4">
-								<label class="block text-sm font-medium text-gray-700 mb-1"
-									for="quantity">Cantidad
+						<div class="mt-8">
+							<div class="mb-6">
+								<label class="block text-sm font-medium text-gray-700 mb-2" for="quantity">Cantidad
 								</label>
 								<div class="flex items-center">
-									<button
-										:disabled="quantity <= 1"
+									<button :disabled="quantity <= 1"
 										class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-3 rounded-l-md border border-gray-300"
-										@click="decrementQuantity"
-									>
+										@click="decrementQuantity">
 										<i class="pi pi-minus"></i>
 									</button>
-									<input
-										id="quantity"
-										v-model="quantity"
-										:max="product.stock"
-										class="w-16 text-center py-2 border-t border-b border-gray-300"
-										min="1"
-										type="number"
-									/>
-									<button
-										:disabled="product.stock <= quantity"
+									<input id="quantity" v-model="quantity" :max="product.stock"
+										class="w-16 text-center py-2 border-t border-b border-gray-300" min="1"
+										type="number" />
+									<button :disabled="product.stock <= quantity"
 										class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-3 rounded-r-md border border-gray-300"
-										@click="incrementQuantity"
-									>
+										@click="incrementQuantity">
 										<i class="pi pi-plus"></i>
 									</button>
 								</div>
 							</div>
 
-							<div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-								<button
-									:class="{
-										'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500': !isAdded,
-										'bg-green-600 hover:bg-green-700 focus:ring-green-500': isAdded,
-										 'opacity-50 cursor-not-allowed': product.stock <= 0
-									}"
-									:disabled="product.stock <= 0"
+							<div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-2">
+								<button :class="{
+									'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500': !isAdded,
+									'bg-green-600 hover:bg-green-700 focus:ring-green-500': isAdded,
+									'opacity-50 cursor-not-allowed': product.stock <= 0
+								}" :disabled="product.stock <= 0"
 									class="flex-1 bg-gray-700 hover:bg-gray-800 text-white py-3 px-4 rounded-md flex items-center justify-center transition-colors"
-									@click="()=>{addToCart(); addToCartAnimation(); }"
-								>
-									<i v-if="!isAdded"
-										class="pi pi-shopping-cart mr-2"></i>
-									<i v-else
-										class="pi pi-check animate-bounce"></i>
+									@click="() => { addToCart(); addToCartAnimation(); }">
+									<i v-if="!isAdded" class="pi pi-shopping-cart mr-2"></i>
+									<i v-else class="pi pi-check animate-bounce"></i>
 									<span v-if="!isAdded">Añadir al carrito</span>
-
 								</button>
 
-								<ActionButtonWhatsapp :product="product"></ActionButtonWhatsapp>
+								<div class="flex space-x-2 sm:flex-1">
+									<ActionButtonWhatsapp :product="product" class="flex-1"></ActionButtonWhatsapp>
 
-								<button
-									class="flex-1 sm:flex-none border border-gray-300 text-gray-700 py-3 px-4 rounded-md flex items-center justify-center hover:bg-gray-50 transition-colors"
-									@click="toggleFavorite"
-								>
-									<i
-										:class="[isFavorite ? 'pi-heart-fill text-red-500' : 'pi-heart']"
-										class="pi mr-2"
-									></i>
-									{{
-										isFavorite ?
-											'Quitar de favoritos' :
-											'Añadir a favoritos'
-									}}
-								</button>
+									<button
+										class="flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-md flex items-center justify-center hover:bg-gray-50 transition-colors"
+										@click="toggleFavorite">
+										<i :class="[isFavorite ? 'pi-heart-fill text-red-500' : 'pi-heart']"
+											class="pi mr-2"></i>
+										<span class="hidden sm:inline">
+											{{
+												isFavorite ?
+													'Quitar de favoritos' :
+													'Añadir a favoritos'
+											}}
+										</span>
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -161,26 +133,26 @@
 
 				<div>
 					<h2 class="text-xl font-semibold text-gray-900 mb-4">Detalles del producto</h2>
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-						<div class="flex">
-							<div class="w-1/3 font-medium text-gray-700">Código:</div>
-							<div class="w-2/3 text-gray-600">{{ product.codigo_alfanum }}</div>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div class="flex flex-col sm:flex-row mb-2 sm:mb-0">
+							<div class="w-full sm:w-1/3 font-medium text-gray-700 mb-1 sm:mb-0">Código:</div>
+							<div class="w-full sm:w-2/3 text-gray-600">{{ product.codigo_alfanum }}</div>
 						</div>
-						<div class="flex">
-							<div class="w-1/3 font-medium text-gray-700">Categoría:</div>
-							<div class="w-2/3 text-gray-600">{{ product.desc_division }}</div>
+						<div class="flex flex-col sm:flex-row mb-2 sm:mb-0">
+							<div class="w-full sm:w-1/3 font-medium text-gray-700 mb-1 sm:mb-0">Categoría:</div>
+							<div class="w-full sm:w-2/3 text-gray-600">{{ product.desc_division }}</div>
 						</div>
-						<div class="flex">
-							<div class="w-1/3 font-medium text-gray-700">Subcategoría:</div>
-							<div class="w-2/3 text-gray-600">{{ product.desc_categoria }}</div>
+						<div class="flex flex-col sm:flex-row mb-2 sm:mb-0">
+							<div class="w-full sm:w-1/3 font-medium text-gray-700 mb-1 sm:mb-0">Subcategoría:</div>
+							<div class="w-full sm:w-2/3 text-gray-600">{{ product.desc_categoria }}</div>
 						</div>
-						<div class="flex">
-							<div class="w-1/3 font-medium text-gray-700">Disponibilidad:</div>
-							<div class="w-2/3 text-gray-600">{{
-									product.stock > 0 ?
-										'En stock' :
-										'Sin stock'
-								}}
+						<div class="flex flex-col sm:flex-row mb-2 sm:mb-0">
+							<div class="w-full sm:w-1/3 font-medium text-gray-700 mb-1 sm:mb-0">Disponibilidad:</div>
+							<div class="w-full sm:w-2/3 text-gray-600">{{
+								product.stock > 0 ?
+									'En stock' :
+									'Sin stock'
+							}}
 							</div>
 						</div>
 					</div>
@@ -204,13 +176,12 @@
 	</div>
 </template>
 
-<script lang="ts"
-	setup>
-import {computed, onMounted, ref} from 'vue';
-import {Producto} from '~/types';
-import {useProductoStore} from '~/stores/productoStore';
-import {useFavoritesStore} from '~/stores/favoritesStore';
-import {useCartStore} from '~/stores/cartStore';
+<script lang="ts" setup>
+import { computed, onMounted, ref } from 'vue';
+import { Producto } from '~/types';
+import { useProductoStore } from '~/stores/productoStore';
+import { useFavoritesStore } from '~/stores/favoritesStore';
+import { useCartStore } from '~/stores/cartStore';
 import emitter from '~/utils/eventBus';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
 import ProductRating from "~/components/ProductRating.vue";
@@ -263,7 +234,7 @@ onMounted(async () => {
 			currentImageIndex.value = 0;
 
 			// Notificar a través del event bus
-			emitter.emit('product:view', {productId: props.productId});
+			emitter.emit('product:view', { productId: props.productId });
 		} else {
 			error.value = 'No se encontró el producto solicitado.';
 			console.error('Producto no encontrado con ID:', props.productId);
@@ -345,10 +316,10 @@ const toggleFavorite = () => {
 
 	if (isFavorite.value) {
 		favoritesStore.removeFavorite(product.value.codigo);
-		emitter.emit('product:removeFromFavorites', {productId: product.value.codigo});
+		emitter.emit('product:removeFromFavorites', { productId: product.value.codigo });
 	} else {
 		favoritesStore.addFavorite(product.value);
-		emitter.emit('product:addToFavorites', {productId: product.value.codigo});
+		emitter.emit('product:addToFavorites', { productId: product.value.codigo });
 	}
 
 	// Notificar actualización de favoritos
@@ -360,7 +331,7 @@ const addToCart = () => {
 	if (!product.value || product.value.stock <= 0) return;
 
 	cartStore.addToCart(product.value, quantity.value);
-	emitter.emit('product:addToCart', {product: product.value, quantity: quantity.value});
+	emitter.emit('product:addToCart', { product: product.value, quantity: quantity.value });
 	emitter.emit('cart:update', undefined);
 };
 </script>
