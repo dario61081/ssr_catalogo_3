@@ -14,10 +14,7 @@
                 <div class="relative z-10 flex flex-col items-center justify-center">
                     <div class="bg-white bg-opacity-80 px-5 py-2 rounded-full shadow-sm flex items-center">
                         <h3 class="text-xl font-semibold text-gray-800">Finalizar Compra</h3>
-                        <div
-                            class="ml-3 w-6 h-6 bg-gray-800 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                            {{ items.length }}
-                        </div>
+
                     </div>
                 </div>
 
