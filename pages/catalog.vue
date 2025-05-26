@@ -2,59 +2,70 @@
 	<div class="catalog-page">
 		<div class="container mx-auto max-w-6xl px-4 py-6">
 			<!-- Cabecera del catálogo con título y breadcrumb -->
-			<CatalogHeader title="Catálogo de Productos" />
+			<CatalogHeader title="Catálogo de Productos"/>
 
-			<div v-if="loading" class="flex justify-center py-16">
-				<LoadingSpinner />
+			<div v-if="loading"
+				class="flex justify-center py-16">
+				<LoadingSpinner/>
 			</div>
 
 			<div v-else-if="error">
-				<CatalogEmpty :error="error" @retry="loadData" />
+				<CatalogEmpty :error="error"
+					@retry="loadData"/>
 			</div>
 
-			<div v-else class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+			<div v-else
+				class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 				<!-- Sidebar de filtros -->
 				<div class="lg:col-span-1">
 					<LazyFilterSidebar v-model:selectedCategories="filterState.categorias"
-						v-model:selectedSubcategories="filterState.subcategorias" :priceMax="filterState.precioMax"
-						:priceMin="filterState.precioMin" :searchQuery="filterState.searchQuery"
+						v-model:selectedSubcategories="filterState.subcategorias"
+						:priceMax="filterState.precioMax"
+						:priceMin="filterState.precioMin"
+						:searchQuery="filterState.searchQuery"
 						@update:priceMin="filterState.precioMin = $event"
 						@update:priceMax="filterState.precioMax = $event"
-						@update:searchQuery="filterState.searchQuery = $event" @filter-changed="applyFilters"
-						@clear-filters="clearFilters" />
+						@update:searchQuery="filterState.searchQuery = $event"
+						@filter-changed="applyFilters"
+						@clear-filters="clearFilters"/>
 				</div>
 
 				<!-- Listado de productos -->
 				<div class="lg:col-span-3">
-					<LazyCatalogProductGrid :products="paginatedProducts" :loading="filterLoading"
-						:totalProducts="filteredProducts.length" :currentPage="currentPage" :totalPages="totalPages"
+					<LazyCatalogProductGrid
+						:currentPage="currentPage"
+						:loading="filterLoading"
+						:products="paginatedProducts"
 						:sortBy="filterState.sortBy"
+						:totalPages="totalPages"
+						:totalProducts="filteredProducts.length"
 						@sort-changed="(newSort) => { filterState.sortBy = newSort; applyFilters(); }"
-						@page-change="goToPage" @clear-filters="clearFilters(false)" />
+						@page-change="goToPage"
+						@clear-filters="clearFilters(false)"/>
 				</div>
 			</div>
 		</div>
 		<!-- Modal de vista previa de producto -->
-		<LazyProductModalPreview :isOpen="showProductPreview" :productId="selectedProductId"
-			@close="showProductPreview = false" />
+		<LazyProductModalPreview :isOpen="showProductPreview"
+			:productId="selectedProductId"
+			@close="showProductPreview = false"/>
 	</div>
 </template>
 
-<script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useProductoStore } from '~/stores/productoStore';
-import { useFavoritesStore } from '~/stores/favoritesStore';
-import { useCartStore } from '~/stores/cartStore';
-import { useFiltersData } from '~/composables/useFiltersData';
-import type { FilterState, SortCriteria } from '~/types';
+<script lang="ts"
+	setup>
+import {computed, onMounted, ref, watch} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {useProductoStore} from '~/stores/productoStore';
+import {useFavoritesStore} from '~/stores/favoritesStore';
+import {useCartStore} from '~/stores/cartStore';
+import {useFiltersData} from '~/composables/useFiltersData';
+import type {FilterState, SortCriteria} from '~/types';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
-import FilterSidebar from '~/components/FilterSidebar.vue';
 import emitter from '~/utils/eventBus';
 
 // Importar componentes del catálogo
 import CatalogHeader from '~/components/catalog/CatalogHeader.vue';
-import CatalogProductGrid from '~/components/catalog/CatalogProductGrid.vue';
 import CatalogEmpty from '~/components/catalog/CatalogEmpty.vue';
 
 // Definir título y meta tags para SEO
@@ -91,7 +102,7 @@ const favoritesStore = useFavoritesStore();
 const cartStore = useCartStore();
 
 // Obtener datos de filtros
-const { filtrosData, loading: filtersLoading } = useFiltersData();
+const {filtrosData, loading: filtersLoading} = useFiltersData();
 
 // Estado
 const loading = ref(true);
@@ -144,30 +155,38 @@ const filteredProducts = computed(() => {
 	if (filterState.value.searchQuery) {
 		const query = filterState.value.searchQuery.toLowerCase();
 		result = result.filter(prod =>
-			prod.nombre.toLowerCase().includes(query) ||
-			prod.desc_division.toLowerCase().includes(query) ||
-			prod.desc_categoria.toLowerCase().includes(query)
+			prod.nombre.toLowerCase()
+				.includes(query) ||
+			prod.desc_division.toLowerCase()
+				.includes(query) ||
+			prod.desc_categoria.toLowerCase()
+				.includes(query)
 		);
 	}
 
 	// Ordenar productos
 	switch (filterState.value.sortBy) {
 		case 'nombre_asc':
-			result.sort((a, b) => a.nombre.localeCompare(b.nombre));
+			result.sort((a,
+						 b) => a.nombre.localeCompare(b.nombre));
 			break;
 		case 'nombre_desc':
-			result.sort((a, b) => b.nombre.localeCompare(a.nombre));
+			result.sort((a,
+						 b) => b.nombre.localeCompare(a.nombre));
 			break;
 		case 'precio_asc':
-			result.sort((a, b) => a.precio - b.precio);
+			result.sort((a,
+						 b) => a.precio - b.precio);
 			break;
 		case 'precio_desc':
-			result.sort((a, b) => b.precio - a.precio);
+			result.sort((a,
+						 b) => b.precio - a.precio);
 			break;
 		case 'recientes':
 			// Aquí podríamos ordenar por fecha si tuviéramos ese dato
 			// Por ahora, usamos el código como aproximación (asumiendo que códigos más altos son más recientes)
-			result.sort((a, b) => b.codigo - a.codigo);
+			result.sort((a,
+						 b) => b.codigo - a.codigo);
 			break;
 	}
 
@@ -227,10 +246,10 @@ const goToPage = (page: number) => {
 	if (page >= 1 && page <= totalPages.value) {
 		currentPage.value = page;
 		// Actualizar la URL con el parámetro de página
-		const query = { ...route.query, page: page.toString() };
-		router.push({ query });
+		const query = {...route.query, page: page.toString()};
+		router.push({query});
 		// Scroll al inicio de los productos
-		window.scrollTo({ top: 0, behavior: 'smooth' });
+		window.scrollTo({top: 0, behavior: 'smooth'});
 	}
 };
 
@@ -279,7 +298,7 @@ const applyFilters = async () => {
 	await new Promise(resolve => setTimeout(resolve, 1000));
 
 	// Actualizar la URL con los nuevos parámetros
-	await router.push({ query });
+	await router.push({query});
 
 	// Desactivar el estado de carga
 	filterLoading.value = false;
@@ -306,7 +325,7 @@ const clearFilters = async (redirectToHome = true) => {
 
 	// Limpiar los parámetros de la URL
 	if (redirectToHome) {
-		await router.push({ query: {} });
+		await router.push({query: {}});
 	}
 
 	// Desactivar estado de carga después de un breve retraso para asegurar que la UI se actualice
@@ -331,12 +350,14 @@ const applyFiltersFromUrl = () => {
 
 	// Categorías
 	if (query.cat) {
-		filterState.value.categorias = (query.cat as string).split(',').map(Number);
+		filterState.value.categorias = (query.cat as string).split(',')
+			.map(Number);
 	}
 
 	// Subcategorías
 	if (query.subcat) {
-		filterState.value.subcategorias = (query.subcat as string).split(',').map(Number);
+		filterState.value.subcategorias = (query.subcat as string).split(',')
+			.map(Number);
 	}
 
 	// Precio mínimo
@@ -372,7 +393,7 @@ const applyFiltersFromUrl = () => {
 // Observar cambios en la ruta para actualizar filtros
 watch(() => route.query, () => {
 	applyFiltersFromUrl();
-}, { deep: true });
+}, {deep: true});
 
 // Cargar datos al montar el componente
 onMounted(() => {

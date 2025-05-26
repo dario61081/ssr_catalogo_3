@@ -13,7 +13,7 @@
 				<NuxtLink :to="`/catalog?cat=${cat.codigo}`"
 					class="block h-full">
 					<div class="relative w-full h-40">
-						<img :alt="cat.nombre"
+						<img :alt="`cat.nombre - img`"
 							:src="cat.imagen"
 							class="w-full h-40 object-cover"
 							loading="lazy"/>
