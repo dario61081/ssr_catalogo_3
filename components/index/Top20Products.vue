@@ -1,33 +1,47 @@
 <template>
-	<div class="w-full overflow-hidden h-[400px]" @mouseenter="pauseAutoScroll" @mouseleave="resumeAutoScroll">
+	<div class="w-full overflow-hidden h-[400px]"
+		@mouseenter="pauseAutoScroll"
+		@mouseleave="resumeAutoScroll">
 		<h2 class="text-2xl font-bold mb-4 text-gray-800 px-0 pt-2">Productos Destacados</h2>
-		<div v-if="loading" class="flex justify-center items-center py-10 overflow-hidden">
+		<div v-if="loading"
+			class="flex justify-center items-center py-10 overflow-hidden">
 			<i class="pi pi-spin pi-spinner text-2xl text-gray-400"></i>
 			<span class="ml-2 text-gray-500">Cargando productos...</span>
 		</div>
-		<div v-else-if="error" class="flex justify-center items-center py-10 text-red-500">
+		<div v-else-if="error"
+			class="flex justify-center items-center py-10 text-red-500">
 			<i class="pi pi-exclamation-triangle mr-2"></i>
 			{{ error }}
 		</div>
 		<div v-else>
 			<div class="relative overflow-hidden">
 				<!-- Botón Izquierda -->
-				<button :class="[
+				<button
+					id="btn-left"
+					:class="[
 					'absolute left-0 top-1/2 -translate-y-1/2 z-10 text-white rounded-full w-8 h-8 flex items-center justify-center shadow transition',
 					isPaused ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-800/70 hover:bg-gray-700/90'
-				]" @click="scrollLeft">
+				]"
+					@click="scrollLeft">
 					<i class="pi pi-chevron-left text-xl"></i>
 				</button>
 				<!-- Carrusel horizontal -->
-				<div ref="scrollContainer" class="flex flex-row gap-3 px-2 w-full overflow-x-auto hide-scrollbar">
-					<ProductCardSmall v-for="prod in productos" :key="prod.codigo" v-lazy-src :product="prod"
-						class="min-w-[217px] max-w-[217px] w-[217px]" />
+				<div ref="scrollContainer"
+					class="flex flex-row gap-3 px-2 w-full overflow-x-auto hide-scrollbar">
+					<ProductCardSmall v-for="prod in productos"
+						:key="prod.codigo"
+						v-lazy-src
+						:product="prod"
+						class="min-w-[217px] max-w-[217px] w-[217px]"/>
 				</div>
 				<!-- Botón Derecha -->
-				<button :class="[
+				<button
+					id="btn-right"
+					:class="[
 					'absolute right-0 top-1/2 -translate-y-1/2 z-10 text-white rounded-full w-8 h-8 flex items-center justify-center shadow transition',
 					isPaused ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-800/70 hover:bg-gray-700/90'
-				]" @click="scrollRight">
+				]"
+					@click="scrollRight">
 					<i class="pi pi-chevron-right text-xl"></i>
 				</button>
 			</div>
@@ -35,11 +49,12 @@
 	</div>
 </template>
 
-<script lang="ts" setup>
-import { onMounted, ref, onUnmounted } from 'vue';
+<script lang="ts"
+	setup>
+import {onMounted, onUnmounted, ref} from 'vue';
 import ProductCardSmall from '../ProductCardSmall.vue';
-import { Producto, ProductoResponse } from '~/types';
-import { mapToProducto } from '~/utils/transforms';
+import {Producto, ProductoResponse} from '~/types';
+import {mapToProducto} from '~/utils/transforms';
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -53,13 +68,13 @@ const SCROLL_INTERVAL = 5000; // 5 segundos entre scroll
 
 function scrollLeft() {
 	if (scrollContainer.value) {
-		scrollContainer.value.scrollBy({ left: -SCROLL_STEP, behavior: 'smooth' });
+		scrollContainer.value.scrollBy({left: -SCROLL_STEP, behavior: 'smooth'});
 	}
 }
 
 function scrollRight() {
 	if (scrollContainer.value) {
-		scrollContainer.value.scrollBy({ left: SCROLL_STEP, behavior: 'smooth' });
+		scrollContainer.value.scrollBy({left: SCROLL_STEP, behavior: 'smooth'});
 	}
 }
 
@@ -72,7 +87,7 @@ function startAutoScroll() {
 				scrollContainer.value.scrollWidth - SCROLL_STEP;
 
 			if (isNearEnd) {
-				scrollContainer.value.scrollTo({ left: 0, behavior: 'smooth' });
+				scrollContainer.value.scrollTo({left: 0, behavior: 'smooth'});
 			} else {
 				scrollRight();
 			}
