@@ -1,19 +1,18 @@
 <template>
   <div>
     <div class="container mx-auto max-w-6xl px-4 py-6">
-      <IndexHero />
-      <IndexCategoriesGrid />
-      <IndexTop20Products />
+      <LazyIndexHero />
+      <LazyIndexCategoriesGrid />
+      <LazyIndexTop20Products />
 
     </div>
   </div>
-  <ProductModalPreview :isOpen="showProductPreview" :productId="selectedProductId"
+  <LazyProductModalPreview :isOpen="showProductPreview" :productId="selectedProductId"
     @close="showProductPreview = false" />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import ProductModalPreview from '~/components/ProductModalPreview.vue';
 import emitter from '~/utils/eventBus';
 
 // Definir título y meta tags para SEO

@@ -1,0 +1,42 @@
+/* Critical CSS for above-the-fold content */
+
+/* Essential variables */
+:root {
+	--bg-primary: #ffffff;
+	--text-primary: #1f2937;
+	--color-primary: #3a3a3a;
+	--header-background-color: #000000;
+	--header-color: #ffffff;
+}
+
+/* Critical base styles */
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	background-color: var(--bg-primary);
+	color: var(--text-primary);
+	font-family: 'Poppins', sans-serif;
+}
+
+/* Critical layout components */
+.container {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Header and hero section styles */
+.catalog-page, 
+.product-card,
+.product-grid {
+	display: block;
+}
+
+/* Basic responsive layout */
+@media (min-width: 768px) {
+	.container {
+		max-width: 1280px;
+	}
+}

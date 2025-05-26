@@ -1,0 +1,57 @@
+// Add these optimizations to your nuxt.config.ts file to reduce JavaScript size
+
+// 1. Add Vite optimization for JavaScript
+vite: {
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          // Create separate chunks for large dependencies
+          if (id.includes('node_modules')) {
+            if (id.includes('leaflet')) return 'leaflet';
+            if (id.includes('pinia')) return 'pinia';
+            return 'vendor';
+          }
+        }
+      }
+    }
+  },
+  optimizeDeps: {
+    include: ['vue', 'pinia']
+  }
+},
+
+// 2. Add app.vue settings to dynamically import components
+// In your app.vue, use lazy loading for heavy components:
+/*
+<template>
+  <NuxtLayout>
+    <NuxtLoadingIndicator />
+    <NuxtPage />
+  </NuxtLayout>
+</template>
+*/
+
+// 3. Add to your nuxt.config.ts to help with optimization
+experimental: {
+  payloadExtraction: true,
+  renderJsonPayloads: true,
+  viewTransition: true
+},
+
+// 4. Script optimization in head section
+app: {
+  head: {
+    script: [
+      // Add defer attribute to non-critical scripts
+      { src: 'https://unpkg.com/primeicons/primeicons.js', defer: true }
+    ]
+  }
+}

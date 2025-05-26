@@ -110,8 +110,8 @@ export default defineComponent({
 		<div class="product-modal-container">
 			<div class="product-modal-header">
 				<h2 class="product-modal-title">Vista previa del producto</h2>
-				<button class="product-modal-close" @click="closeModal">
-					<i class="pi pi-times"></i>
+				<button class="product-modal-close" @click="closeModal" aria-label="Cerrar vista previa">
+					<i class="pi pi-times" aria-hidden="true"></i>
 				</button>
 			</div>
 			<div class="product-modal-body">

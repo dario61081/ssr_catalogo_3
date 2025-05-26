@@ -15,7 +15,7 @@
 			<div v-else class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 				<!-- Sidebar de filtros -->
 				<div class="lg:col-span-1">
-					<FilterSidebar v-model:selectedCategories="filterState.categorias"
+					<LazyFilterSidebar v-model:selectedCategories="filterState.categorias"
 						v-model:selectedSubcategories="filterState.subcategorias" :priceMax="filterState.precioMax"
 						:priceMin="filterState.precioMin" :searchQuery="filterState.searchQuery"
 						@update:priceMin="filterState.precioMin = $event"
@@ -26,7 +26,7 @@
 
 				<!-- Listado de productos -->
 				<div class="lg:col-span-3">
-					<CatalogProductGrid :products="paginatedProducts" :loading="filterLoading"
+					<LazyCatalogProductGrid :products="paginatedProducts" :loading="filterLoading"
 						:totalProducts="filteredProducts.length" :currentPage="currentPage" :totalPages="totalPages"
 						:sortBy="filterState.sortBy"
 						@sort-changed="(newSort) => { filterState.sortBy = newSort; applyFilters(); }"
@@ -34,9 +34,8 @@
 				</div>
 			</div>
 		</div>
-
 		<!-- Modal de vista previa de producto -->
-		<ProductModalPreview :isOpen="showProductPreview" :productId="selectedProductId"
+		<LazyProductModalPreview :isOpen="showProductPreview" :productId="selectedProductId"
 			@close="showProductPreview = false" />
 	</div>
 </template>
@@ -51,7 +50,6 @@ import { useFiltersData } from '~/composables/useFiltersData';
 import type { FilterState, SortCriteria } from '~/types';
 import LoadingSpinner from '~/components/LoadingSpinner.vue';
 import FilterSidebar from '~/components/FilterSidebar.vue';
-import ProductModalPreview from '~/components/ProductModalPreview.vue';
 import emitter from '~/utils/eventBus';
 
 // Importar componentes del catálogo

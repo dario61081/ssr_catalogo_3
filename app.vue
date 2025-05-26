@@ -3,10 +3,9 @@
     <!-- Header -->
     <header style="background-color: var(--header-background-color); color: var(--header-color);" class="shadow-sm">
       <div class="container mx-auto max-w-6xl px-4 py-4">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-          <!-- Logo -->
+        <div class="flex flex-col md:flex-row justify-between items-center"> <!-- Logo -->
           <NuxtLink to="/" class="mb-4 md:mb-0">
-            <img src="/img/logo.svg" alt="Paraná Hogar" style="width: 180px;" />
+            <NuxtImg src="/img/logo.svg" alt="Paraná Hogar" width="180" height="44" />
           </NuxtLink>
 
           <!-- Navegación -->
@@ -94,7 +93,6 @@ onMounted(() => {
 <style>
 /* Estilos globales */
 body {
-
   color: #333;
   line-height: 1.5;
 }

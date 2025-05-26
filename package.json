@@ -3,14 +3,15 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"build": "nuxt build",
+		"build": "npm run optimize-css && nuxt build",
 		"dev": "nuxt dev --host 0.0.0.0 --port=3010",
-		"generate": "nuxt generate",
+		"generate": "npm run optimize-css && nuxt generate",
 		"preview": "nuxt preview --host 0.0.0.0 --port=3011",
 		"postinstall": "nuxt prepare",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"optimize-css": "purgecss --config purgecss-config.js"
 	},
 	"dependencies": {
 		"@heroicons/vue": "^2.2.0",
@@ -38,6 +39,7 @@
 	},
 	"devDependencies": {
 		"@nuxtjs/robots": "^5.2.10",
-		"@vitest/coverage-v8": "3.1.2"
+		"@vitest/coverage-v8": "3.1.2",
+		"purgecss": "^5.0.0"
 	}
 }

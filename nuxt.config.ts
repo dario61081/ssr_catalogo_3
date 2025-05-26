@@ -5,6 +5,9 @@ export default defineNuxtConfig({
 	devtools: { enabled: false },
 	app: {
 		head: {
+			htmlAttrs: {
+				lang: 'es' // Specify Spanish language for the entire page
+			},
 			title: 'Paraná Hogar - Catálogo de Productos',
 			meta: [
 				{ charset: 'utf-8' },
@@ -15,14 +18,31 @@ export default defineNuxtConfig({
 				}
 			],
 			link: [
-				{ rel: 'stylesheet', href: '/styles/general.css' },
-				{ rel: 'stylesheet', href: 'https://unpkg.com/primeicons/primeicons.css' },
+				{ rel: 'stylesheet', href: '/styles/critical.css' },
+				{
+					rel: 'preload',
+					href: '/styles/general.css',
+					as: 'style',
+					onload: "this.onload=null;this.rel='stylesheet'"
+				},
+				{
+					rel: 'preload',
+					href: 'https://unpkg.com/primeicons/primeicons.css',
+					as: 'style',
+					onload: "this.onload=null;this.rel='stylesheet'"
+				},
 				{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
 				{ rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
 				{
-					rel: 'stylesheet',
-					href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'
+					rel: 'preload',
+					href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap',
+					as: 'style',
+					onload: "this.onload=null;this.rel='stylesheet'"
 				}
+			],
+			script: [
+				// Add script attribute to defer non-critical scripts
+				{ src: 'https://unpkg.com/primeicons/primeicons.js', defer: true }
 			]
 		}
 	},
@@ -54,6 +74,11 @@ export default defineNuxtConfig({
 	imports: {
 		dirs: ['stores']
 	},
+	// Optimize imports to reduce bundle size
+	experimental: {
+		treeshakeClientOnly: true,
+		payloadExtraction: true
+	},
 	runtimeConfig: {
 		public: {
 			apiBase: process.env.NODE_ENV === 'production'
@@ -67,6 +92,35 @@ export default defineNuxtConfig({
 		},
 		production: {
 			dotenv: '.env'
+		},
+		compressPublicAssets: true, // Enable compression for all public assets
+		compressPublicAssetsWith: {
+			brotli: true, // Enable Brotli compression (highest compression)
+			gzip: true,   // Enable gzip as fallback
+		},
+		// Improve minification and tree-shaking
+		minify: true,
+		routeRules: {
+			'/img/**': {
+				cache: {
+					maxAge: 60 * 60 * 24 * 365 // 1 year cache for images
+				}
+			},
+			'/styles/**': {
+				cache: {
+					maxAge: 60 * 60 * 24 * 30 // 30 days cache for styles
+				}
+			},
+			'/_nuxt/**': {
+				headers: {
+					'cache-control': 'public, max-age=31536000, immutable'
+				}
+			},
+			'/**': {
+				headers: {
+					'x-content-type-options': 'nosniff'
+				}
+			}
 		}
 	}
 })

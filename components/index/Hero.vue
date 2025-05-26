@@ -10,9 +10,10 @@
                     class="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
                     style="z-index:0; left:0; top:0; right:0; bottom:0; margin:0; padding:0;" loading="lazy" />
                 <!-- Marca de agua logo -->
-                <img src="/img/logo.svg" alt="Marca de agua logo"
+                <NuxtImg src="/img/logo.svg" alt="Marca de agua logo"
                     class="absolute left-8 bottom-8 opacity-50 pointer-events-none select-none"
-                    style="z-index:1; width:180px; max-width:30vw; min-width:80px; filter: brightness(0) invert(1) drop-shadow(0 2px 8px #fff8);" />
+                    style="z-index:1; width:180px; max-width:30vw; min-width:80px; filter: brightness(0) invert(1) drop-shadow(0 2px 8px #fff8);"
+                    width="180" height="44" />
                 <!-- Overlay de color de fondo del banner -->
                 <div v-if="showLabels" class="absolute inset-0 pointer-events-none"
                     :style="`background: ${banners[activeIndex].fondo_color || 'linear-gradient(to top right, #111827cc, #374151cc)'}; opacity:0.85; z-index:2;`">
@@ -31,7 +32,8 @@
                             :style="`background: ${banners[activeIndex].cta_color || '#f59e42'};`"></div>
                     </div>
                     <div class="flex flex-col items-center md:items-end">
-                        <a v-if="showVerMas" :href="banners[activeIndex].cta_url || '#'" target="_blank">
+                        <a v-if="showVerMas" :href="banners[activeIndex].cta_url || '#'" target="_blank"
+                            :aria-label="'Ver más sobre ' + banners[activeIndex].titulo">
                             <button class="font-semibold rounded-full px-6 py-2 mt-2 shadow transition"
                                 :style="`background: ${banners[activeIndex].cta_color || '#f59e42'}; color: ${banners[activeIndex].texto_color || '#222'};`">
                                 {{ banners[activeIndex].cta_texto }}
@@ -42,13 +44,13 @@
             </div>
         </Transition>
         <!-- Flechas navegación -->
-        <button @click="prev"
+        <button @click="prev" aria-label="Anterior slide"
             class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-gray-800/60 hover:bg-gray-700/80 text-white rounded-full w-8 h-8 flex items-center justify-center shadow transition">
-            <i class="pi pi-chevron-left text-xl"></i>
+            <i class="pi pi-chevron-left text-xl" aria-hidden="true"></i>
         </button>
-        <button @click="next"
+        <button @click="next" aria-label="Siguiente slide"
             class="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-gray-800/60 hover:bg-gray-700/80 text-white rounded-full w-8 h-8 flex items-center justify-center shadow transition">
-            <i class="pi pi-chevron-right text-xl"></i>
+            <i class="pi pi-chevron-right text-xl" aria-hidden="true"></i>
         </button>
         <!-- Paginación de slider -->
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20"

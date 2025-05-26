@@ -16,12 +16,10 @@
                         <h3 class="text-xl font-semibold text-gray-800">Finalizar Compra</h3>
 
                     </div>
-                </div>
-
-                <!-- Botón cerrar -->
-                <button @click="close"
+                </div> <!-- Botón cerrar -->
+                <button @click="close" aria-label="Cerrar formulario de compra"
                     class="absolute top-3 right-3 text-white hover:text-gray-100 bg-gray-800 bg-opacity-70 hover:bg-opacity-100 rounded-full p-2 transition-colors">
-                    <i class="pi pi-times"></i>
+                    <i class="pi pi-times" aria-hidden="true"></i>
                 </button>
             </div>
 
