@@ -1,6 +1,6 @@
 <template>
 	<section
-		class="relative rounded-xl min-h-[488px] md:min-h-[608px] w-full h-full flex items-center justify-center shadow-lg p-0 m-0  bg-gray-900"
+		class="relative overflow-hidden rounded-xl min-h-[488px] md:min-h-[608px] w-full h-full flex items-center justify-center shadow-lg p-0 m-0  bg-gray-900"
 		@mouseenter="pauseAutoplay"
 		@mouseleave="resumeAutoplay">
 		<!-- Slide actual -->
