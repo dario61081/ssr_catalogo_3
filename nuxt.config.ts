@@ -4,10 +4,21 @@ export default defineNuxtConfig({
 	// Specify correct dependency resolution to help with h3 module resolution
 	vite: {
 		resolve: {
-			dedupe: ['h3']
+			dedupe: ['h3', 'vue']
 		},
 		optimizeDeps: {
 			include: ['h3']
+		},
+		build: {
+			cssCodeSplit: true,
+			chunkSizeWarningLimit: 1000,
+			rollupOptions: {
+				output: {
+					manualChunks: {
+						vendor: ['vue', 'vue-router'],
+					}
+				}
+			}
 		}
 	},
 	alias: {
@@ -132,7 +143,21 @@ export default defineNuxtConfig({
 				headers: {
 					'x-content-type-options': 'nosniff'
 				}
-			}
+			},
+			'/assets/**': { headers: { 'cache-control': 'public,max-age=31536000,immutable' } },
+			'/api/**': { headers: { 'cache-control': 'public,max-age=60,stale-while-revalidate=30' } },
 		}
-	}
+	},
+	image: {
+		quality: 80,
+		screens: {
+			xs: 320,
+			sm: 640,
+			md: 768,
+			lg: 1024,
+			xl: 1280,
+			xxl: 1536,
+		},
+		format: ['webp', 'jpg', 'png']
+	},
 })
