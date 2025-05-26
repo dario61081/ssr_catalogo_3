@@ -2,6 +2,13 @@
   // https://v3.nuxtjs.org/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "baseUrl": ".",
+    "paths": {
+      "h3": ["./node_modules/h3/dist/index.mjs"],
+      "@unjs/h3": ["./node_modules/h3/dist/index.mjs"]
+    },
+    "moduleResolution": "node",
+    "resolveJsonModule": true
   }
 }

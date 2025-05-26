@@ -1,6 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 // @ts-ignore
 export default defineNuxtConfig({
+	// Specify correct dependency resolution to help with h3 module resolution
+	vite: {
+		resolve: {
+			dedupe: ['h3']
+		},
+		optimizeDeps: {
+			include: ['h3']
+		}
+	},
+	alias: {
+		'h3': require.resolve('h3'),
+	},
 	compatibilityDate: '2024-04-03',
 	devtools: { enabled: false },
 	app: {
